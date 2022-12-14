@@ -19,12 +19,14 @@ namespace Business.Concrete
         private readonly IRoleService _roleService;
         private readonly ITokenHandler _tokenHandler;
         private readonly IWriterService _writerService;
-        public AuthService(IUserService userService, IRoleService roleService, ITokenHandler tokenHandler, IWriterService writerService)
+        private readonly IMailService _mailService;
+        public AuthService(IUserService userService, IRoleService roleService, ITokenHandler tokenHandler, IWriterService writerService, IMailService mailService)
         {
             _userService = userService;
             _roleService = roleService;
             _tokenHandler = tokenHandler;
             _writerService = writerService;
+            _mailService = mailService;
         }
 
         public IDataResult<AccessToken> CreateAccessToken(User user)
@@ -38,19 +40,19 @@ namespace Business.Concrete
             var userToCheck = await _userService.GetUserByMailWithRolesAsync(dto.Email);
             if (userToCheck.Data != null)
             {
-                if (!HashingHelper.VerifyPasswordHash(dto.Password, userToCheck.Data.PasswordHash,
-                        userToCheck.Data.PasswordSalt))
+                if (!HashingHelper.VerifyPasswordHash(dto.Password!, userToCheck.Data.PasswordHash!,
+                        userToCheck.Data.PasswordSalt!))
                     return new ErrorDataResult<User>();
-                return new SuccessDataResult<User>(userToCheck.Data,"Giriş başarılı");
+                return new SuccessDataResult<User>(userToCheck.Data, "Giriş başarılı");
             }
-
             return new ErrorDataResult<User>();
         }
 
         public async Task<IDataResult<int>> RegisterForUserAsync(UserForRegisterDto dto)
         {
-            HashingHelper.CreatePasswordHash(dto.Password, out var hash, out var salt);
+            HashingHelper.CreatePasswordHash(dto.Password!, out var hash, out var salt);
             var userRoleResult = await _roleService.GetByName("User");
+           
             var user = new User
             {
                 Email = dto.Email,
@@ -59,8 +61,11 @@ namespace Business.Concrete
                 PasswordHash = hash,
                 PasswordSalt = salt,
             };
-            user.Roles.Add(userRoleResult.Data);
+            user.Roles!.Add(userRoleResult.Data!);
             var result = await _userService.AddAsync(user);
+
+            if (!result.Success) return new ErrorDataResult<int>();
+            await _mailService.SendRegistrationCompletedMailAsync(user.Email!, $"{user.FirstName} {user.LastName}");
             return new SuccessDataResult<int>(result.Data);
         }
 
@@ -73,16 +78,13 @@ namespace Business.Concrete
                 LastName = dto.LastName,
                 Password = dto.Password,
             });
-            if (result.Success)
+            if (!result.Success) return new ErrorResult();
+            await _writerService.AddAsync(new WriterForCreateDto
             {
-                await _writerService.AddAsync(new WriterForCreateDto
-                {
-                    NickName = dto.NickName,
-                    UserId = result.Data
-                });
-                return new SuccessResult();
-            }
-            return new ErrorResult();
+                NickName = dto.NickName,
+                UserId = result.Data
+            });
+            return new SuccessResult();
         }
     }
 }

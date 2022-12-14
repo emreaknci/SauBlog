@@ -41,7 +41,7 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
-        public async Task<IDataResult<User>> GetUserByMailWithRolesAsync(string mail)
+        public async Task<IDataResult<User>> GetUserByMailWithRolesAsync(string? mail)
         {
             var user = await _userDal.Table.Include(x => x.Roles)
                 .FirstOrDefaultAsync(x => x.Email == mail);

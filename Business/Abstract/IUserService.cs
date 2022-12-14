@@ -14,7 +14,7 @@ namespace Business.Abstract
         Task<IDataResult<int>> AddAsync(User user);
         Task<IDataResult<User>> DeleteAsync(int id);
         Task<IDataResult<User>> UpdateAsync(UserForUpdateDto dto);
-        Task<IDataResult<User>> GetUserByMailWithRolesAsync(string mail);
+        Task<IDataResult<User>> GetUserByMailWithRolesAsync(string? mail);
         Task<IDataResult<User>> GetUserByMailAsync(string mail);
         IDataResult<List<User>> GetAll();
         Task<IDataResult<User>> GetById(int id);
