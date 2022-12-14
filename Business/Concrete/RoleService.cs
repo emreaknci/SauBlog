@@ -51,6 +51,12 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
+        public async Task<IDataResult<Role>> GetByName(string name)
+        {
+            var role = await _roleDal.GetAsync(r => r.Name == name);
+            return new SuccessDataResult<Role>(role);
+        }
+
         public async Task<IDataResult<Role>> GetWithUsersById(int id)
         {
             throw new NotImplementedException();

@@ -9,6 +9,7 @@ using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using DataAccess.Abstract;
 using Entities.DTOs.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Concrete
 {
@@ -38,6 +39,26 @@ namespace Business.Concrete
         public async Task<IDataResult<User>> UpdateAsync(UserForUpdateDto dto)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IDataResult<User>> GetUserByMailWithRolesAsync(string mail)
+        {
+            var user = await _userDal.Table.Include(x => x.Roles)
+                .FirstOrDefaultAsync(x => x.Email == mail);
+            return new SuccessDataResult<User>(user);
+        }
+
+        public async Task<IDataResult<User>> GetUserByMailAsync(string mail)
+        {
+            var user = await _userDal.Table.FirstOrDefaultAsync(x => x.Email == mail);
+            return new SuccessDataResult<User>(user);
+        }
+
+        public async Task<IDataResult<User>> GetUserByIdWithRolesAsync(int id)
+        {
+            var user = await _userDal.Table.Include(x => x.Roles)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            return new SuccessDataResult<User>(user);
         }
 
         public IDataResult<List<User>> GetAll()

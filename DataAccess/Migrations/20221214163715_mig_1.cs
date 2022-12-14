@@ -93,6 +93,7 @@ namespace DataAccess.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<int>(type: "integer", nullable: true),
+                    NickName = table.Column<string>(type: "text", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Status = table.Column<bool>(type: "boolean", nullable: false)

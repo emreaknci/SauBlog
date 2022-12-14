@@ -13,8 +13,8 @@ namespace Business.Abstract
 {
     public interface IAuthService
     {
-        IDataResult<AccessToken> CreateAccessTokenAsync(User user);
-        Task<IResult> LoginAsync(UserForLoginDto dto);
+        IDataResult<AccessToken> CreateAccessToken(User user);
+        Task<IDataResult<User>> LoginAsync(UserForLoginDto dto);
         Task<IDataResult<int>> RegisterForUserAsync(UserForRegisterDto dto);
         Task<IResult> RegisterForWriterAsync(WriterForRegisterDto dto);
     }

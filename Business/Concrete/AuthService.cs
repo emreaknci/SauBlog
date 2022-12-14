@@ -27,29 +27,39 @@ namespace Business.Concrete
             _writerService = writerService;
         }
 
-        public IDataResult<AccessToken> CreateAccessTokenAsync(User user)
+        public IDataResult<AccessToken> CreateAccessToken(User user)
         {
             var token = _tokenHandler.CreateToken(user, user.Roles!.ToList());
             return new SuccessDataResult<AccessToken>(token);
-            throw new NotImplementedException();
         }
 
-        public async Task<IResult> LoginAsync(UserForLoginDto dto)
+        public async Task<IDataResult<User>> LoginAsync(UserForLoginDto dto)
         {
-            throw new NotImplementedException();
+            var userToCheck = await _userService.GetUserByMailWithRolesAsync(dto.Email);
+            if (userToCheck.Data != null)
+            {
+                if (!HashingHelper.VerifyPasswordHash(dto.Password, userToCheck.Data.PasswordHash,
+                        userToCheck.Data.PasswordSalt))
+                    return new ErrorDataResult<User>();
+                return new SuccessDataResult<User>(userToCheck.Data,"Giriş başarılı");
+            }
+
+            return new ErrorDataResult<User>();
         }
 
         public async Task<IDataResult<int>> RegisterForUserAsync(UserForRegisterDto dto)
         {
             HashingHelper.CreatePasswordHash(dto.Password, out var hash, out var salt);
+            var userRoleResult = await _roleService.GetByName("User");
             var user = new User
             {
                 Email = dto.Email,
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 PasswordHash = hash,
-                PasswordSalt = salt
+                PasswordSalt = salt,
             };
+            user.Roles.Add(userRoleResult.Data);
             var result = await _userService.AddAsync(user);
             return new SuccessDataResult<int>(result.Data);
         }
@@ -63,12 +73,16 @@ namespace Business.Concrete
                 LastName = dto.LastName,
                 Password = dto.Password,
             });
-            await _writerService.AddAsync(new WriterForCreateDto
+            if (result.Success)
             {
-                NickName = dto.NickName,
-                UserId = result.Data
-            });
-            return new SuccessResult();
+                await _writerService.AddAsync(new WriterForCreateDto
+                {
+                    NickName = dto.NickName,
+                    UserId = result.Data
+                });
+                return new SuccessResult();
+            }
+            return new ErrorResult();
         }
     }
 }
