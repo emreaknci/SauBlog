@@ -17,6 +17,8 @@ namespace Business
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<IWriterService, WriterService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+
             return services;
         }
     }
