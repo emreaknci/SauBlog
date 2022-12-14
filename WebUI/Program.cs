@@ -1,12 +1,19 @@
 using Business;
 using Core;
 using DataAccess;
+using NToastNotify;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+
+builder.Services.AddMvcCore().AddNToastNotifyToastr(new ToastrOptions()
+{
+    ProgressBar = true,
+    TimeOut = 3000,
+});
 builder.Services.AddCoreService();
 builder.Services.AddBusinessService();
 builder.Services.AddDataAccessService(builder.Configuration);

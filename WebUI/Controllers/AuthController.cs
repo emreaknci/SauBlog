@@ -4,16 +4,19 @@ using Entities.Concrete;
 using Entities.DTOs.Users;
 using Entities.DTOs.Writers;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 
 namespace WebUI.Controllers
 {
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
+        private readonly IToastNotification _toastNotification;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IToastNotification toastNotification)
         {
             _authService = authService;
+            _toastNotification = toastNotification;
         }
 
         [HttpGet]
@@ -32,9 +35,10 @@ namespace WebUI.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
-
+                _toastNotification.AddErrorToastMessage("Giriş başarısız");
                 return View(dto);
             }
+            _toastNotification.AddErrorToastMessage("Eksik alanlar var");
             return View(dto);
         }
         [HttpGet]
