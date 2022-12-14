@@ -22,6 +22,7 @@ namespace DataAccess
 
             services.AddTransient<IUserDal, UserDal>();
             services.AddTransient<IRoleDal, RoleDal>();
+            services.AddTransient<IWriterDal, WriterDal>();
             return services;
         }
     }

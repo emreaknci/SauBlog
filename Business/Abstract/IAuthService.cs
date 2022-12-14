@@ -2,6 +2,7 @@
 using Core.Utilities.Results;
 using Core.Utilities.Security.JWT;
 using Entities.DTOs.Users;
+using Entities.DTOs.Writers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace Business.Abstract
     {
         IDataResult<AccessToken> CreateAccessTokenAsync(User user);
         Task<IResult> LoginAsync(UserForLoginDto dto);
-        Task<IDataResult<int>> RegisterAsync(UserForRegisterDto dto);
+        Task<IDataResult<int>> RegisterForUserAsync(UserForRegisterDto dto);
+        Task<IResult> RegisterForWriterAsync(WriterForRegisterDto dto);
     }
 }
