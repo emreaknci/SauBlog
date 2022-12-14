@@ -1,4 +1,10 @@
+using System.Text;
+using Business;
+using Core;
 using Core.Utilities.Security.JWT;
+using DataAccess;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +30,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddCoreService();
+builder.Services.AddBusinessService();
+builder.Services.AddDataAccessService(builder.Configuration);
+
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
@@ -36,7 +47,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();

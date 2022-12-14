@@ -1,8 +1,15 @@
+using Business;
+using Core;
+using DataAccess;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddCoreService();
+builder.Services.AddBusinessService();
+builder.Services.AddDataAccessService(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
