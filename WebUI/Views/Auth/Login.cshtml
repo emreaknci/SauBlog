@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    Layout = "_Layout";
+}
+@model Entities.DTOs.Users.UserForLoginDto
+<div class="row py-5 mx-0">
+    <div class="col-4 offset-4">
+
+        <div class="row">
+            <div class="col text-center">
+                <i class="fa-2xl fa-brands fa-facebook"></i>
+            </div>
+            <div class="col text-center">
+                <i class="fa-2xl fa-brands fa-google"></i>
+            </div>
+            <div class="col text-center">
+                <i class="fa-2xl fa-brands fa-github"></i>
+            </div>
+        </div>
+
+        <div class="row py-2">
+            <div class="col-5"><hr /></div>
+            <div class="col text-center">veya</div>
+            <div class="col-5"><hr /></div>
+        </div>
+
+        <div class="row">
+            <form asp-action="Login" asp-controller="Auth">
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"> Email</label>
+                    <input asp-for="Email" type="email" class="form-control">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Şifre</label>
+                    <input asp-for="Password" type="password" class="form-control">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <a data-bs-target="#resetPasswordModal" data-bs-toggle="modal" class="text-decoration-underline " style="cursor: pointer">Şifremi Unuttum</a>
+                </div>
+                <button type="submit" class="btn btn-outline-primary w-100 rounded-5">Oturum Aç</button>
+            </form>
+            <div>Hesabın yok mu? <a asp-action="Register" class="text-decoration-underline" style="cursor: pointer">Kayıt Ol</a></div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="resetPasswordModal" aria-hidden="true" aria-labelledby="resetPassworModalLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="resetPassworModalLabel">Şifremi Unuttum</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <h5>Size ulaşabilmemiz için sisteme kaydolduğunuz mail adresini giriniz.</h5>
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control">
+                                <span class="text-danger"></span>
+                            </div>
+                            <button type="submit" class="btn btn-outline-danger w-100 rounded">Gönder</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div>Zaten bir hesabın var mı? <a data-bs-target="#resetPasswordModal" data-bs-dismiss="modal" class="text-decoration-underline" style="cursor: pointer">Giriş Yap</a></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Register";
+    Layout = "_Layout";
+}
+@model Entities.DTOs.Writers.WriterForRegisterDto
+<div class="row py-5 mx-0">
+    <div class="col-4 offset-4">
+
+        <div class="row">
+            <div class="col text-center">
+                <i class="fa-2xl fa-brands fa-facebook"></i>
+            </div>
+            <div class="col text-center">
+                <i class="fa-2xl fa-brands fa-google"></i>
+            </div>
+            <div class="col text-center">
+                <i class="fa-2xl fa-brands fa-github"></i>
+            </div>
+        </div>
+
+        <div class="row py-2">
+            <div class="col-5"><hr /></div>
+            <div class="col text-center">veya</div>
+            <div class="col-5"><hr /></div>
+        </div>
+
+        <div class="row">
+            <form asp-action="Register" asp-controller="Auth">
+                <div class="mb-3">
+                    <label asp-for="FirstName" class="form-label">Ad</label>
+                    <input asp-for="FirstName" type="text" class="form-control">
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="LastName" class="form-label">Soyad</label>
+                    <input asp-for="LastName" type="text" class="form-control">
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" type="email" class="form-control">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="NickName" class="form-label">Kullanıcı Adı</label>
+                    <input asp-for="NickName" type="text" class="form-control">
+                    <span asp-for="NickName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Şifre</label>
+                    <input asp-for="Password" type="password" class="form-control">
+                    <span asp-for="Password" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-outline-success w-100 rounded-5">Kayıt Ol</button>
+            </form>
+            <div>Zaten bir hesabın var mı? <a asp-action="Login" class="text-decoration-underline" style="cursor: pointer">Giriş Yap</a></div>
+        </div>
+
+    </div>
+</div>
+

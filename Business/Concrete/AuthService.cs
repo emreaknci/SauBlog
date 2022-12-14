@@ -84,7 +84,7 @@ namespace Business.Concrete
                 NickName = dto.NickName,
                 UserId = result.Data
             });
-            return new SuccessResult();
+            return new SuccessResult("Yazar Kaydı Oluşturuldu");
         }
     }
 }
