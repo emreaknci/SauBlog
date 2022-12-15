@@ -18,12 +18,14 @@ namespace WebUI.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
+        private readonly IUserService _userService;
         private readonly IToastNotification _toastNotification;
 
-        public AuthController(IAuthService authService, IToastNotification toastNotification)
+        public AuthController(IAuthService authService, IToastNotification toastNotification, IUserService userService)
         {
             _authService = authService;
             _toastNotification = toastNotification;
+            _userService = userService;
         }
         public IActionResult AccessDenied()
         {
@@ -41,7 +43,7 @@ namespace WebUI.Controllers
             {
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             }
-            return RedirectToAction("LogIn");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -55,7 +57,7 @@ namespace WebUI.Controllers
                 {
                     var user = result.Data;
                     _toastNotification.AddSuccessToastMessage(result.Message);
-                    var identity = new ClaimsIdentity(SetClaims(user!, user!.Roles!.ToList()),
+                    var identity = new ClaimsIdentity(_userService.GetClaims(user!, user!.Roles!.ToList()),
                         CookieAuthenticationDefaults.AuthenticationScheme);
 
                     await HttpContext.SignInAsync(
@@ -91,14 +93,6 @@ namespace WebUI.Controllers
             _toastNotification.AddErrorToastMessage("Eksik alanlar var");
             return View(dto);
         }
-        private IEnumerable<Claim> SetClaims(User user, List<Role> roles)
-        {
-            var claims = new List<Claim>();
-            claims.AddNameIdentifier(user.Id.ToString());
-            claims.AddEmail(user.Email!);
-            claims.AddName($"{user.FirstName} {user.LastName}");
-            claims.AddRoles(roles);
-            return claims;
-        }
+
     }
 }

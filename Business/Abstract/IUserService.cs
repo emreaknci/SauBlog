@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Entities;
@@ -19,6 +20,8 @@ namespace Business.Abstract
         IDataResult<List<User>> GetAll();
         Task<IDataResult<User>> GetById(int id);
         Task<IDataResult<User>> GetWithRolesById(int id);
+        List<Claim> GetClaims(User user, List<Role> roles);
+
 
     }
 }

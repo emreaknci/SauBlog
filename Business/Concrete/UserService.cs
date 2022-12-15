@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Business.Abstract;
 using Core.Entities;
+using Core.Extensions;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using DataAccess.Abstract;
@@ -74,6 +76,16 @@ namespace Business.Concrete
         public async Task<IDataResult<User>> GetWithRolesById(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public List<Claim> GetClaims(User user, List<Role> roles)
+        {
+            var claims = new List<Claim>();
+            claims.AddNameIdentifier(user.Id.ToString());
+            claims.AddEmail(user.Email!);
+            claims.AddName($"{user.FirstName} {user.LastName}");
+            claims.AddRoles(roles);
+            return claims;
         }
     }
 }
