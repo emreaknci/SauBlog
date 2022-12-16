@@ -45,8 +45,8 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("CreatedDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -54,12 +54,28 @@ namespace DataAccess.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly?>("UpdatedDate")
+                        .HasColumnType("date");
 
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedDate = new DateOnly(2022, 1, 1),
+                            Name = "Admin",
+                            Status = true
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedDate = new DateOnly(2022, 1, 1),
+                            Name = "User",
+                            Status = true
+                        });
                 });
 
             modelBuilder.Entity("Core.Entities.User", b =>
@@ -70,8 +86,8 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("CreatedDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");
@@ -91,8 +107,8 @@ namespace DataAccess.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly?>("UpdatedDate")
+                        .HasColumnType("date");
 
                     b.HasKey("Id");
 
@@ -110,8 +126,8 @@ namespace DataAccess.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("CreatedDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("ImagePath")
                         .HasColumnType("text");
@@ -122,8 +138,8 @@ namespace DataAccess.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly?>("UpdatedDate")
+                        .HasColumnType("date");
 
                     b.Property<int?>("WriterId")
                         .HasColumnType("integer");
@@ -143,8 +159,8 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("CreatedDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -152,12 +168,77 @@ namespace DataAccess.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly?>("UpdatedDate")
+                        .HasColumnType("date");
 
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedDate = new DateOnly(2022, 1, 1),
+                            Name = "Technology",
+                            Status = true
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedDate = new DateOnly(2022, 1, 1),
+                            Name = "Travel",
+                            Status = true
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedDate = new DateOnly(2022, 1, 1),
+                            Name = "Personal",
+                            Status = true
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedDate = new DateOnly(2022, 1, 1),
+                            Name = "Music",
+                            Status = true
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedDate = new DateOnly(2022, 1, 1),
+                            Name = "Food",
+                            Status = true
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedDate = new DateOnly(2022, 1, 1),
+                            Name = "Political",
+                            Status = true
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedDate = new DateOnly(2022, 1, 1),
+                            Name = "News",
+                            Status = true
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedDate = new DateOnly(2022, 1, 1),
+                            Name = "Lifestyle",
+                            Status = true
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedDate = new DateOnly(2022, 1, 1),
+                            Name = "Fashion",
+                            Status = true
+                        });
                 });
 
             modelBuilder.Entity("Entities.Concrete.Comment", b =>
@@ -174,14 +255,14 @@ namespace DataAccess.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("CreatedDate")
+                        .HasColumnType("date");
 
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly?>("UpdatedDate")
+                        .HasColumnType("date");
 
                     b.Property<int?>("WriterId")
                         .HasColumnType("integer");
@@ -203,8 +284,8 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("CreatedDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("NickName")
                         .IsRequired()
@@ -213,8 +294,8 @@ namespace DataAccess.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly?>("UpdatedDate")
+                        .HasColumnType("date");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("integer");

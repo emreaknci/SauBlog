@@ -17,8 +17,8 @@ namespace DataAccess.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    UpdatedDate = table.Column<DateOnly>(type: "date", nullable: true),
                     Status = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -33,8 +33,8 @@ namespace DataAccess.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    UpdatedDate = table.Column<DateOnly>(type: "date", nullable: true),
                     Status = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -53,8 +53,8 @@ namespace DataAccess.Migrations
                     Email = table.Column<string>(type: "text", nullable: true),
                     PasswordHash = table.Column<byte[]>(type: "bytea", nullable: true),
                     PasswordSalt = table.Column<byte[]>(type: "bytea", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    UpdatedDate = table.Column<DateOnly>(type: "date", nullable: true),
                     Status = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -94,8 +94,8 @@ namespace DataAccess.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<int>(type: "integer", nullable: true),
                     NickName = table.Column<string>(type: "text", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    UpdatedDate = table.Column<DateOnly>(type: "date", nullable: true),
                     Status = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -118,8 +118,8 @@ namespace DataAccess.Migrations
                     Content = table.Column<string>(type: "text", nullable: true),
                     ImagePath = table.Column<string>(type: "text", nullable: true),
                     WriterId = table.Column<int>(type: "integer", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    UpdatedDate = table.Column<DateOnly>(type: "date", nullable: true),
                     Status = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -165,8 +165,8 @@ namespace DataAccess.Migrations
                     Content = table.Column<string>(type: "text", nullable: true),
                     WriterId = table.Column<int>(type: "integer", nullable: true),
                     BlogId = table.Column<int>(type: "integer", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    UpdatedDate = table.Column<DateOnly>(type: "date", nullable: true),
                     Status = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -182,6 +182,31 @@ namespace DataAccess.Migrations
                         column: x => x.WriterId,
                         principalTable: "Writers",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "CreatedDate", "Name", "Status", "UpdatedDate" },
+                values: new object[,]
+                {
+                    { 1, new DateOnly(2022, 1, 1), "Technology", true, null },
+                    { 2, new DateOnly(2022, 1, 1), "Travel", true, null },
+                    { 3, new DateOnly(2022, 1, 1), "Personal", true, null },
+                    { 4, new DateOnly(2022, 1, 1), "Music", true, null },
+                    { 5, new DateOnly(2022, 1, 1), "Food", true, null },
+                    { 6, new DateOnly(2022, 1, 1), "Political", true, null },
+                    { 7, new DateOnly(2022, 1, 1), "News", true, null },
+                    { 8, new DateOnly(2022, 1, 1), "Lifestyle", true, null },
+                    { 9, new DateOnly(2022, 1, 1), "Fashion", true, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "CreatedDate", "Name", "Status", "UpdatedDate" },
+                values: new object[,]
+                {
+                    { 1, new DateOnly(2022, 1, 1), "Admin", true, null },
+                    { 2, new DateOnly(2022, 1, 1), "User", true, null }
                 });
 
             migrationBuilder.CreateIndex(

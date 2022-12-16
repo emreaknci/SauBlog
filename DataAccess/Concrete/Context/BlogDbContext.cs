@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace DataAccess.Concrete.Context
 {
-    public class BlogDbContext:DbContext
+    public class BlogDbContext : DbContext
     {
         private readonly IConfiguration _configuration;
 
@@ -21,7 +21,35 @@ namespace DataAccess.Concrete.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(_configuration.GetConnectionString("PostgreSQL"));
+
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            var date = new DateOnly(2022, 1, 1);
+
+            List<Role> roles = new()
+            {
+                new() { Id = 1, Name = "Admin", Status = true, CreatedDate = date },
+                new() { Id = 2, Name = "User", Status = true, CreatedDate = date},
+            }; modelBuilder.Entity<Role>().HasData(roles);
+
+            List<Category> categories = new()
+            {
+                new() { Id = 1, Name = "Technology", Status = true, CreatedDate = date },
+                new() { Id = 2, Name = "Travel", Status = true, CreatedDate = date },
+                new() { Id = 3, Name = "Personal", Status = true, CreatedDate = date },
+                new() { Id = 4, Name = "Music", Status = true, CreatedDate = date },
+                new() { Id = 5, Name = "Food", Status = true, CreatedDate = date },
+                new() { Id = 6, Name = "Political", Status = true, CreatedDate = date },
+                new() { Id = 7, Name = "News", Status = true, CreatedDate = date },
+                new() { Id = 8, Name = "Lifestyle", Status = true, CreatedDate = date },
+                new() { Id = 9, Name = "Fashion", Status = true, CreatedDate = date },
+            }; modelBuilder.Entity<Category>().HasData(categories);
+
+            base.OnModelCreating(modelBuilder);
+        }
+
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var datas = ChangeTracker.Entries<BaseEntity>();
@@ -29,18 +57,18 @@ namespace DataAccess.Concrete.Context
             {
                 _ = data.State switch
                 {
-                    EntityState.Added => data.Entity.CreatedDate = DateTime.UtcNow,
-                    EntityState.Modified => data.Entity.UpdatedDate = DateTime.UtcNow,
-                    _ => DateTime.UtcNow,
+                    EntityState.Added => data.Entity.CreatedDate = DateOnly.FromDateTime(DateTime.UtcNow),
+                    EntityState.Modified => data.Entity.UpdatedDate = DateOnly.FromDateTime(DateTime.UtcNow),
+                    _ => DateOnly.FromDateTime(DateTime.UtcNow),
                 };
             }
             return await base.SaveChangesAsync(cancellationToken);
         }
-        public DbSet<Writer>Writers { get; set; }
+        public DbSet<Writer> Writers { get; set; }
         public DbSet<Blog> Blogs { get; set; }
-        public DbSet<Category> Categories{ get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<User> Users  { get; set; }
-        public DbSet<Role> Roles{ get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
     }
 }
