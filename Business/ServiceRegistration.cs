@@ -30,6 +30,7 @@ namespace Business
             services.AddTransient<IWriterService, WriterService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IMailService, MailService>();
+            services.AddTransient<IBlogService, BlogService>();
 
             return services;
         }

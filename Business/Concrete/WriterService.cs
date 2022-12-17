@@ -24,8 +24,8 @@ namespace Business.Concrete
         {
             Writer writer = new()
             {
-               UserId= dto.UserId,
-               NickName= dto.NickName
+                UserId = dto.UserId,
+                NickName = dto.NickName
             };
             await _writerDal.AddAsync(writer);
             await _writerDal.SaveAsync();
@@ -39,7 +39,8 @@ namespace Business.Concrete
 
         public IDataResult<List<Writer>> GetAll()
         {
-            throw new NotImplementedException();
+            var list = _writerDal.GetAll().ToList();
+            return new SuccessDataResult<List<Writer>>(list);
         }
 
         public Task<IDataResult<Writer>> GetById(int id)
