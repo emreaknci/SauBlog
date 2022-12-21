@@ -129,7 +129,7 @@ namespace DataAccess.Migrations
                     b.Property<DateOnly>("CreatedDate")
                         .HasColumnType("date");
 
-                    b.Property<string>("ImagePath")
+                    b.Property<string>("CurrentImagePath")
                         .HasColumnType("text");
 
                     b.Property<bool>("Status")

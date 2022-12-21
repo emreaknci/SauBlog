@@ -1,13 +1,14 @@
 using System.Text;
 using Business;
 using Core;
-using Core.Utilities.Security.JWT;
 using DataAccess;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using NToastNotify;
 using static System.Net.Mime.MediaTypeNames;
+using TokenOptions = Core.Utilities.Security.JWT.TokenOptions;
 
 var builder = WebApplication.CreateBuilder(args);
 

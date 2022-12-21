@@ -1,12 +1,13 @@
-﻿@model Entities.DTOs.Blog.BlogForCreateDto
+﻿@model Entities.DTOs.Blog.BlogForUpdateDto
 @{
-    ViewData["Title"] = "Add";
-    Layout = "_Layout";
+    ViewData["Title"] = "Update";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="row my-5">
     <div class="offset-4 col-4">
-        <form asp-controller="Blogs" asp-action="Add" enctype="multipart/form-data">
+        <form asp-controller="Blogs" asp-action="Update" enctype="multipart/form-data">
+            <img src="~/Images/@Model.CurrentImagePath" alt="..." class="offset-5 col-4 img-thumbnail">
 
             <div class="mb-3 row">
                 <label asp-for="Title" class="col-sm-2 col-form-label">Başlık</label>
@@ -23,13 +24,13 @@
                 </div>
             </div>
             <div class="mb-3 row">
-                <label asp-for="Image" class="col-sm-2 col-form-label">NewImage</label>
+                <label asp-for="NewImage" class="col-sm-2 col-form-label">Kapak Fotoğrafı Değiştir</label>
 
                 <div class="col-sm-10">
-                    <input type="file" asp-for="Image" class="form-control">
+                    <input type="file" asp-for="NewImage" class="form-control">
 
                 </div>
-                <span asp-validation-for="Image" class="text-danger"></span>
+                <span asp-validation-for="NewImage" class="text-danger"></span>
             </div>
             <div class="mb-3 row">
                 <label asp-for="WriterId" class="col-sm-2 col-form-label">Yazar</label>
@@ -58,12 +59,26 @@
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#categoryAccordion">
                             <div class="accordion-body">
                                 <div class="row">
-                                    @foreach (var category in ViewBag.categories)
+                                    @foreach (var item in ViewBag.categories)
                                     {
-                                        <div class="col-4">
-                                            <input name="CategoryIds" type="checkbox" id="option-@category.Id" value="@category.Id">
-                                            <label id="option-@category.Id">@category.Name</label>
-                                        </div>
+
+                                        @if (item.Checked)
+                                        {
+                                            <div class="col-4">
+                                                <input checked class="form-check-input" name="CategoryIds" type="checkbox" id="option-@item.Category.Id" value="@item.Category.Id">
+                                                <label class="form-check-label" id="option-@item.Category.Id">@item.Category.Name</label>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-4">
+                                                <input class="form-check-input" name="CategoryIds" type="checkbox" id="option-@item.Category.Id" value="@item.Category.Id">
+                                                <label class="form-check-label" id="option-@item.Category.Id">@item.Category.Name</label>
+                                            </div>
+                                        }
+
+
+
                                     }
                                 </div>
 
@@ -84,3 +99,4 @@
 
 
 </div>
+

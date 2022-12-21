@@ -1,15 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 
 namespace WebUI.Controllers
 {
     public class ErrorController : Controller
     {
+        private readonly IToastNotification _toastNotification;
+
+        public ErrorController(IToastNotification toastNotification)
+        {
+            _toastNotification = toastNotification;
+        }
+
         [Route("/Error/{statusCode}")]
         public IActionResult HttpStatusCodeHandler(int? statusCode)
         {
             switch (statusCode.Value)
             {
                 case 404:
+                    _toastNotification.AddWarningToastMessage("");
                     return RedirectToAction("Error404");
                     break;
             }

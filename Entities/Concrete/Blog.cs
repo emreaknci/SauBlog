@@ -10,6 +10,12 @@ namespace Entities.Concrete
 {
     public class Blog : BaseEntity
     {
+        public Blog()
+        {
+            Categories = new HashSet<Category>();
+            Comments = new HashSet<Comment>();
+        }
+
         public string? Title { get; set; }
         public string? Content { get; set; }
         public string? ImagePath { get; set; }

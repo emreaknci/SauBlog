@@ -10,8 +10,8 @@ namespace Core.Helpers
 {
     public class FileHelper
     {
-        private static readonly string _currentDirectory = Environment.CurrentDirectory + "\\wwwroot";
-        private static readonly string _folderName = "\\Images\\";
+        private static readonly string _currentDirectory = Environment.CurrentDirectory + "\\wwwroot\\";
+        private static readonly string _folderName = "Images\\";
         public static IDataResult<string> Upload(IFormFile file)
         {
             var fileExists = CheckFileExists(file);
@@ -33,27 +33,28 @@ namespace Core.Helpers
             CreateImageFile(_currentDirectory + _folderName + randomName + type, file);
             return new SuccessDataResult<string>(randomName+type, (_folderName + randomName + type).Replace("\\", "/"));
         }
-        public static IResult Update(IFormFile file, string imagePath)
+        public static IDataResult<string> Update(IFormFile newFile, string oldImagePath)
         {
-            var fileExists = CheckFileExists(file);
+            var fileExists = CheckFileExists(newFile);
             if (fileExists.Message != null)
             {
-                return new ErrorResult(fileExists.Message);
+                return new ErrorDataResult<string>(null!,fileExists.Message);
             }
 
-            var type = Path.GetExtension(file.FileName);
+            var type = Path.GetExtension(newFile.FileName);
             var typeValid = CheckFileTypeValid(type);
             var randomName = Guid.NewGuid().ToString();
 
             if (typeValid.Message != null)
             {
-                return new ErrorResult(typeValid.Message);
+                return new ErrorDataResult<string>(null!, typeValid.Message);
             }
 
-            DeleteOldImageFile((_currentDirectory + imagePath).Replace("/", "\\"));
+            var x = (_currentDirectory + oldImagePath).Replace("/", "\\");
+            DeleteOldImageFile((_currentDirectory+_folderName + oldImagePath).Replace("/", "\\"));
             CheckDirectoryExists(_currentDirectory + _folderName);
-            CreateImageFile(_currentDirectory + _folderName + randomName + type, file);
-            return new SuccessResult((_folderName + randomName + type).Replace("\\", "/"));
+            CreateImageFile(_currentDirectory + _folderName + randomName + type, newFile);
+            return new SuccessDataResult<string>(randomName + type, (_folderName + randomName + type).Replace("\\", "/"));
         }
 
         public static IResult Delete(string path)

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using NToastNotify;
 
 namespace WebUI.Controllers
@@ -32,8 +33,9 @@ namespace WebUI.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult LogIn()
+        public IActionResult LogIn(string? returnUrl)
         {
+            TempData["returnUrl"] = returnUrl;
             return View();
         }
         [HttpGet]
@@ -63,7 +65,9 @@ namespace WebUI.Controllers
                     await HttpContext.SignInAsync(
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(identity));
-                    return RedirectToAction("Index", "Home");
+                    if (TempData["returnUrl"] == null)
+                        return RedirectToAction("Index", "Home");
+                    return Redirect((string)TempData["returnUrl"]);
                 }
                 _toastNotification.AddErrorToastMessage("Giriş başarısız");
                 return View(dto);

@@ -2,6 +2,7 @@
 using Core.Entities;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
+using DataAccess.Concrete;
 using Entities.Concrete;
 using Entities.DTOs.Category;
 using System;
@@ -32,6 +33,18 @@ namespace Business.Concrete
             return new SuccessDataResult<Category>(newCategory);
         }
 
+        public async Task<IDataResult<Category>> GetByIdWithBlogs(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IDataResult<List<Category>>> GetByList(List<int> ids)
+        {
+            var categories = new List<Category>();
+            foreach (var id in ids)
+                categories.Add((await _categoryDal.GetByIdAsync(id))!);
+            return new SuccessDataResult<List<Category>>(categories);
+        }
         public Task<IDataResult<Category>> DeleteAsync(int id)
         {
             throw new NotImplementedException();
@@ -39,15 +52,11 @@ namespace Business.Concrete
 
         public IDataResult<List<Category>> GetAll()
         {
-            throw new NotImplementedException();
+            var list = _categoryDal.GetAll().ToList();
+            return new SuccessDataResult<List<Category>>(list);
         }
 
         public Task<IDataResult<Category>> GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IDataResult<Category>> GetWithCategoryById(int id)
         {
             throw new NotImplementedException();
         }
