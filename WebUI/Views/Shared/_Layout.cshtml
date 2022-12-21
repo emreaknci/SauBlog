@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using WebUI.ViewComponents
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
 </head>
 <body>
-@await Component.InvokeAsync("Header")
+@await Component.InvokeAsync(typeof(HeaderViewComponent))
 
 <main role="main">
 
@@ -18,7 +19,7 @@
 
 </main>
 
-@await Component.InvokeAsync("Footer")
+@await Component.InvokeAsync(typeof(FooterViewComponent))
 
 
 <script type="text/javascript">

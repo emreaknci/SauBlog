@@ -18,7 +18,6 @@ namespace WebUI.Controllers
             switch (statusCode.Value)
             {
                 case 404:
-                    _toastNotification.AddWarningToastMessage("");
                     return RedirectToAction("Error404");
                     break;
             }
@@ -28,6 +27,8 @@ namespace WebUI.Controllers
         [HttpGet("404")]
         public IActionResult Error404()
         {
+            _toastNotification.AddWarningToastMessage("");
+
             return View();
         }
     }
