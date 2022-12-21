@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using WebUI.Models;
 
@@ -38,13 +39,13 @@ namespace WebUI.Controllers
 
         [HttpGet]
 
-    [Authorize(Roles = "Admin,User", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        [Authorize(Roles = "Admin,User", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult Add()
         {
             var writers = _writerService.GetAll().Data;
-            ViewBag.writers = writers!;
+            ViewData["writers"] = writers;
             var categories = _categoryService.GetAll().Data;
-            ViewBag.categories = categories!;
+            ViewData["categories"] = categories;
 
             return View();
         }
@@ -52,7 +53,14 @@ namespace WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(BlogForCreateDto dto)
         {
-            if (!ModelState.IsValid) return View(dto);
+            if (!ModelState.IsValid)
+            {
+                var categories = _categoryService.GetAll().Data;
+                ViewData["categories"] = categories;
+                var writers = _writerService.GetAll().Data;
+                ViewData["writers"] = writers;
+                return View(dto);
+            }
 
             var result = await _blogService.AddAsync(dto);
             _toastNotification.AddSuccessToastMessage("Blog başarıyla eklendi!");

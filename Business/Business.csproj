@@ -19,7 +19,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Rules\BusinessRules\" />
-    <Folder Include="Rules\ValidationRules\" />
   </ItemGroup>
 
 </Project>

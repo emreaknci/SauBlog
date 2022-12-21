@@ -24,12 +24,10 @@
             </div>
             <div class="mb-3 row">
                 <label asp-for="Image" class="col-sm-2 col-form-label">NewImage</label>
-
                 <div class="col-sm-10">
                     <input type="file" asp-for="Image" class="form-control">
-
+                    <span asp-validation-for="Image" class="text-danger"></span>
                 </div>
-                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="mb-3 row">
                 <label asp-for="WriterId" class="col-sm-2 col-form-label">Yazar</label>
@@ -42,8 +40,8 @@
                                 <option value="@writer.Id">@writer.NickName</option>
                             }
                         </select>
-                        <span asp-validation-for="WriterId" class="text-danger"></span>
                     </div>
+                    <span asp-validation-for="WriterId" class="text-danger"></span>
                 </div>
             </div>
             <div class="mb-3 row">
@@ -66,12 +64,10 @@
                                         </div>
                                     }
                                 </div>
-
                             </div>
-
                         </div>
-                        <span asp-validation-for="CategoryIds" class="text-danger"></span>
-                    </div>
+                    </div>        
+                    <span asp-validation-for="CategoryIds" class="text-danger"></span>
                 </div>
             </div>
 
