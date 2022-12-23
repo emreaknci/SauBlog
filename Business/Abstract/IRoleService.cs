@@ -12,7 +12,7 @@ namespace Business.Abstract
     public interface IRoleService
     {
         Task<IDataResult<Role>> AddAsync(RoleForCreateDto dto);
-        Task<IDataResult<Role>> DeleteAsync(int id);
+        Task<IResult> DeleteAsync(int id);
         Task<IDataResult<Role>> UpdateAsync(RoleForUpdateDto dto);
 
         IDataResult<List<Role>> GetAll();
