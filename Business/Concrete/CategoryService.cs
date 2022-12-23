@@ -5,6 +5,7 @@ using DataAccess.Abstract;
 using DataAccess.Concrete;
 using Entities.Concrete;
 using Entities.DTOs.Category;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,12 @@ namespace Business.Concrete
 
         public async Task<IDataResult<Category>> GetByIdWithBlogs(int id)
         {
-            throw new NotImplementedException();
+            var category = await _categoryDal.Table.Include(c=>c.Blogs).FirstOrDefaultAsync(b=>b.Id==id);
+            if (category!=null)
+            {
+                return new SuccessDataResult<Category>(category);
+            }
+            return new ErrorDataResult<Category>("Category Bulunamadı");
         }
 
         public async Task<IDataResult<List<Category>>> GetByList(List<int> ids)
@@ -45,9 +51,17 @@ namespace Business.Concrete
                 categories.Add((await _categoryDal.GetByIdAsync(id))!);
             return new SuccessDataResult<List<Category>>(categories);
         }
-        public Task<IDataResult<Category>> DeleteAsync(int id)
+        public async Task<IDataResult<Category>> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var category = await _categoryDal.GetByIdAsync(id);
+
+            if (category != null)
+            {
+                _categoryDal.Remove(category);
+                await _categoryDal.SaveAsync();
+                return new SuccessDataResult<Category>(category, "Kategori Silindi");
+            }
+            return new ErrorDataResult<Category>("Kategori Bulunamadı");
         }
 
         public IDataResult<List<Category>> GetAll()
@@ -56,14 +70,28 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Category>>(list);
         }
 
-        public Task<IDataResult<Category>> GetById(int id)
+        public async Task<IDataResult<Category>> GetById(int id)
         {
-            throw new NotImplementedException();
+            var category = await _categoryDal.GetByIdAsync(id);
+
+            if (category != null)
+            {
+                return new SuccessDataResult<Category>(category);
+            }
+            return new ErrorDataResult<Category>("Category Bulunamadı");
         }
 
-        public Task<IDataResult<Category>> UpdateAsync(CategoryForUpdateDto dto)
+        public async Task<IDataResult<Category>> UpdateAsync(CategoryForUpdateDto dto)
         {
-            throw new NotImplementedException();
+            var category = await _categoryDal.GetByIdAsync(dto.Id);
+            if (category != null)
+            {
+                category.Name = dto.Name;
+                _categoryDal.Update(category);
+                await _categoryDal.SaveAsync();
+                return new SuccessDataResult<Category>(category, "Kategori Güncellendi");
+            }
+            return new ErrorDataResult<Category>("Kategori Bulunamadı");
         }
     }
 }

@@ -33,49 +33,89 @@ namespace Business.Concrete
             return new SuccessDataResult<int>(user.Id);
         }
 
-        public async Task<IDataResult<User>> DeleteAsync(int id)
+        public async Task<IResult> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var user = await _userDal.GetByIdAsync(id);
+            if (user != null)
+            {
+                _userDal.Remove(user);
+                await _userDal.SaveAsync();
+                return new SuccessResult("User Silindi");
+            }
+            return new ErrorResult("User Bulunamadı");
+
         }
 
         public async Task<IDataResult<User>> UpdateAsync(UserForUpdateDto dto)
         {
-            throw new NotImplementedException();
+            var user = await _userDal.GetByIdAsync(dto.Id);
+
+            if (user != null)
+            {
+                user.FirstName = dto.FirstName;
+                user.LastName = dto.LastName;
+                user.Email = dto.Email;
+                _userDal.Update(user);
+                await _userDal.SaveAsync();
+                return new SuccessDataResult<User>(user, "User Güncellendi");
+            }
+            return new ErrorDataResult<User>("User Bulunamadı");
         }
 
         public async Task<IDataResult<User>> GetUserByMailWithRolesAsync(string? mail)
         {
             var user = await _userDal.Table.Include(x => x.Roles)
                 .FirstOrDefaultAsync(x => x.Email == mail);
-            return new SuccessDataResult<User>(user);
+            if (user != null)
+            {
+                return new SuccessDataResult<User>(user);
+            }
+            return new ErrorDataResult<User>("User Bulunamadı");
         }
+
 
         public async Task<IDataResult<User>> GetUserByMailAsync(string mail)
         {
             var user = await _userDal.Table.FirstOrDefaultAsync(x => x.Email == mail);
-            return new SuccessDataResult<User>(user);
+            if (user != null)
+            {
+                return new SuccessDataResult<User>(user);
+            }
+            return new ErrorDataResult<User>("User Bulunamadı");
         }
+
 
         public async Task<IDataResult<User>> GetUserByIdWithRolesAsync(int id)
         {
             var user = await _userDal.Table.Include(x => x.Roles)
                 .FirstOrDefaultAsync(x => x.Id == id);
-            return new SuccessDataResult<User>(user);
+            if (user != null)
+            {
+                return new SuccessDataResult<User>(user);
+            }
+            return new ErrorDataResult<User>("User Bulunamadı");
+
         }
 
         public IDataResult<List<User>> GetAll()
         {
-            throw new NotImplementedException();
+            var list = _userDal.GetAll().ToList();
+            if (list.Count > 0)
+            {
+                return new SuccessDataResult<List<User>>(list);
+            }
+            return new ErrorDataResult<List<User>>("User Bulunamadı");
         }
 
         public async Task<IDataResult<User>> GetById(int id)
         {
-            throw new NotImplementedException();
-        }
+            var user = await _userDal.GetByIdAsync(id);
 
-        public async Task<IDataResult<User>> GetWithRolesById(int id)
-        {
-            throw new NotImplementedException();
+            if (user != null)
+            {
+                return new SuccessDataResult<User>(user);
+            }
+            return new ErrorDataResult<User>("User Bulunamadı");
         }
 
         public List<Claim> GetClaims(User user, List<Role> roles)

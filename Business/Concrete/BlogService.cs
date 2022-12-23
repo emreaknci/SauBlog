@@ -41,9 +41,17 @@ namespace Business.Concrete
             return new SuccessDataResult<Blog>(newBlog);
         }
 
-        public async Task<IDataResult<Blog>> DeleteAsync(int id)
+        public async Task<IResult> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var blog = await _blogDal.GetByIdAsync(id);
+
+            if (blog!=null)
+            {
+                _blogDal.Remove(blog);
+                await _blogDal.SaveAsync();
+                return new SuccessResult("Blog Silindi");
+            }
+            return new ErrorResult("Blog Bulunamadı");
         }
 
         public async Task<IDataResult<Blog>> UpdateAsync(BlogForUpdateDto dto)
@@ -75,12 +83,22 @@ namespace Business.Concrete
         public IDataResult<List<Blog>> GetAll()
         {
             var list = _blogDal.GetAll().ToList();
-            return new SuccessDataResult<List<Blog>>(list);
+            if (list.Count > 0)
+            {
+                return new SuccessDataResult<List<Blog>>(list);
+            }
+            else return new ErrorDataResult<List<Blog>>("Blog Bulunamadı");
         }
 
         public async Task<IDataResult<Blog>> GetById(int id)
         {
-            throw new NotImplementedException();
+            var blog = await _blogDal.GetByIdAsync(id);
+
+            if (blog != null)
+            {
+                return new SuccessDataResult<Blog>(blog);
+            }
+            return new ErrorDataResult<Blog>("Blog Bulunamadı");
         }
 
         public async Task<IDataResult<Blog>> GetByIdWithCategories(int id)

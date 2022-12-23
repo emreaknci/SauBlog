@@ -12,7 +12,7 @@ namespace Business.Abstract
     public interface IBlogService
     {
         Task<IDataResult<Blog>> AddAsync(BlogForCreateDto dto);
-        Task<IDataResult<Blog>> DeleteAsync(int id);
+        Task<IResult> DeleteAsync(int id);
         Task<IDataResult<Blog>> UpdateAsync(BlogForUpdateDto dto);
 
         IDataResult<List<Blog>> GetAll();
