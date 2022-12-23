@@ -62,5 +62,56 @@ namespace Core.Utilities.Security.JWT
             );
             return jwt;
         }
+
+        public string GenerateResetPasswordToken(string userId, string resetPasswordToken)
+        {
+            // Token oluşturma işlemini gerçekleştirin.
+            // Örneğin, tarih ve saat bilgilerini kullanarak bir token oluşturun.
+            // Token, verilen userId ve resetPasswordToken değerlerini içerecektir.
+            var currentDate = DateTime.UtcNow;
+            var expirationDate = currentDate.AddDays(1);
+
+            var token = $"{userId}:{resetPasswordToken}:{currentDate.Ticks}:{expirationDate.Ticks}";
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
+        }
+        public ResetPasswordToken ValidateResetPasswordToken(string token)
+        {
+            // Token doğrulama işlemini gerçekleştirin.
+            // Örneğin, token'ın oluşturulduğu tarih ve saat bilgilerine bakarak token'ın geçerliliğini doğrulayabilirsiniz.
+            // Token geçerli ise, token içindeki bilgileri döndürün.
+            // Token geçersiz ise, null değerini döndürün.
+            var tokenBytes = Convert.FromBase64String(token);
+            var tokenString = Encoding.UTF8.GetString(tokenBytes);
+            var tokenValues = tokenString.Split(':');
+
+            if (tokenValues.Length != 4)
+            {
+                return null;
+            }
+
+            var userId = tokenValues[0];
+            var resetPasswordToken = tokenValues[1];
+            var currentTicks = long.Parse(tokenValues[2]);
+            var expirationTicks = long.Parse(tokenValues[3]);
+
+            var currentDate = new DateTime(currentTicks);
+            var expirationDate = new DateTime(expirationTicks);
+
+            if (currentDate > DateTime.UtcNow || expirationDate < DateTime.UtcNow)
+            {
+                return null;
+            }
+
+            // Token geçerli. Token içindeki bilgileri döndürün.
+            ResetPasswordToken resetToken = new()
+            {
+                Token = resetPasswordToken,
+                UserId = Convert.ToInt32(userId),
+                ExpirationDate = expirationDate
+            };
+
+
+            return resetToken;
+        }
     }
 }

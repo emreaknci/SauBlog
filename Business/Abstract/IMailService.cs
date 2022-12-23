@@ -13,5 +13,6 @@ namespace Business.Abstract
         Task SendMailAsync(string to, string subject, string body, bool isBodyHtml = true);
         Task SendMailAsync(string[] tos, string subject, string body, bool isBodyHtml = true);
         Task SendRegistrationCompletedMailAsync(string to, string newUserName);
+        Task SendResetPasswordMailAsync(string to, string userName, string resetPasswordToken);
     }
 }

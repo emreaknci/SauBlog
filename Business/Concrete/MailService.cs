@@ -55,5 +55,16 @@ namespace Business.Concrete
             #endregion
             await SendMailAsync(to, "Thanks For Registration!", mailBody);
         }
+
+        public async Task SendResetPasswordMailAsync(string to, string userName, string resetPasswordToken)
+        {
+            string mailBody = "";
+            #region mailBody
+            mailBody =
+              $"<!-- <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n<html> -->\r\n<head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html charset=UTF-8\" />\r\n<link href=\"https://fonts.googleapis.com/css2?family=Roboto&display=swap\" rel=\"stylesheet\">\r\n<style>a,a:link,a:visited{{text-decoration:none;color:#00788a}}a:hover{{text-decoration:underline}}h2,h2 a,h2 a:visited,h3,h3 a,h3 a:visited,h4,h5,h6,.t_cht{{color:#000!important}}.ExternalClass p,.ExternalClass span,.ExternalClass font,.ExternalClass td{{line-height:100%}}.ExternalClass{{width:100%}}</style>\r\n</head>\r\n<body style=\"font-size:1.25rem;font-family:'Roboto',sans-serif;padding-left:20px;padding-right:20px;padding-top:20px;padding-bottom:20px;background-color:#fafafa;width:75%;max-width:1280px;min-width:600px;margin-right:auto;margin-left:auto\">\r\n<table cellpadding=\"12\" cellspacing=\"0\" width=\"100%\" bgcolor=\"#FAFAFA\" style=\"border-collapse:collapse;margin:auto\">\r\n<thead>\r\n<tr>\r\n<td style=\"padding-left:0;padding-right:0\">\r\n<img src=\"https://uploads-ssl.webflow.com/5e96c040bda7162df0a5646d/5f91d2a4d4d57838829dcef4_image-blue%20waves%402x.png\" style=\"width:80%;max-width:750px\" />\r\n</td>\r\n</tr>\r\n<tr>\r\n<td style=\"text-align:center;padding-bottom:20px\">\r\n<img src=\"https://uploads-ssl.webflow.com/5e96c040bda7162df0a5646d/5f8ebf5c6621845cd7ca4201_Logo-color.svg\" style=\"max-width:250px;width:30%\" />\r\n</td>\r\n</tr>\r\n</thead>\r\n<tbody>\r\n<tr>\r\n<td style=\"padding:50px;background-color:#fff;max-width:660px\">\r\n<table width=\"100%\" style=\"\">\r\n<tr>\r\n<td style=\"text-align:center\">\r\n<h1 style=\"font-size:30px;color:#202225;margin-top:0\">Hello {userName}</h1>\r\n<p style=\"font-size:18px;margin-bottom:30px;color:#202225;max-width:60ch;margin-left:auto;margin-right:auto\">A request has been received to change the password for your account</p>\r\n<a href=\"https://localhost:7144/Auth/ResetPassword/{resetPasswordToken}\" style=\"background-color:#1755f5;color:#fff;padding:8px 24px;border-radius:4px;border-style:solid;border-color:#1755f5;font-size:14px;text-decoration:none;cursor:pointer\">Reset Password </a>\r\n</td>\r\n</tr>\r\n</table>\r\n</td>\r\n</tr>\r\n</tbody>\r\n<tfoot>\r\n<tr>\r\n<td style=\"text-align:center;padding-top:30px\">\r\n<table>\r\n<tr>\r\n<td><img src=\"https://uploads-ssl.webflow.com/5e96c040bda7162df0a5646d/5f91d2a4d80f5ebbf2ec0119_image-hand%20with%20wrench%402x.png\" style=\"width:100px\" /></td>\r\n<td>\r\n<td style=\"text-align:left;color:#b6b6b6;font-size:18px;padding-left:12px\">If you didn’t request this, you can ignore this email or let us know. Your password won’t change until you create a new password.</td>\r\n</td>\r\n</tr>\r\n</table>\r\n</td>\r\n</tr>\r\n</tfoot>\r\n</table>\r\n</body>";
+            #endregion
+            await SendMailAsync(to, "Password Reset Request", mailBody);
+
+        }
     }
 }

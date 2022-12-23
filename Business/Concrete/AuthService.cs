@@ -52,7 +52,7 @@ namespace Business.Concrete
         {
             HashingHelper.CreatePasswordHash(dto.Password!, out var hash, out var salt);
             var userRoleResult = await _roleService.GetByName("User");
-           
+
             var user = new User
             {
                 Email = dto.Email,
@@ -85,6 +85,35 @@ namespace Business.Concrete
                 UserId = result.Data
             });
             return new SuccessResult("Yazar Kaydı Oluşturuldu");
+        }
+
+        public async Task<IResult> PasswordResetAsync(string email)
+        {
+            var user = _userService.GetUserByMailAsync(email).Result.Data;
+            if (user == null) return new ErrorResult("Kullanıcı bulunamadı!");
+
+            var resetPasswordToken = Guid.NewGuid().ToString();
+            var resetPasswordTokenExpiration = DateTime.UtcNow.AddDays(1);
+            var token = _tokenHandler.GenerateResetPasswordToken(user.Id.ToString(), resetPasswordToken);
+
+            var result = await _userService.AddResetPasswordToken(user, token);
+            if (!result.Success)
+                return new ErrorResult();
+
+            await _mailService.SendResetPasswordMailAsync(email, $"{user.FirstName} {user.LastName}", token);
+            return new SuccessResult("Şifre sıfırlama maili gönderildi.");
+        }
+
+        public async Task<IDataResult<ResetPasswordToken>> VerifyResetTokenAsync(string resetToken)
+        {
+            var token = _tokenHandler.ValidateResetPasswordToken(resetToken);
+            if (token == null)
+                return new ErrorDataResult<ResetPasswordToken>("Token doğrulanamadı.Süresi dolmuş olabilir.");
+            var userCurrentToken = _userService.GetById(token.UserId).Result.Data.ResetPasswordToken;
+            if (string.IsNullOrEmpty(userCurrentToken) || userCurrentToken != resetToken)
+                return new ErrorDataResult<ResetPasswordToken>("Bu link üzerinden şifre daha önce değiştirilmiş.");
+
+            return new SuccessDataResult<ResetPasswordToken>(token);
         }
     }
 }

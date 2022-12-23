@@ -12,7 +12,7 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private IAuthService _authService;
+        private readonly IAuthService _authService;
 
         public AuthController(IAuthService authService)
         {
@@ -22,24 +22,14 @@ namespace WebAPI.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> RegisterForUser(UserForRegisterDto dto)
         {
-          var result= await _authService.RegisterForUserAsync(dto);
-          if (result.Success)
-          {
-              return Ok(result);
-          }
-          return BadRequest();
-        }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> Login(UserForLoginDto dto)
-        {
-            var result = await _authService.LoginAsync(dto);
+            var result = await _authService.RegisterForUserAsync(dto);
             if (result.Success)
             {
-                var token = _authService.CreateAccessToken(result.Data);
-                return Ok(token.Data);
+                return Ok(result);
             }
             return BadRequest();
         }
+
 
         [HttpPost("[action]")]
         public async Task<IActionResult> RegisterForWriter(WriterForRegisterDto dto)
@@ -53,12 +43,22 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles = "User")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User")]
         public IActionResult denemeYetki()
         {
             return Ok();
         }
 
-        
+        [HttpPost("[action]")]
+        public IActionResult SendResetPassword(string email)
+        {
+            var result = _authService.PasswordResetAsync(email).Result;
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
     }
 }

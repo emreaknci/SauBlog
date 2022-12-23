@@ -20,6 +20,9 @@ namespace WebUI.Controllers
                 case 404:
                     return RedirectToAction("Error404");
                     break;
+                case 405:
+                    return RedirectToAction("Error405");
+                    break;
             }
             return View("Error");
         }
@@ -27,8 +30,11 @@ namespace WebUI.Controllers
         [HttpGet("404")]
         public IActionResult Error404()
         {
-            _toastNotification.AddWarningToastMessage("");
-
+            return View();
+        }
+        [HttpGet("405")]
+        public IActionResult Error405()
+        {
             return View();
         }
     }

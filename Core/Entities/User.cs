@@ -18,6 +18,7 @@ namespace Core.Entities
         public string? Email { get; set; }
         public byte[]? PasswordHash { get; set; }
         public byte[]? PasswordSalt { get; set; }
+        public string? ResetPasswordToken { get; set; }
         public virtual ICollection<Role>? Roles { get; set; }
 
     }

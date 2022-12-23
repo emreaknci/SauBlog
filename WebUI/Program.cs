@@ -20,7 +20,7 @@ builder.Services.AddMvcCore().AddNToastNotifyToastr(new ToastrOptions()
 {
     ProgressBar = true,
     TimeOut = 3000,
-    PositionClass =ToastPositions.TopLeft 
+    PositionClass = ToastPositions.TopLeft
 });
 builder.Services.AddCoreService();
 builder.Services.AddBusinessService();
@@ -32,7 +32,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         opts.Cookie.Name = $".sauBlog.auth";
         opts.AccessDeniedPath = "/Auth/AccessDenied";
-        opts.LogoutPath= "/Auth/LogOut";
+        opts.LogoutPath = "/Auth/LogOut";
         opts.LoginPath = "/Auth/LogIn";
         opts.SlidingExpiration = true;
     }).AddJwtBearer(options =>

@@ -1,7 +1,10 @@
-﻿namespace Core.Utilities.Results
+﻿using System.Text.Json.Serialization;
+
+namespace Core.Utilities.Results
 {
     public class Result : IResult
     {
+        [JsonConstructor]
         public Result(bool success, string message) : this(success)
         {
             Message = message;

@@ -1,4 +1,7 @@
-﻿using System.Security.Claims;
+﻿using System.Net.Http;
+using System.Reflection.Metadata;
+using System.Security.Claims;
+using System.Text;
 using Business.Abstract;
 using Business.Concrete;
 using Core.Entities;
@@ -12,7 +15,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NToastNotify;
+using WebUI.Models;
+using IResult = Core.Utilities.Results.IResult;
 
 namespace WebUI.Controllers
 {
@@ -32,6 +39,7 @@ namespace WebUI.Controllers
         {
             return View();
         }
+
         [HttpGet]
         public IActionResult LogIn(string? returnUrl)
         {
@@ -98,5 +106,75 @@ namespace WebUI.Controllers
             return View(dto);
         }
 
+        [HttpGet]
+        public PartialViewResult ForgotPassword()
+        {
+            return PartialView();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            using HttpClient httpClient = new HttpClient();
+            var response = httpClient.PostAsync($"https://localhost:7144/api/Auth/SendResetPassword?email={email}", null).Result;
+            var content = await response.Content.ReadAsStringAsync();
+            // Deserialize the JSON response
+            var responseResult = JsonConvert.DeserializeObject<Response>(content);
+            if (response.IsSuccessStatusCode)
+            {
+                // Read the response content
+
+                if (responseResult!.Success)
+                {
+                    _toastNotification.AddSuccessToastMessage(responseResult.Message);
+                    return RedirectToAction("Index", "Home");
+                }
+                _toastNotification.AddErrorToastMessage(responseResult.Message);
+            }
+            else
+            {
+                _toastNotification.AddErrorToastMessage(responseResult.Message);
+            }
+            return RedirectToAction("LogIn", "Auth");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ResetPassword(string? resetPasswordToken)
+        {
+            ViewContext context = new ViewContext();
+            resetPasswordToken = (string)RouteData.Values["id"]!;
+
+            var result = await _authService.VerifyResetTokenAsync(resetPasswordToken!);
+            if (!result.Success)
+            {
+                _toastNotification.AddErrorToastMessage(result.Message);
+                return RedirectToAction("Index", "Home");
+            }
+            ViewBag.userId = result.Data.UserId;
+
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+                return View(viewModel);
+            var result = await _userService.ChangePasswordAsync(viewModel.UserId, viewModel.Password);
+            if (!result.Success)
+                _toastNotification.AddErrorToastMessage(result.Message);
+            _toastNotification.AddSuccessToastMessage(result.Message);
+
+            return RedirectToAction("Index", "Home");
+        }
+    }
+
+    class Response
+    {
+        public Response(bool success, string message)
+        {
+            Success = success;
+            Message = message;
+        }
+        public bool Success { get; set; }
+        public string Message { get; set; }
     }
 }

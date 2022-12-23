@@ -33,6 +33,14 @@ namespace Business.Concrete
             return new SuccessDataResult<int>(user.Id);
         }
 
+        public async Task<IResult> AddResetPasswordToken(User user, string resetPasswordToken)
+        {
+            user.ResetPasswordToken = resetPasswordToken;
+            _userDal.Update(user);
+            await _userDal.SaveAsync();
+            return new SuccessResult();
+        }
+
         public async Task<IDataResult<User>> DeleteAsync(int id)
         {
             throw new NotImplementedException();
@@ -41,6 +49,21 @@ namespace Business.Concrete
         public async Task<IDataResult<User>> UpdateAsync(UserForUpdateDto dto)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IResult> ChangePasswordAsync(int userId, string newPassword)
+        {
+            var user = await _userDal.GetByIdAsync(userId);
+            if (user == null)
+                return new ErrorResult("Kullanıcı bulunamadı");
+
+            HashingHelper.CreatePasswordHash(newPassword, out var hash, out var salt);
+            user.PasswordHash = hash;
+            user.PasswordSalt = salt;
+            user.ResetPasswordToken = null;
+            _userDal.Update(user);
+            await _userDal.SaveAsync();
+            return new SuccessResult("Şifre değişikliği tamamlandı!");
         }
 
         public async Task<IDataResult<User>> GetUserByMailWithRolesAsync(string? mail)

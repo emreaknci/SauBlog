@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(BlogDbContext))]
-    [Migration("20221216212138_mig_1")]
-    partial class mig_1
+    [Migration("20221223132159_Mig_1")]
+    partial class Mig_1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -105,6 +105,9 @@ namespace DataAccess.Migrations
 
                     b.Property<byte[]>("PasswordSalt")
                         .HasColumnType("bytea");
+
+                    b.Property<string>("ResetPasswordToken")
+                        .HasColumnType("text");
 
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");

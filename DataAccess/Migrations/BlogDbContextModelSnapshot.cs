@@ -104,6 +104,9 @@ namespace DataAccess.Migrations
                     b.Property<byte[]>("PasswordSalt")
                         .HasColumnType("bytea");
 
+                    b.Property<string>("ResetPasswordToken")
+                        .HasColumnType("text");
+
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
 
@@ -129,7 +132,7 @@ namespace DataAccess.Migrations
                     b.Property<DateOnly>("CreatedDate")
                         .HasColumnType("date");
 
-                    b.Property<string>("CurrentImagePath")
+                    b.Property<string>("ImagePath")
                         .HasColumnType("text");
 
                     b.Property<bool>("Status")

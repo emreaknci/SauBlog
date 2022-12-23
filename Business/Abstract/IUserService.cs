@@ -13,8 +13,10 @@ namespace Business.Abstract
     public interface IUserService
     {
         Task<IDataResult<int>> AddAsync(User user);
+        Task<IResult> AddResetPasswordToken(User user, string resetPasswordToken);
         Task<IDataResult<User>> DeleteAsync(int id);
         Task<IDataResult<User>> UpdateAsync(UserForUpdateDto dto);
+        Task<IResult> ChangePasswordAsync(int userId,string newPassword);
         Task<IDataResult<User>> GetUserByMailWithRolesAsync(string? mail);
         Task<IDataResult<User>> GetUserByMailAsync(string mail);
         IDataResult<List<User>> GetAll();

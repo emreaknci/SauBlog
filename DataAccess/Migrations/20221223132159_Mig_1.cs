@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DataAccess.Migrations
 {
-    public partial class mig_1 : Migration
+    public partial class Mig_1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -53,6 +53,7 @@ namespace DataAccess.Migrations
                     Email = table.Column<string>(type: "text", nullable: true),
                     PasswordHash = table.Column<byte[]>(type: "bytea", nullable: true),
                     PasswordSalt = table.Column<byte[]>(type: "bytea", nullable: true),
+                    ResetPasswordToken = table.Column<string>(type: "text", nullable: true),
                     CreatedDate = table.Column<DateOnly>(type: "date", nullable: false),
                     UpdatedDate = table.Column<DateOnly>(type: "date", nullable: true),
                     Status = table.Column<bool>(type: "boolean", nullable: false)
