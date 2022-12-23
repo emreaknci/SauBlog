@@ -12,11 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(BlogDbContext))]
-<<<<<<<< HEAD:DataAccess/Migrations/20221223132159_Mig_1.Designer.cs
-    [Migration("20221223132159_Mig_1")]
-    partial class Mig_1
-========
-    [Migration("20221223073848_mig_1")]
+    [Migration("20221216212138_mig_1")]
     partial class mig_1
 >>>>>>>> eb327a490015d15d13f6e84d9cd3f73a6a95c5e8:DataAccess/Migrations/20221223073848_mig_1.Designer.cs
     {

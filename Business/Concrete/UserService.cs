@@ -33,60 +33,16 @@ namespace Business.Concrete
             return new SuccessDataResult<int>(user.Id);
         }
 
-<<<<<<< HEAD
-        public async Task<IResult> AddResetPasswordToken(User user, string resetPasswordToken)
-        {
-            user.ResetPasswordToken = resetPasswordToken;
-            _userDal.Update(user);
-            await _userDal.SaveAsync();
-            return new SuccessResult();
-        }
-
         public async Task<IDataResult<User>> DeleteAsync(int id)
-=======
-        public async Task<IResult> DeleteAsync(int id)
->>>>>>> eb327a490015d15d13f6e84d9cd3f73a6a95c5e8
         {
-            var user = await _userDal.GetByIdAsync(id);
-            if (user != null)
-            {
-                _userDal.Remove(user);
-                await _userDal.SaveAsync();
-                return new SuccessResult("User Silindi");
-            }
-            return new ErrorResult("User Bulunamadı");
+            throw new NotImplementedException();
+        }
 
         }
 
         public async Task<IDataResult<User>> UpdateAsync(UserForUpdateDto dto)
         {
-            var user = await _userDal.GetByIdAsync(dto.Id);
-
-            if (user != null)
-            {
-                user.FirstName = dto.FirstName;
-                user.LastName = dto.LastName;
-                user.Email = dto.Email;
-                _userDal.Update(user);
-                await _userDal.SaveAsync();
-                return new SuccessDataResult<User>(user, "User Güncellendi");
-            }
-            return new ErrorDataResult<User>("User Bulunamadı");
-        }
-
-        public async Task<IResult> ChangePasswordAsync(int userId, string newPassword)
-        {
-            var user = await _userDal.GetByIdAsync(userId);
-            if (user == null)
-                return new ErrorResult("Kullanıcı bulunamadı");
-
-            HashingHelper.CreatePasswordHash(newPassword, out var hash, out var salt);
-            user.PasswordHash = hash;
-            user.PasswordSalt = salt;
-            user.ResetPasswordToken = null;
-            _userDal.Update(user);
-            await _userDal.SaveAsync();
-            return new SuccessResult("Şifre değişikliği tamamlandı!");
+            throw new NotImplementedException();
         }
 
         public async Task<IDataResult<User>> GetUserByMailWithRolesAsync(string? mail)
@@ -126,12 +82,7 @@ namespace Business.Concrete
 
         public IDataResult<List<User>> GetAll()
         {
-            var list = _userDal.GetAll().ToList();
-            if (list.Count > 0)
-            {
-                return new SuccessDataResult<List<User>>(list);
-            }
-            return new ErrorDataResult<List<User>>("User Bulunamadı");
+            throw new NotImplementedException();
         }
 
         public async Task<IDataResult<User>> GetById(int id)
