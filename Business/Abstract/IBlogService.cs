@@ -20,5 +20,6 @@ namespace Business.Abstract
         IDataResult<List<Blog>> GetLastBlogs(int count);
         Task<IDataResult<Blog>> GetById(int id);
         Task<IDataResult<Blog>> GetByIdWithCategories(int id);
+        Task<IDataResult<Blog>> GetByIdWithCommentsAsync(int id);
     }
 }

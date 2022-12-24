@@ -139,5 +139,16 @@ namespace Business.Concrete
             }
             return new ErrorDataResult<List<Blog>>("Blog Bulunamadı");
         }
+
+        public async Task<IDataResult<Blog>> GetByIdWithCommentsAsync(int id)
+        {
+            var blog = await _blogDal.Table.Include(b=>b.Comments!).ThenInclude(b=>b.Writer).FirstOrDefaultAsync(b=> b.Id==id);
+
+            if (blog != null)
+            {
+                return new SuccessDataResult<Blog>(blog);
+            }
+            return new ErrorDataResult<Blog>("Blog Bulunamadı");
+        }
     }
 }

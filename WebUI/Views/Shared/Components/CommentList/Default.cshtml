@@ -1,6 +1,9 @@
-﻿@{
+﻿@using Entities.Concrete;
+@{
     string userImg = "https://e7.pngegg.com/pngimages/178/595/png-clipart-user-profile-computer-icons-login-user-avatars-monochrome-black.png";
 }
+@model List<Comment>
+
 <div class="container w-100">
     <h6>Yorumlar</h6>
 
@@ -43,24 +46,27 @@
         </form>
     }
 
-
-    @for (int i = 0; i < 4; i++)
+    @if (Model != null)
     {
-        <div class="card m-3">
-            <div class="row">
-                <div class="col-md-2 m-auto text-center p-3">
-                    <img class="w-75 rounded rounded-circle" src="@userImg" alt="">
-                <h5 class="card-title">John Doe</h5>
+        @foreach (var item in Model)
+        {
+            <div class="card m-3">
+                <div class="row">
+                    <div class="col-md-2 m-auto text-center p-3">
+                        <img class="w-75 rounded rounded-circle" src="@userImg" alt="">
+                        <h5 class="card-title">@item.Writer.NickName</h5>
 
-            </div>
-            <div class="col-md">
-                <div class="card-body">
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                    <div class="col-md">
+                        <div class="card-body">
+                            <p class="card-text">@item.Content</p>
+                            <p class="card-text"><small class="text-muted">@item.CreatedDate</small></p>
 
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+        }
+
     }
 </div>
