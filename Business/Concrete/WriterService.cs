@@ -68,6 +68,17 @@ namespace Business.Concrete
             return new ErrorDataResult<Writer>("Yazar Bulunamadı");
         }
 
+        public async Task<IDataResult<Writer>> GetByUserId(int userId)
+        {
+            var writer = await _writerDal.GetAsync(u=>u.UserId==userId);
+
+            if (writer != null)
+            {
+                return new SuccessDataResult<Writer>(writer);
+            }
+            return new ErrorDataResult<Writer>(null,"Yazar Bulunamadı");
+        }
+
         public async Task<IDataResult<Writer>> UpdateAsync(WriterForUpdateDto dto)
         {
 

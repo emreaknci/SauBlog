@@ -51,8 +51,6 @@ namespace Business.Concrete
         public async Task<IDataResult<int>> RegisterForUserAsync(UserForRegisterDto dto)
         {
             HashingHelper.CreatePasswordHash(dto.Password!, out var hash, out var salt);
-            var userRoleResult = await _roleService.GetByName("User");
-
             var user = new User
             {
                 Email = dto.Email,
@@ -61,12 +59,18 @@ namespace Business.Concrete
                 PasswordHash = hash,
                 PasswordSalt = salt,
             };
-            user.Roles!.Add(userRoleResult.Data!);
-            var result = await _userService.AddAsync(user);
+            if (CheckIfEmailPrivate(dto.Email).Success)
+            {
+                var adminRole = await _roleService.GetByName("Admin");
+                user.Roles!.Add(adminRole.Data!);
+            }
+            var userRole = await _roleService.GetByName("User");
+            user.Roles!.Add(userRole.Data!);
+            var addResult = await _userService.AddAsync(user);
 
-            if (!result.Success) return new ErrorDataResult<int>();
+            if (!addResult.Success) return new ErrorDataResult<int>();
             await _mailService.SendRegistrationCompletedMailAsync(user.Email!, $"{user.FirstName} {user.LastName}");
-            return new SuccessDataResult<int>(result.Data);
+            return new SuccessDataResult<int>(addResult.Data);
         }
 
         public async Task<IResult> RegisterForWriterAsync(WriterForRegisterDto dto)
@@ -114,6 +118,13 @@ namespace Business.Concrete
                 return new ErrorDataResult<ResetPasswordToken>("Bu link üzerinden şifre daha önce değiştirilmiş.");
 
             return new SuccessDataResult<ResetPasswordToken>(token);
+        }
+
+        private IResult CheckIfEmailPrivate(string email)
+        {
+            if (email == "b201210101@ogr.sakarya.edu.tr" || email == "b201210023@ogr.sakarya.edu.tr")
+                return new SuccessResult();
+            return new ErrorResult();
         }
     }
 }

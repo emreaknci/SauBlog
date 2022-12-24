@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Business.Abstract;
 using Core.Entities;
 using Core.Extensions;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using DataAccess.Abstract;
@@ -27,7 +28,11 @@ namespace Business.Concrete
 
         public async Task<IDataResult<int>> AddAsync(User user)
         {
-
+            var result= BusinessRules.Run(CheckIfEmailExist(user.Email));
+            if (result != null)
+            {
+                return new ErrorDataResult<int>(result.Message);
+            }
             await _userDal.AddAsync(user);
             await _userDal.SaveAsync();
 
@@ -154,5 +159,15 @@ namespace Business.Concrete
         }
 
 
+
+        private IResult CheckIfEmailExist(string email)
+        {
+            var result = _userDal.GetAll(p => p.Email == email).Any();
+            if (result)
+            {
+                return new ErrorResult("Bu email daha önce kullanılmış");
+            }
+            return new SuccessResult();
+        }
     }
 }

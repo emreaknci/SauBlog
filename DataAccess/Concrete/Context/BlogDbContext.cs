@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Entities;
+using Core.Utilities.Security.Hashing;
 using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,13 +28,13 @@ namespace DataAccess.Concrete.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var date = new DateOnly(2022, 1, 1);
+            HashingHelper.CreatePasswordHash("sau", out var hash, out var salt);
 
             List<Role> roles = new()
             {
                 new() { Id = 1, Name = "Admin", Status = true, CreatedDate = date },
                 new() { Id = 2, Name = "User", Status = true, CreatedDate = date},
             }; modelBuilder.Entity<Role>().HasData(roles);
-
             List<Category> categories = new()
             {
                 new() { Id = 1, Name = "Technology", Status = true, CreatedDate = date },
@@ -46,7 +47,7 @@ namespace DataAccess.Concrete.Context
                 new() { Id = 8, Name = "Lifestyle", Status = true, CreatedDate = date },
                 new() { Id = 9, Name = "Fashion", Status = true, CreatedDate = date },
             }; modelBuilder.Entity<Category>().HasData(categories);
-
+           
             base.OnModelCreating(modelBuilder);
         }
 
