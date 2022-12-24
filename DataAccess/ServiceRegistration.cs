@@ -25,6 +25,7 @@ namespace DataAccess
             services.AddTransient<IWriterDal, WriterDal>();
             services.AddTransient<ICategoryDal, CategoryDal>();
             services.AddTransient<IBlogDal, BlogDal>();
+            services.AddTransient<ICommentDal, CommentDal>();
             return services;
         }
     }
