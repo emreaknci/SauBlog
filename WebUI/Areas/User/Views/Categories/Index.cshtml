@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+}
+
+@model List<Entities.Concrete.Category>
+<div class="col-12">
+    @if (Model != null)
+    {
+        <div class="ibox ">
+            <div class="ibox-title">
+                <h5>Hover Table  </h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li>
+                            <a href="#" class="dropdown-item">Config option 1</a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item">Config option 2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Created Date</th>
+                            <th>Updated Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <th>@item.Id</th>
+                                <td>@item.Name</td>
+                                @if (item.Status)
+                                {
+                                    <td><div class="rounded bg-success">Aktif</div></td>
+                                }
+                                else
+                                {
+                                    <td><div class="bg-danger">Pasif</div></td>
+                                }
+                                <td>@item.CreatedDate</td>
+                                <td>@item.UpdatedDate</td>
+                                <td>Blogları görüntüle</td>
+                                <td>
+                                    <div class="row">Durum Değiştir</div>
+                                    <div class="row">Güncelle</div>
+                                    <div class="row">Sil</div>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    }
+    else
+    {
+        <span>
+            Kategori Bulunamadı
+        </span>
+    }
+</div>
+
+
+<script src="~/userareas/js/jquery-3.1.1.min.js"></script>
+<script src="~/userareas/js/popper.min.js"></script>
+<script src="~/userareas/js/bootstrap.js"></script>
