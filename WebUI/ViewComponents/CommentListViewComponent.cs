@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Entities.Concrete;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebUI.ViewComponents;
 
 public class CommentListViewComponent : ViewComponent
 {
-    public IViewComponentResult Invoke(int blogId = 1)
+    public IViewComponentResult Invoke(List<Comment> comments)
     {
-        return View();
+        return View(comments);
     }
 }

@@ -31,9 +31,11 @@ namespace WebUI.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult Detail(int id = 0)
+        public IActionResult Detail(int id)
         {
-            return View();
+            var result = _blogService.GetByIdWithCommentsAsync(id).Result.Data;
+
+            return View(result);
         }
 
 

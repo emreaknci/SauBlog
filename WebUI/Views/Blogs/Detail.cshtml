@@ -1,23 +1,21 @@
-﻿@{
+﻿@using Entities.Concrete;
+@{
     ViewData["Title"] = "Detail";
     Layout = "_Layout";
 }
+@model Blog
 
 <div class="container pt-5">
     <!-- Three columns of text below the carousel -->
     <div class="row">
         <div class="col-lg-9">
             <div class="card border-0 mb-3">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxKMuDTeQiUr9Gthk97A-69scwhaogzrqypB10Tiy&s" style="height: 50%; height: 50%" class="card-img-top mx-auto" alt="...">
+                <img src="~/Images/@Model.ImagePath" style="height: 50%; height: 50%" class="card-img-top mx-auto" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title">Card title Card title Card title</h5>
+                    <h5 class="card-title">@Model.Title</h5>
                     <p class="card-text">
-                        Some representative placeholder content for the three columns of text below the carousel. This is the first column.
-                        Some representative placeholder content for the three columns of text below the carousel. This is the first column.Some representative placeholder content for the three columns of text below the carousel. This is the first column.Some representative placeholder content for the three columns of text below the carousel. This is the first column.
-                        Some representative placeholder content for the three columns of text below the carousel. This is the first column.Some representative placeholder content for the three columns of text below the carousel. This is the first column.Some representative placeholder content for the three columns of text below the carousel. This is the first column.
-                        Some representative placeholder content for the three columns of text below the carousel. This is the first column.Some representative placeholder content for the three columns of text below the carousel. This is the first column.Some representative placeholder content for the three columns of text below the carousel. This is the first column.
-                        Some representative placeholder content for the three columns of text below the carousel. This is the first column.Some representative placeholder content for the three columns of text below the carousel. This is the first column.Some representative placeholder content for the three columns of text below the carousel. This is the first column.
-                        Some representative placeholder content for the three columns of text below the carousel. This is the first column.Some representative placeholder content for the three columns of text below the carousel. This is the first column.
+                        @Model.Content
+                        
                     </p>
                     <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                 </div>
