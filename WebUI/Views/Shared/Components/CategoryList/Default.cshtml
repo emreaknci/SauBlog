@@ -1,8 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model List<Entities.Concrete.Category>
+@using WebUI.ViewComponents
+@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.Localization
 
+@inject IViewLocalizer localizer
 <div class="border">
-    <h3 class="pt-3 mx-auto">Kategoriler</h3>
+    <h3 class="pt-3 mx-auto">@localizer["Kategoriler"]</h3>
 
     <div class="mx-auto py-3">
         @foreach (var (item, i) in Model.Select((item, i) => (item, i)))

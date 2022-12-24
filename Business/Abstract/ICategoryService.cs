@@ -18,6 +18,7 @@ namespace Business.Abstract
         Task<IDataResult<Category>> UpdateAsync(CategoryForUpdateDto dto);
 
         IDataResult<List<Category>> GetAll();
+        IDataResult<List<Category>> GetAllWithBlogs();
         Task<IDataResult<Category>> GetById(int id);
         Task<IDataResult<Category>> GetByIdWithBlogs(int id);
         Task<IDataResult<List<Category>>> GetByList(List<int> ids);

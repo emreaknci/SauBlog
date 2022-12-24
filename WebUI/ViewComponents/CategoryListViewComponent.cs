@@ -1,20 +1,23 @@
-﻿using Entities.Concrete;
+﻿using Business.Abstract;
+using Entities.Concrete;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebUI.ViewComponents;
 
 public class CategoryListViewComponent : ViewComponent
 {
+    private readonly ICategoryService _categoryService;
+
+    public CategoryListViewComponent(ICategoryService categoryService)
+    {
+        _categoryService = categoryService;
+    }
+
     public IViewComponentResult Invoke()
-    {List<Category> categories = new()
-        {
-            new() { Id = 1, Name = "A" },
-            new() { Id = 2, Name = "B" },
-            new() { Id = 3, Name = "C" },
-            new() { Id = 4, Name = "D" },
-            new() { Id = 5, Name = "E" },
-            new() { Id = 6, Name = "F" },
-        };
-        return View(categories);
+    {
+        var result = _categoryService.GetAllWithBlogs();
+
+        
+        return View(result.Data);
     }
 }

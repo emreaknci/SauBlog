@@ -93,5 +93,12 @@ namespace Business.Concrete
             }
             return new ErrorDataResult<Category>("Kategori Bulunamadı");
         }
+
+        public IDataResult<List<Category>> GetAllWithBlogs()
+        {
+            var categories = _categoryDal.GetAll().Include(x => x.Blogs).ToList();
+
+            return new SuccessDataResult<List<Category>>(categories);
+        }
     }
 }

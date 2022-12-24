@@ -128,5 +128,16 @@ namespace Business.Concrete
                 return new ErrorDataResult<Blog>();
             return new SuccessDataResult<Blog>(blog);
         }
+
+        public IDataResult<List<Blog>> GetLastBlogs(int count)
+        {
+            var blogs = _blogDal.GetAll().Include(b=>b.Comments).OrderByDescending(b=>b.Id).ToList().Take(count).ToList();
+
+            if (blogs.Count>0)
+            {
+                return new SuccessDataResult<List<Blog>>(blogs);
+            }
+            return new ErrorDataResult<List<Blog>>("Blog Bulunamadı");
+        }
     }
 }
