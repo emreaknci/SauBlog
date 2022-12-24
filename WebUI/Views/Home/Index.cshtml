@@ -1,4 +1,9 @@
-﻿@{
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common
+@using Entities.Concrete
+@model IPagedList<Blog>
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -67,28 +72,124 @@
 <div class="container pt-5">
 
     <!-- Three columns of text below the carousel -->
-    <div class="row">
+    <div class="row" id="blogs">
         <div class="col-lg-9">
-            @await Component.InvokeAsync("BlogList")
+            @*@await Html.PartialAsync("~/Views/Blogs/List.cshtml")*@
+
+            <div class="row">
+                @if (Model.Count > 0)
+                {
+
+                    foreach (var item in Model)
+                    {
+                        <div class="col-lg-6">
+                            <img class="rounded-circle" style="width: 150px; height: 150px" alt="avatar1" src="~/Images/@item.ImagePath" />
+                            <h2 class="fw-normal">@item.Title </h2>
+                            <p>
+                                <a class="btn btn-outline-secondary" asp-route-id="@item.Id" asp-action="Detail" asp-controller="Blogs">View details &raquo;</a>
+                            </p>
+                        </div>
+                    }
+                    @*<nav aria-label="Page navigation example">
+                <ul class="pagination">
+                @if (Model.blogs.HasPrevious)
+                {
+                <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+                </li>
+                }
+
+                @foreach (var item in Model.pageNumberList)
+                {
+                <li class="page-item"><a class="page-link" href="#">@item</a></li>
+                }
+                @if (Model.blogs.HasNext)
+                {
+                <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+                </li>
+
+                }
+                </ul>
+
+
+                </nav>*@
+                    <div class="pull-right">
+                        @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index",
+                    new
+                    {
+                    page
+
+                    }),
+                    new PagedListRenderOptionsBase
+                    {
+                    LiElementClasses = new string[] { "page-item" },
+                    PageClasses = new string[] { "page-link" },
+                    Display = PagedListDisplayMode.IfNeeded
+
+                    })
+                    </div>
+
+                }
+                else
+                {
+                    <div class="offset-3 col-lg-6">
+                        <h2 class="fw-normal">Üzgünüz.. </h2>
+                        <p>
+                            Blog bulunumadı
+                        </p>
+
+                    </div>
+                }
+
+
+            </div>
+
         </div>
         <div class="col-lg-3">
             @await Component.InvokeAsync("BlogsSidebar")
         </div>
     </div><!-- /.row -->
-    <!--todo sayfalama eklenecek-->
-    <nav aria-label="...">
-        <ul class="pagination justify-content-center">
-            <li class="page-item disabled">
-                <span class="page-link">Previous</span>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item active" aria-current="page">
-                <span class="page-link">2</span>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-            </li>
-        </ul>
-    </nav>
+
 </div><!-- /.container -->
+
+@*@section Scripts
+    {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#blogs > div.col-lg-9 > div > nav > ul > li').click(function (e) {
+                e.preventDefault();
+                let pageNumber = $('#blogs > div.col-lg-9 > div > nav > ul > li.page-item.active > a').text();
+                console.log(pageNumber);
+                $('#blogs > div.col-lg-9 > div > nav > ul > li').removeClass('active');
+                $(this).addClass('active');
+                let url1 = "Home/Index?page=" + pageNumber;
+                $.ajax({
+                    contentType: "application/json",
+                    dataType: "json",
+                    type: "Get",
+                    url: url1,
+                    //data: { page: pageNumber },
+                    success: function (func) {
+                        console.log(func);
+                        console.log("başarılı");
+
+                        let w = jQuery.parseJSON(func);
+                        console.log(w);
+                    },
+                    error: function (func) {
+                        console.log(func);
+                        console.log("başarılı değil");
+
+                    }
+                });
+            });
+        });
+
+
+    </script>
+}*@

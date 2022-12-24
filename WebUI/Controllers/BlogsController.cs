@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using WebUI.Models;
+using X.PagedList;
 
 namespace WebUI.Controllers
 {
@@ -112,6 +113,14 @@ namespace WebUI.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult List(int currentPageNo = 1, int size = 2)
+        {
+            //var result = _blogService.GetWithPaginate(currentPageNo - 1, size);
+            var result = _blogService.GetAll();
+            var pagedlist = result.Data.ToPagedList(currentPageNo - 1, size);
+
+            return View(pagedlist);
+        }
     }
     public class CategoryListItem
     {

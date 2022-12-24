@@ -45,7 +45,7 @@ namespace Business.Concrete
         {
             var blog = await _blogDal.GetByIdAsync(id);
 
-            if (blog!=null)
+            if (blog != null)
             {
                 _blogDal.Remove(blog);
                 await _blogDal.SaveAsync();
@@ -80,11 +80,31 @@ namespace Business.Concrete
             return new SuccessDataResult<Blog>(blog);
         }
 
+        public IPaginateResult<BlogForListDto> GetWithPaginate(int index, int size)
+        {
+            var data = _blogDal.GetWithPagination(index, size);
+            if (index * size > data.totalCount)
+            {
+                return new ErrorPaginationResult<BlogForListDto>("Yanlış kardeşim dön");
+            }
+            data.list.ForEach(i =>
+            {
+                if (string.IsNullOrEmpty(i.ImagePath))
+                    i.ImagePath = "DefaultBlogPng.png";
+            });
+            return new SuccessPaginationResult<BlogForListDto>(index, size, data.list, data.totalCount);
+        }
+
         public IDataResult<List<Blog>> GetAll()
         {
             var list = _blogDal.GetAll().ToList();
             if (list.Count > 0)
             {
+                list.ForEach(i =>
+                {
+                    if (string.IsNullOrEmpty(i.ImagePath))
+                        i.ImagePath = "DefaultBlogPng.png";
+                });
                 return new SuccessDataResult<List<Blog>>(list);
             }
             else return new ErrorDataResult<List<Blog>>("Blog Bulunamadı");

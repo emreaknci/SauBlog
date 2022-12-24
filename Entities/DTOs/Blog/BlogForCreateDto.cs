@@ -14,6 +14,15 @@ namespace Entities.DTOs.Blog
         public string? Content { get; set; }
         public int? WriterId { get; set; }
         public IFormFile? Image { get; set; }
-        public List<int>? CategoryIds{ get; set; }
+        public List<int>? CategoryIds { get; set; }
+    }
+    public class BlogForListDto
+    {
+        public int Id { get; set; }
+        public int CommentCount{ get; set; }
+        public string? Title { get; set; }
+        public string? ImagePath { get; set; }
+        public DateOnly? CreatedDate { get; set; }
+        public string? WriterNickName { get; set; }
     }
 }
