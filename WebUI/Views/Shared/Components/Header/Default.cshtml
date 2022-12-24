@@ -1,4 +1,9 @@
-﻿<nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Offcanvas navbar large">
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer localizer
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Offcanvas navbar large">
     <div class="container-lg">
         <a class="navbar-brand" asp-action="Index" asp-controller="Home">Blog</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar2" aria-controls="offcanvasNavbar2">
@@ -11,19 +16,6 @@
             </div>
             <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li class="nav-item">
-                            <a asp-action="Privacy" asp-controller="Home" class="nav-link active" aria-current="page">Privacy</a>
-                        </li>
-                    }
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Dropdown
@@ -69,7 +61,7 @@
                 {
                     <div class="text-dark">
                         <a class="btn btn-outline-light rounded-5" asp-action="LogIn" asp-controller="Auth" role="button">
-                            <i class="fa-solid fa-circle-user"></i> Giriş Yap
+                            <i class="fa-solid fa-circle-user"></i> @localizer["Giriş Yap"]
                         </a>
                     </div>
                 }
@@ -86,13 +78,13 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a asp-area="User" asp-controller="Home" asp-action="Index" class="dropdown-item">
-                                <i class="fa-solid fa-pencil"></i> Bilgilerini Güncelle
+                                <i class="fa-solid fa-pencil"></i> @localizer["Hesabım"]
                             </a>
                             <a class="dropdown-item">
-                                <i class="fa-solid fa-key"></i> Güvenlik
+                                <i class="fa-solid fa-key"></i> @localizer["Güvenlik"]
                             </a>
                             <a class="dropdown-item" asp-action="LogOut" asp-controller="Auth">
-                                <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
+                                <i class="fa-solid fa-right-from-bracket"></i> @localizer["Çıkış Yap"]
                             </a>
                         </ul>
                     </li>
@@ -105,5 +97,8 @@
 
             </div>
         </div>
+    </div>
+    <div class="p-4">
+        <partial name="~/Views/Shared/_SelectLanguage.cshtml" />
     </div>
 </nav>

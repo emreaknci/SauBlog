@@ -1,8 +1,11 @@
 ﻿using Business.Abstract;
 using Core.Utilities.Results;
+using Entities.Concrete;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System.Diagnostics;
 using System.Drawing;
 using WebUI.Models;
@@ -12,13 +15,15 @@ namespace WebUI.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IStringLocalizer<HomeController> _localizer;
         private readonly ILogger<HomeController> _logger;
         private readonly IBlogService _blogService;
 
-        public HomeController(ILogger<HomeController> logger, IBlogService blogService)
+        public HomeController(ILogger<HomeController> logger, IBlogService blogService, IStringLocalizer<HomeController> localizer)
         {
             _logger = logger;
             _blogService = blogService;
+            _localizer = localizer;
         }
 
         public IActionResult Index(int page = 1, int size = 6)
@@ -38,8 +43,10 @@ namespace WebUI.Controllers
             //        pageList.Add(i);
             ////ViewBag.pageList = pageList;
             //return View((result,pageList));
+            IPagedList<Blog> pagedlist = null;
             var result = _blogService.GetAll();
-            var pagedlist = result.Data.ToPagedList(page, size);
+            if(result.Data!= null) 
+           pagedlist = result.Data.ToPagedList(page, size);
             return View(pagedlist);
         }
 
@@ -47,6 +54,18 @@ namespace WebUI.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult SetLanguage(string culture, string returnUrl)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+                );
+
+            return LocalRedirect(returnUrl);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
