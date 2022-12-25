@@ -110,6 +110,15 @@ namespace Business.Concrete
             else return new ErrorDataResult<List<Blog>>("Blog Bulunamadı");
         }
 
+        public IDataResult<List<Blog>> GetAllByCategoryId(int categroyId)
+        {
+            var list = _blogDal.GetAllByCategoryId(categroyId);
+            if (list.Count>0)
+                return new SuccessDataResult<List<Blog>>(list);
+
+            return new ErrorDataResult<List<Blog>>(null, "Bu kategoriye ait blog bulunumadı");
+        }
+
         public async Task<IDataResult<Blog>> GetById(int id)
         {
             var blog = await _blogDal.GetByIdAsync(id);
@@ -131,9 +140,9 @@ namespace Business.Concrete
 
         public IDataResult<List<Blog>> GetLastBlogs(int count)
         {
-            var blogs = _blogDal.GetAll().Include(b=>b.Comments).OrderByDescending(b=>b.Id).ToList().Take(count).ToList();
+            var blogs = _blogDal.GetAll().Include(b => b.Comments).OrderByDescending(b => b.Id).ToList().Take(count).ToList();
 
-            if (blogs.Count>0)
+            if (blogs.Count > 0)
             {
                 return new SuccessDataResult<List<Blog>>(blogs);
             }
@@ -142,7 +151,7 @@ namespace Business.Concrete
 
         public async Task<IDataResult<Blog>> GetByIdWithCommentsAsync(int id)
         {
-            var blog = await _blogDal.Table.Include(b=>b.Comments!).ThenInclude(b=>b.Writer).FirstOrDefaultAsync(b=> b.Id==id);
+            var blog = await _blogDal.Table.Include(b => b.Comments!).ThenInclude(b => b.Writer).FirstOrDefaultAsync(b => b.Id == id);
 
             if (blog != null)
             {

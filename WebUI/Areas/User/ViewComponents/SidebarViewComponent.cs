@@ -5,8 +5,8 @@ namespace WebUI.Areas.User.ViewComponents
 {
     public class SidebarViewComponent : ViewComponent
     {
-        private IUserService _userService;
-        private IWriterService _writerService;
+        private readonly IUserService _userService;
+        private readonly IWriterService _writerService;
 
         public SidebarViewComponent(IUserService userService, IWriterService writerService)
         {

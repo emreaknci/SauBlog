@@ -2,7 +2,7 @@
 @using System.Globalization
 @using Microsoft.AspNetCore.Mvc.Localization
 
-@inject IViewLocalizer loalizer
+@inject IViewLocalizer localizer
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,23 +15,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
 </head>
 <body>
-@await Component.InvokeAsync(typeof(HeaderViewComponent))
+    @await Component.InvokeAsync("Header")
 
-<main role="main">
+    <main role="main">
+        @RenderBody()
+        @await Component.InvokeAsync("NToastNotify")
 
-    @RenderBody()
-    @await Component.InvokeAsync("NToastNotify")
+    </main>
 
-</main>
 
-@await Component.InvokeAsync(typeof(FooterViewComponent))
+    @await Component.InvokeAsync("Footer")
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/js/all.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/js/all.min.js"></script>
 
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-
-<script src="~/js/site.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

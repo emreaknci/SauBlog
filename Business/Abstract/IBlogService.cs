@@ -17,6 +17,7 @@ namespace Business.Abstract
         IPaginateResult<BlogForListDto> GetWithPaginate(int index, int size);
 
         IDataResult<List<Blog>> GetAll();
+        IDataResult<List<Blog>> GetAllByCategoryId(int categroyId);
         IDataResult<List<Blog>> GetLastBlogs(int count);
         Task<IDataResult<Blog>> GetById(int id);
         Task<IDataResult<Blog>> GetByIdWithCategories(int id);

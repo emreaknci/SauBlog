@@ -43,5 +43,21 @@ namespace DataAccess.Concrete
             count = list.Count();
             return (list.ToList(), count);
         }
+
+        public List<Blog>? GetAllByCategoryId(int categoryId)
+        {
+            var result = GetAll().Include(b => b.Categories).ToList();
+            var list = new List<Blog>();
+            foreach (var blog in result)
+            {
+                foreach (var category in blog.Categories)
+                {
+                    if (category.Id == categoryId)
+                        list.Add(blog);
+                }
+            }
+
+            return list;
+        }
     }
 }

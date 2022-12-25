@@ -1,74 +1,86 @@
 ﻿@{
     Layout = null;
 }
-<nav class="navbar-default navbar-static-side" role="navigation">
-    <div class="sidebar-collapse">
-        <ul class="nav metismenu" id="side-menu">
-            <li class="nav-header">
-                <div class="dropdown profile-element">
-                    <img alt="image" class="rounded-circle" style="height: 3rem;width: 3rem" src="https://ubisoft-avatars.akamaized.net/3dbcbbbb-2947-40e3-8fe7-513e3f441a5d/default_256_256.png" />
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        <span class="block m-t-xs font-bold">@User.Identity.Name</span>
-                        <span class="text-muted text-xs block">Art Director <b class="caret"></b></span>
-                    </a>
-                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                        <li><a class="dropdown-item" href="#">Profilim</a></li>
-                        <li><a class="dropdown-item" href="#">Şifreyi Değiştir</a></li>
-                        <li><a class="dropdown-item" asp-action="Index" asp-controller="Home" asp-area="">Siteye Git</a></li>
-                        <li class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" asp-controller="Auth" asp-action="LogOut" asp-area="">Çıkış Yap</a></li>
-                    </ul>
-                </div>
-                <div class="logo-element">
-                    IN+
-                </div>
-            </li>
-            <li>
-                <a href="#"><i class="fa fa-laptop"></i> <span class="nav-label">Profilim</span></a>
+
+
+<nav id="sidebar">
+    <div class="p-4 pt-5">
+        <a href="#" class="img logo rounded-circle mb-5" style="background-image: url(https://www.pngitem.com/pimgs/m/150-1503945_transparent-user-png-default-user-image-png-png.png);"></a>
+        <div class="d-flex justify-content-center">
+            @User.Identity.Name
+        </div>
+        <ul class="list-unstyled components mb-5">
+            <li class="active">
+                <a href="#accountSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Hesabım</a>
+                <ul class="collapse list-unstyled" id="accountSubmenu">
+                    <li>
+                        <a href="#">Profilim</a>
+                    </li>
+                    <li>
+                        <a href="#">Şifre Değiştir</a>
+                    </li>
+                </ul>
             </li>
             @if (User.IsInRole("Admin"))
             {
                 <li>
-                    <a href="#"><i class="fa-solid fa-square-list"></i><span class="nav-label">Kategori İşlemleri</span></a>
-                    <ul class="nav nav-second-level collapse">
-                        <li><a asp-area="User" asp-controller="Categories" asp-action="Index">Kategoriler</a></li>
-                        <li><a href="#">Yeni Kategori</a></li>
+                    <a href="#"> <span class="nav-label">Bloglar</span></a>
+                </li>
+                <li>
+                    <a href="#categorySubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Kategori İşlemleri</a>
+                    <ul class="collapse list-unstyled" id="categorySubmenu">
+                        <li>
+                            <a asp-area="User" asp-controller="Categories" asp-action="Index">Kategoriler</a>
+                        </li>
+                        <li>
+                            <a href="#">Yeni Kategori</a>
+                        </li>
                     </ul>
                 </li>
-            }
-            @if (User.IsInRole("Admin"))
-            {
                 <li>
-                    <a href="#"><i class="fa-solid fa-comments"></i> <span class="nav-label">Yorum İşlemleri</span></a>
-                    <ul class="nav nav-second-level collapse">
+                    <a href="#commentSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Yorum İşlemleri</a>
+                    <ul class="collapse list-unstyled" id="commentSubmenu">
                         <li><a href="#">Yorumlar</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#roleSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Yetki İşlemleri</a>
+                    <ul class="collapse list-unstyled" id="roleSubmenu">
+                        <li><a href="#">Adminler</a></li>
+                        <li><a href="#">Kullanıcılar</a></li>
+                        <li><a href="#">Yeni Rol Ekle</a></li>
+                        <li><a href="#">Yeni Admin Ekle</a></li>
                     </ul>
                 </li>
             }
             @if ((bool)ViewBag.hasWriter)
             {
                 <li>
-                    <a href="#"><i class="fa-solid fa-blog"></i>  <span class="nav-label">Blog İşlemleri</span></a>
-                    <ul class="nav nav-second-level collapse">
+                    <a href="#blogForWriterSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Blog İşlemleri</a>
+                    <ul class="collapse list-unstyled" id="blogForWriterSubmenu">
                         <li><a href="#">Bloglarım</a></li>
                         <li><a asp-area="User" asp-controller="Blogs" asp-action="Add">Yeni Blog</a></li>
                     </ul>
                 </li>
+                <li>
+                    <a href="#">Yorumlarım</a>
+                </li>
             }
             <li>
-                <a href="#"><i class="fa-solid fa-key"></i> <span class="nav-label">Güvenlik</span></a>
-                <ul class="nav nav-second-level collapse">
-                    <li><a href="#">Şifreyi Değiştir</a></li>
-                </ul>
+                <a asp-action="Index" asp-controller="Home" asp-area="">Siteye Git</a>
             </li>
             <li>
-                <a asp-action="Index" asp-controller="Home" asp-area=""><i class="fa-solid fa-door-open"></i> <span class="nav-label">Siteye Git</span></a>
+                <a asp-controller="Auth" asp-action="LogOut" asp-area="">Çıkış Yap</a>
             </li>
-            <li>
-                <a asp-controller="Auth" asp-action="LogOut" asp-area=""><i class="fa-solid fa-right-from-bracket"></i> <span class="nav-label">Çıkış Yap</span></a>
-            </li>
-           
         </ul>
+
+        <div class="footer">
+            <p>
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib.com</a>
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            </p>
+        </div>
 
     </div>
 </nav>

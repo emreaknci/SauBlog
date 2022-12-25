@@ -114,7 +114,7 @@ namespace WebUI.Controllers
             _toastNotification.AddSuccessToastMessage("Blog başarıyla güncellendi!");
             return RedirectToAction("Index", "Home");
         }
-
+        [HttpGet]
         public IActionResult List(int currentPageNo = 1, int size = 2)
         {
             //var result = _blogService.GetWithPaginate(currentPageNo - 1, size);
@@ -122,6 +122,17 @@ namespace WebUI.Controllers
             var pagedlist = result.Data.ToPagedList(currentPageNo - 1, size);
 
             return View(pagedlist);
+        }
+        [HttpGet("Blogs/Category{categoryId}")]
+        public IActionResult BlogsByCategoryId(int categoryId)
+        {
+            var result = _blogService.GetAllByCategoryId(categoryId);
+            if (!result.Success)
+            {
+                _toastNotification.AddInfoToastMessage(result.Message);
+                return RedirectToAction("Index","Home");
+            }
+            return View(result.Data);
         }
     }
     public class CategoryListItem
