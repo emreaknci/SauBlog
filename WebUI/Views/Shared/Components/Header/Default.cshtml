@@ -16,42 +16,7 @@
             </div>
             <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#">
-                                    alt
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Action</a></li>
-                                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                                    <li>
-                                                        <hr class="dropdown-divider">
-                                                    </li>
-                                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                                </ul>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                        <partial name="~/Views/Shared/_SelectLanguage.cshtml" />
                 </ul>
                 @*      <form class="d-flex mt-3 mt-lg-0" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -98,7 +63,7 @@
             </div>
         </div>
     </div>
-    <div class="p-4">
+   @* <div class="p-4">
         <partial name="~/Views/Shared/_SelectLanguage.cshtml" />
-    </div>
+    </div>*@
 </nav>

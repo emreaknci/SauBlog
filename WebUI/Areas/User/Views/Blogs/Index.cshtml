@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+}
+@using Microsoft.IdentityModel.Tokens
+@model List<Entities.Concrete.Blog>
+<div class="row mb-2 p-3">
+    @if (!Model.IsNullOrEmpty())
+    {
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6">
+                <div class="  row g-0 border rounded flex-md-row mb-4 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        @if (item.Status)
+                        {
+                            <strong class="d-inline-block mb-2 text-success">Aktif</strong>
+                        }
+                        else
+                        {
+                            <strong class="d-inline-block mb-2 text-danger">Aktif</strong>
+                        }
+                        <h3 class="mb-0"> @item.Title</h3>
+                        <p class="card-text mb-auto"></p>
+                        <div class="row">
+                            <a target="_blank" asp-area="" asp-controller="Blogs" asp-action="Detail" asp-route-id="@item.WriterId" class="col-6 text-primary">Yazara Git &raquo;</a>
+                            <a target="_blank" asp-area="" asp-controller="Blogs" asp-action="Detail" asp-route-id="@item.Id" class="col-6 text-primary">Bloga Git &raquo;</a>
+                            @if (item.Status)
+                            {
+                                <a href="#" class="col-6 text-danger">Askıya Al</a>
+                            }
+                            else
+                            {
+                                <a href="#" class="col-6 text-success">Aktif Yap</a>
+
+                            }
+                            <a href="#" class="col-6 text-danger">Sil</a>
+                        </div>
+
+
+                        <div class="mb-1 text-muted">@item.CreatedDate</div>
+
+                    </div>
+                    <div class="col-auto d-none d-lg-block">
+                        @*   <svg class="bd-placeholder-img" width="200" height="250" xmlns="~/Images/@item.ImagePath" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>*@
+                        <img style="width: 200px; height: 250px" alt="avatar1" src="~/Images/@item.ImagePath" />
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <h3>Blog Bulunumadı!</h3>
+    }
+
+</div>

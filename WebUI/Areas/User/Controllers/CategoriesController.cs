@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Entities.DTOs.Category;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,6 @@ namespace WebUI.Areas.User.Controllers
 {
     [Area("User")]
     [Authorize(Roles = "User", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-
     public class CategoriesController : Controller
     {
         private ICategoryService _categoryService;
@@ -24,7 +24,7 @@ namespace WebUI.Areas.User.Controllers
             var list = _categoryService.GetAll().Data;
             return View(list);
         }
-        [HttpPost]
+        [HttpGet]
         public IActionResult Delete(int id)
         {
             var result = _categoryService.DeleteAsync(id).Result;
@@ -33,7 +33,56 @@ namespace WebUI.Areas.User.Controllers
             else
                 _toastNotification.AddErrorToastMessage(result.Message);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Categories", new{Area="User"});
+        }
+        [HttpGet]
+        public IActionResult Update(int id)
+        {
+
+            var result = _categoryService.GetById(id).Result;
+            if (!result.Success)
+            {
+                _toastNotification.AddErrorToastMessage(result.Message);
+                return RedirectToAction("Index");
+            }
+
+            CategoryForUpdateDto dto = new()
+            {
+                Id = result.Data.Id,
+                Name = result.Data.Name
+            };
+            return View(dto);
+        }
+        [HttpPost]
+        public IActionResult Update(CategoryForUpdateDto dto)
+        {
+            if (!ModelState.IsValid) 
+                return View(dto);
+
+            var result = _categoryService.UpdateAsync(dto).Result;
+            if (result.Success)
+                return RedirectToAction("Index");
+
+            _toastNotification.AddErrorToastMessage(result.Message);
+            return View(dto);
+        }
+        [HttpGet]
+        public IActionResult Add()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Add(CategoryForCreateDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
+            var result = _categoryService.AddAsync(dto).Result;
+            if (result.Success)
+                return RedirectToAction("Index");
+
+            _toastNotification.AddErrorToastMessage(result.Message);
+            return View(dto);
         }
     }
 }

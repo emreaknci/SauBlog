@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+}
+@model List<Entities.Concrete.Writer>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-4">
+
+            <div class="card" style="width: 18rem;">
+                <img src="https://www.pngitem.com/pimgs/m/150-1503945_transparent-user-png-default-user-image-png-png.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">@item.User.FirstName @item.User.LastName</h5>
+                    <p class="card-text"><span class="font-weight-bold">NickName:</span> @item.NickName</p>
+                    <p class="card-text"><span class="font-weight-bold">Kayıt Tarihi:</span> @item.CreatedDate</p>
+                    <p class="card-text"><a href="#" class="font-weight-bold text-primary">Bloglarını Git &raquo;</a></p>
+                    <p class="card-text"><a href="#" class="font-weight-bold text-danger">Üyeliğini İptal Et</a></p>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>

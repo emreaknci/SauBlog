@@ -50,5 +50,12 @@ namespace WebUI.Areas.User.Controllers
             return RedirectToAction("Index", "Home", new { Area = "User" });
 
         }
+
+        public IActionResult Index()
+        {
+            var result = _blogService.GetAll();
+            
+            return View(result.Data);
+        }
     }
 }

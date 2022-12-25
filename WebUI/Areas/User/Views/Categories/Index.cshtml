@@ -41,7 +41,7 @@
                             <ul class="dropdown-menu">
                                 <li class="dropdown-item"><a target="_blank" asp-area="" asp-controller="Blogs" asp-action="BlogsByCategoryId" asp-route-categoryId="@item.Id">Blogları görüntüle</a></li>
                                 <li class="dropdown-item"><a href="#">Durum Değiştir</a></li>
-                                <li class="dropdown-item"><a href="#">Güncelle</a></li>
+                                <li class="dropdown-item"><a asp-area="User" asp-controller="Categories" asp-action="Update" asp-route-id="@item.Id">Güncelle</a></li>
                                 <li class="dropdown-item"><a asp-area="User" asp-controller="Categories" asp-action="Delete" asp-route-id="@item.Id">Sil</a></li>
                             </ul>
                         </td>

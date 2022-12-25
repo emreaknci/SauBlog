@@ -9,16 +9,29 @@
     <h3 class="pt-3 mx-auto">@localizer["Kategoriler"]</h3>
 
     <div class="mx-auto py-3">
-        @foreach (var (item, i) in Model.Select((item, i) => (item, i)))
-        {
-            <a asp-action="BlogsByCategoryId" asp-controller="Blogs"
-           asp-route-categoryId="@item.Id"
-           class="list-group-item list-group-item-action" id="@i" aria-valuetext="@item.Name">
-                @item.Name
-                <span class="badge bg-primary rounded-pill">@item.Blogs?.Count</span>
-            </a>
-        }
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    @localizer["Tüm Kategoriler"]
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#categoryAccordion">
+                <div class="accordion-body">
+                    <div class="row">
+                        @foreach (var (item, i) in Model.Select((item, i) => (item, i)))
+                        {
+                            <a asp-action="BlogsByCategoryId" asp-controller="Blogs"
+                               asp-route-categoryId="@item.Id"
+                               class="list-group-item list-group-item-action" id="@i" aria-valuetext="@item.Name">
+                                @item.Name
+                                <span class="badge bg-primary rounded-pill">@item.Blogs?.Count</span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>  
     </div>
-
+    
 
 </div>

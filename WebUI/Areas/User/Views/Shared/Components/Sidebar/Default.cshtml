@@ -2,7 +2,6 @@
     Layout = null;
 }
 
-
 <nav id="sidebar">
     <div class="p-4 pt-5">
         <a href="#" class="img logo rounded-circle mb-5" style="background-image: url(https://www.pngitem.com/pimgs/m/150-1503945_transparent-user-png-default-user-image-png-png.png);"></a>
@@ -10,7 +9,7 @@
             @User.Identity.Name
         </div>
         <ul class="list-unstyled components mb-5">
-            <li class="active">
+            <li>
                 <a href="#accountSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Hesabım</a>
                 <ul class="collapse list-unstyled" id="accountSubmenu">
                     <li>
@@ -24,7 +23,7 @@
             @if (User.IsInRole("Admin"))
             {
                 <li>
-                    <a href="#"> <span class="nav-label">Bloglar</span></a>
+                    <a asp-area="User" asp-controller="Blogs" asp-action="Index"> <span class="nav-label">Bloglar</span></a>
                 </li>
                 <li>
                     <a href="#categorySubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Kategori İşlemleri</a>
@@ -33,7 +32,15 @@
                             <a asp-area="User" asp-controller="Categories" asp-action="Index">Kategoriler</a>
                         </li>
                         <li>
-                            <a href="#">Yeni Kategori</a>
+                            <a asp-area="User" asp-controller="Categories" asp-action="Add">Yeni Kategori</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#writerSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Yazar İşlemleri</a>
+                    <ul class="collapse list-unstyled" id="writerSubmenu">
+                        <li>
+                            <a asp-area="User" asp-controller="Writer" asp-action="Index">Yazarlar</a>
                         </li>
                     </ul>
                 </li>

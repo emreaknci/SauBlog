@@ -9,18 +9,27 @@
 
 @{
     var requestCulture = Context.Features.Get<IRequestCultureFeature>();
-    var cultures = options.Value.SupportedUICultures
-        .Select(c => new SelectListItem { Value = c.Name, Text = c.NativeName })
-        .ToList();
+
+    var cultures = options.Value.SupportedUICultures.ToList();
     var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
 }
-
+@*asp-controller="Home" asp-action="SetLanguage" asp-route-returnUrl="@returnUrl"*@
 <div>
-    <form method="post" asp-controller="Home" asp-action="SetLanguage" asp-route-returnUrl="@returnUrl">
-        <select name="culture"
-                asp-for="@requestCulture.RequestCulture.UICulture.Name"
-                asp-items="cultures"
-                onchange="this.form.submit();">
-        </select>
+    <form method="post" action="/Home/SetLanguage">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                @localizer["Dil"]
+            </a>
+            <ul class="dropdown-menu">
+                @foreach (var item in cultures)
+                {
+                    <input hidden="true" value="@returnUrl" name="returnUrl" />
+                    <li>
+                        <button class="dropdown-item" type="submit" name="culture" value="@item.Name">@item.NativeName</button>
+                    </li>
+                }
+
+            </ul>
+        </li>
     </form>
 </div>

@@ -17,7 +17,9 @@ namespace Business.Abstract
         Task<IDataResult<Writer>> UpdateAsync(WriterForUpdateDto dto);
 
         IDataResult<List<Writer>> GetAll();
+        IDataResult<List<Writer>> GetAllWithUserInfo();
         Task<IDataResult<Writer>> GetById(int id);
+        Task<IDataResult<Writer>> GetByIdWithUserInfoAsync(int id);
         Task<IDataResult<Writer>> GetByUserId(int userId);
 
     }

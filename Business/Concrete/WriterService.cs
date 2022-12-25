@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Concrete
 {
@@ -57,6 +58,16 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Writer>>(list);
         }
 
+        public IDataResult<List<Writer>> GetAllWithUserInfo()
+        {
+            var list = _writerDal.GetAll().Include(w => w.User).ToList();
+            if (list != null)
+            {
+                return new SuccessDataResult<List<Writer>>(list);
+            }
+            return new ErrorDataResult<List<Writer>>("Yazar Bulunamadı");
+        }
+
         public async Task<IDataResult<Writer>> GetById(int id)
         {
             var writer = await _writerDal.GetByIdAsync(id);
@@ -68,15 +79,26 @@ namespace Business.Concrete
             return new ErrorDataResult<Writer>("Yazar Bulunamadı");
         }
 
-        public async Task<IDataResult<Writer>> GetByUserId(int userId)
+        public async Task<IDataResult<Writer>> GetByIdWithUserInfoAsync(int id)
         {
-            var writer = await _writerDal.GetAsync(u=>u.UserId==userId);
+            var writer = await _writerDal.Table.Include(w => w.User).FirstOrDefaultAsync(w => w.Id == id);
 
             if (writer != null)
             {
                 return new SuccessDataResult<Writer>(writer);
             }
-            return new ErrorDataResult<Writer>(null,"Yazar Bulunamadı");
+            return new ErrorDataResult<Writer>("Yazar Bulunamadı");
+        }
+
+        public async Task<IDataResult<Writer>> GetByUserId(int userId)
+        {
+            var writer = await _writerDal.GetAsync(u => u.UserId == userId);
+
+            if (writer != null)
+            {
+                return new SuccessDataResult<Writer>(writer);
+            }
+            return new ErrorDataResult<Writer>(null, "Yazar Bulunamadı");
         }
 
         public async Task<IDataResult<Writer>> UpdateAsync(WriterForUpdateDto dto)

@@ -113,10 +113,15 @@ namespace Business.Concrete
         public IDataResult<List<Blog>> GetAllByCategoryId(int categroyId)
         {
             var list = _blogDal.GetAllByCategoryId(categroyId);
-            if (list.Count>0)
-                return new SuccessDataResult<List<Blog>>(list);
+            if (list.Count <= 0) 
+                return new ErrorDataResult<List<Blog>>(null, "Bu kategoriye ait blog bulunumadı");
+            list.ForEach(i =>
+            {
+                if (string.IsNullOrEmpty(i.ImagePath))
+                    i.ImagePath = "DefaultBlogPng.png";
+            });
+            return new SuccessDataResult<List<Blog>>(list);
 
-            return new ErrorDataResult<List<Blog>>(null, "Bu kategoriye ait blog bulunumadı");
         }
 
         public async Task<IDataResult<Blog>> GetById(int id)
