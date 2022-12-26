@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 
 namespace WebUI.Areas.User.Controllers
 {
@@ -9,8 +10,16 @@ namespace WebUI.Areas.User.Controllers
 
     public class HomeController : Controller
     {
+        private IToastNotification _toastNotification;
+
+        public HomeController(IToastNotification toastNotification)
+        {
+            _toastNotification = toastNotification;
+        }
+
         public IActionResult Index()
         {
+            _toastNotification.AddSuccessToastMessage("Hoşgeldiniz");
             return View();
         }
     }

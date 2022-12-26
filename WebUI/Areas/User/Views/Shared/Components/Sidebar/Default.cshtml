@@ -16,7 +16,7 @@
                         <a href="#">Profilim</a>
                     </li>
                     <li>
-                        <a href="#">Şifre Değiştir</a>
+                        <a asp-area="User" asp-controller="Auth" asp-action="ChangePassword">Şifre Değiştir</a>
                     </li>
                 </ul>
             </li>
@@ -60,7 +60,7 @@
                     </ul>
                 </li>
             }
-            @if ((bool)ViewBag.hasWriter)
+            @if (User.IsInRole("Writer"))
             {
                 <li>
                     <a href="#blogForWriterSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Blog İşlemleri</a>

@@ -34,6 +34,7 @@ namespace DataAccess.Concrete.Context
             {
                 new() { Id = 1, Name = "Admin", Status = true, CreatedDate = date },
                 new() { Id = 2, Name = "User", Status = true, CreatedDate = date},
+                new() { Id = 3, Name = "Writer", Status = true, CreatedDate = date},
             }; modelBuilder.Entity<Role>().HasData(roles);
             List<Category> categories = new()
             {

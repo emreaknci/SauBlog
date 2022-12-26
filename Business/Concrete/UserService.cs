@@ -68,6 +68,19 @@ namespace Business.Concrete
             return new ErrorDataResult<User>("User Bulunamadı");
         }
 
+        public async Task<IResult> ChangePasswordAsync(UserForChangePasswordDto dto)
+        {
+            var userToCheck = await _userDal.GetByIdAsync(dto.UserId);
+            if (userToCheck != null)
+            {
+                if (!HashingHelper.VerifyPasswordHash(dto.OldPassword!, userToCheck.PasswordHash!,
+                        userToCheck.PasswordSalt!))
+                    return new ErrorResult("Hatalı Şifre!");
+                return new SuccessResult("Şifre değişikliği tamamlandı!");
+            }
+            return new ErrorResult("Kullanıcı bulunamadı");
+        }
+
         public async Task<IDataResult<User>> GetUserByMailWithRolesAsync(string? mail)
         {
             var user = await _userDal.Table.Include(x => x.Roles)
@@ -143,7 +156,7 @@ namespace Business.Concrete
             await _userDal.SaveAsync();
             return new SuccessResult();
         }
-        public async Task<IResult> ChangePasswordAsync(int userId, string newPassword)
+        public async Task<IResult> ResetPasswordAsync(int userId, string newPassword)
         {
             var user = await _userDal.GetByIdAsync(userId);
             if (user == null)

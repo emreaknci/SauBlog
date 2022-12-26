@@ -16,12 +16,12 @@ namespace WebUI.Areas.User.ViewComponents
 
         public IViewComponentResult Invoke()
         {
-            var email = HttpContext.User.Claims.ToList()[1].Value;
-            var user = _userService.GetUserByMailAsync(email).Result.Data;
-            var writer = _writerService.GetByUserId(user.Id).Result.Data;
+            //var email = HttpContext.User.Claims.ToList()[1].Value;
+            //var user = _userService.GetUserByMailAsync(email).Result.Data;
+            //var writer = _writerService.GetByUserId(user.Id).Result.Data;
 
-            bool hasWriter = writer != null;
-            ViewBag.hasWriter = hasWriter;
+            //bool hasWriter = writer != null;
+            //ViewBag.hasWriter = hasWriter;
             return View();
         }
     }

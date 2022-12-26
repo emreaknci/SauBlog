@@ -83,11 +83,16 @@ namespace Business.Concrete
                 Password = dto.Password,
             });
             if (!result.Success) return new ErrorResult();
+            var user = _userService.GetById(result.Data).Result.Data;
+            var writerRole = _roleService.GetByName("Writer").Result.Data;
+            user.Roles!.Add(writerRole);
             await _writerService.AddAsync(new WriterForCreateDto
             {
                 NickName = dto.NickName,
                 UserId = result.Data
             });
+           
+            
             return new SuccessResult("Yazar Kaydı Oluşturuldu");
         }
 

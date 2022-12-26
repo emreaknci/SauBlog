@@ -101,6 +101,7 @@ namespace WebUI.Controllers
                     return RedirectToAction("Index", "Home");
                 }
                 _toastNotification.AddErrorToastMessage(result.Message);
+                return View(dto);
             }
             _toastNotification.AddErrorToastMessage("Eksik alanlar var");
             return View(dto);
@@ -158,7 +159,7 @@ namespace WebUI.Controllers
         {
             if (!ModelState.IsValid)
                 return View(viewModel);
-            var result = await _userService.ChangePasswordAsync(viewModel.UserId, viewModel.Password);
+            var result = await _userService.ResetPasswordAsync(viewModel.UserId, viewModel.Password);
             if (!result.Success)
                 _toastNotification.AddErrorToastMessage(result.Message);
             _toastNotification.AddSuccessToastMessage(result.Message);

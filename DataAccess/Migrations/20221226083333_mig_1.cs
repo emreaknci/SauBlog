@@ -207,7 +207,8 @@ namespace DataAccess.Migrations
                 values: new object[,]
                 {
                     { 1, new DateOnly(2022, 1, 1), "Admin", true, null },
-                    { 2, new DateOnly(2022, 1, 1), "User", true, null }
+                    { 2, new DateOnly(2022, 1, 1), "User", true, null },
+                    { 3, new DateOnly(2022, 1, 1), "Writer", true, null }
                 });
 
             migrationBuilder.CreateIndex(

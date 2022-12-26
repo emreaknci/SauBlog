@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(BlogDbContext))]
-    [Migration("20221224153014_mig_1")]
+    [Migration("20221226083333_mig_1")]
     partial class mig_1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,6 +76,13 @@ namespace DataAccess.Migrations
                             Id = 2,
                             CreatedDate = new DateOnly(2022, 1, 1),
                             Name = "User",
+                            Status = true
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedDate = new DateOnly(2022, 1, 1),
+                            Name = "Writer",
                             Status = true
                         });
                 });

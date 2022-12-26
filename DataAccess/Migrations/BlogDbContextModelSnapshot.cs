@@ -75,6 +75,13 @@ namespace DataAccess.Migrations
                             CreatedDate = new DateOnly(2022, 1, 1),
                             Name = "User",
                             Status = true
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedDate = new DateOnly(2022, 1, 1),
+                            Name = "Writer",
+                            Status = true
                         });
                 });
 

@@ -16,7 +16,8 @@ namespace Business.Abstract
         Task<IDataResult<int>> AddAsync(User user);
         Task<IResult> DeleteAsync(int id);
         Task<IDataResult<User>> UpdateAsync(UserForUpdateDto dto);
-        Task<IResult> ChangePasswordAsync(int userId,string newPassword);
+        Task<IResult> ResetPasswordAsync(int userId,string newPassword);
+        Task<IResult> ChangePasswordAsync(UserForChangePasswordDto dto);
         Task<IDataResult<User>> GetUserByMailWithRolesAsync(string? mail);
         Task<IDataResult<User>> GetUserByMailAsync(string mail);
         IDataResult<List<User>> GetAll();
