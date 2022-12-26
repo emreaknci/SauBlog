@@ -127,7 +127,7 @@ namespace Business.Concrete
 
         private IResult CheckIfEmailPrivate(string email)
         {
-            if (email == "b201210101@ogr.sakarya.edu.tr" || email == "b201210023@ogr.sakarya.edu.tr")
+            if (email == "yunus.akinci1@ogr.sakarya.edu.tr" || email == "emirhan.usta@ogr.sakarya.edu.tr")
                 return new SuccessResult();
             return new ErrorResult();
         }

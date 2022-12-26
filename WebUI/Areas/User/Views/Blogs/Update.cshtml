@@ -1,0 +1,86 @@
+﻿@model Entities.DTOs.Blog.BlogForUpdateDto
+
+@{
+    ViewData["Title"] = "Update";
+    Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+}
+
+<div class="row my-5">
+    <div class="offset-2 col-8">
+        <form asp-area="User" asp-controller="Blogs" asp-action="Update" enctype="multipart/form-data">
+            <img src="~/Images/@Model.CurrentImagePath" alt="..." class="offset-5 col-4 img-thumbnail">
+            <input hidden="true" type="text" asp-for="WriterId" value="@Model.WriterId">
+
+            <div class="mb-3 row">
+                <label asp-for="Title" class="col-sm-2 col-form-label">Başlık</label>
+                <div class="col-sm-10">
+                    <input type="text" asp-for="Title" class="form-control">
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="Content" class="col-sm-2 col-form-label">İçerik</label>
+                <div class="col-sm-10">
+                    <input type="text" asp-for="Content" class="form-control">
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="NewImage" class="col-sm-2 col-form-label">Kapak Fotoğrafı Değiştir</label>
+
+                <div class="col-sm-10">
+                    <input type="file" asp-for="NewImage" class="form-control">
+
+                </div>
+                <span asp-validation-for="NewImage" class="text-danger"></span>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="CategoryIds" class="col-sm-2 col-form-label">Kategori</label>
+                <div class="col-sm-10">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Kategori Seç
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#categoryAccordion">
+                            <div class="accordion-body">
+                                <div class="row p-2">
+                                    @foreach (var item in ViewBag.categories)
+                                    {
+
+                                        @if (item.Checked)
+                                        {
+                                            <div class="col-4">
+                                                <input checked class="form-check-input" name="CategoryIds" type="checkbox" id="option-@item.Category.Id" value="@item.Category.Id">
+                                                <label class="form-check-label" id="option-@item.Category.Id">@item.Category.Name</label>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-4">
+                                                <input class="form-check-input" name="CategoryIds" type="checkbox" id="option-@item.Category.Id" value="@item.Category.Id">
+                                                <label class="form-check-label" id="option-@item.Category.Id">@item.Category.Name</label>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <span asp-validation-for="CategoryIds" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+
+    </div>
+
+
+</div>
+

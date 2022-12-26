@@ -1,21 +1,26 @@
 ﻿@{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "MyBlogs";
     Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
     var currentUrl = ViewContext.HttpContext.Request.GetDisplayUrl();
 }
 @using Microsoft.IdentityModel.Tokens
 @using Microsoft.AspNetCore.Http.Extensions
 @model List<Entities.Concrete.Blog>
+
 <div class="row mb-2 p-3">
+
     @if (!Model.IsNullOrEmpty())
     {
         <div class="m-0 p-0 col-12 mb-3">
             <h3>Bloglarım</h3>
+
+            <a class=" btn btn-success w-auto h-auto" asp-area="User" asp-controller="Blogs" asp-action="Add">Yeni Blog Ekle</a>
         </div>
+
         @foreach (var item in Model)
         {
             <div class="col-md-6">
-                <div class="  row g-0 border rounded flex-md-row mb-4 position-relative">
+                <div class=" row g-0 border rounded flex-md-row mb-4 position-relative">
                     <div class="col p-4 d-flex flex-column position-static">
                         @if (item.Status)
                         {
@@ -28,8 +33,9 @@
                         <h3 class="mb-0"> @item.Title</h3>
                         <p class="card-text mb-auto"></p>
                         <div class="row">
-                            <a target="_blank" asp-area="" asp-controller="Blogs" asp-action="Detail" asp-route-id="@item.WriterId" class="col-6 text-primary">Yazara Git &raquo;</a>
-                            <a target="_blank" asp-area="" asp-controller="Blogs" asp-action="Detail" asp-route-id="@item.Id" class="col-6 text-primary">Bloga Git &raquo;</a>
+                            <a target="_blank" asp-area="" asp-controller="Blogs" asp-action="Detail" asp-route-id="@item.Id" class="col-6 text-primary">
+                                Bloga Git &raquo;
+                            </a>
                             @if (item.Status)
                             {
                                 <a href="#" class="col-6 text-danger">Askıya Al</a>
@@ -38,6 +44,11 @@
                             {
                                 <a href="#" class="col-6 text-success">Aktif Yap</a>
                             }
+                            <a class="col-6"
+                       asp-area="User" asp-controller="Blogs" asp-action="Update"
+                       asp-route-id="@item.Id">
+                                Güncelle
+                            </a>
                             <a class="col-6 text-danger"
                        asp-area="User" asp-controller="Blogs" asp-action="Delete"
                        asp-route-id="@item.Id"
@@ -60,7 +71,9 @@
     }
     else
     {
-        <h3>Blog Bulunumadı!</h3>
+        <h3>Henüz bir blog yazmadınız!</h3>
+        <a class="mx-2 btn btn-success w-auto" asp-area="User" asp-controller="Blogs" asp-action="Add">İlk Blogunuzu Yazın</a>
+
     }
 
 </div>

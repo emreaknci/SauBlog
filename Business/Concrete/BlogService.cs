@@ -43,10 +43,11 @@ namespace Business.Concrete
 
         public async Task<IResult> DeleteAsync(int id)
         {
-            var blog = await _blogDal.GetByIdAsync(id);
+            var blog = await _blogDal.Table.Include(b => b.Comments).FirstOrDefaultAsync(b => b.Id == id);
 
             if (blog != null)
             {
+                 FileHelper.Delete(blog.ImagePath);
                 _blogDal.Remove(blog);
                 await _blogDal.SaveAsync();
                 return new SuccessResult("Blog Silindi");
@@ -63,8 +64,11 @@ namespace Business.Concrete
 
             if (dto.NewImage != null)
             {
-                var imagePath = FileHelper.Update(dto.NewImage!, dto.CurrentImagePath!);
-                blog.ImagePath = imagePath.Data;
+                if (!dto.CurrentImagePath.Contains("DefaultBlogPng"))
+                {
+                    var imagePath = FileHelper.Update(dto.NewImage!, dto.CurrentImagePath!);
+                    blog.ImagePath = imagePath.Data;
+                }
             }
             else
                 blog.ImagePath = dto.CurrentImagePath;
@@ -110,10 +114,24 @@ namespace Business.Concrete
             else return new ErrorDataResult<List<Blog>>("Blog Bulunamadı");
         }
 
+        public IDataResult<List<Blog>> GetAllByWriterId(int writerId)
+        {
+            var list = _blogDal.GetAll(b=>b.WriterId==writerId).ToList();
+
+            if (list.Count <= 0)
+                return new ErrorDataResult<List<Blog>>(null, "Bu kategoriye ait blog bulunumadı");
+            list.ForEach(i =>
+            {
+                if (string.IsNullOrEmpty(i.ImagePath))
+                    i.ImagePath = "DefaultBlogPng.png";
+            });
+            return new SuccessDataResult<List<Blog>>(list);
+        }
+
         public IDataResult<List<Blog>> GetAllByCategoryId(int categroyId)
         {
             var list = _blogDal.GetAllByCategoryId(categroyId);
-            if (list.Count <= 0) 
+            if (list.Count <= 0)
                 return new ErrorDataResult<List<Blog>>(null, "Bu kategoriye ait blog bulunumadı");
             list.ForEach(i =>
             {
@@ -131,7 +149,7 @@ namespace Business.Concrete
             if (blog != null)
             {
                 if (string.IsNullOrEmpty(blog.ImagePath))
-                    blog.ImagePath = "DefaultBlogPng.png"; 
+                    blog.ImagePath = "DefaultBlogPng.png";
                 return new SuccessDataResult<Blog>(blog);
             }
             return new ErrorDataResult<Blog>("Blog Bulunamadı");
@@ -139,7 +157,7 @@ namespace Business.Concrete
 
         public async Task<IDataResult<Blog>> GetByIdWithWriter(int id)
         {
-            var blog = await _blogDal.Table.Include(b=>b.Writer).FirstOrDefaultAsync(b=>b.Id==id);
+            var blog = await _blogDal.Table.Include(b => b.Writer).FirstOrDefaultAsync(b => b.Id == id);
 
             if (blog != null)
             {
