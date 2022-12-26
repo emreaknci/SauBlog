@@ -15,6 +15,7 @@ namespace Business.Abstract
         Task<IDataResult<Writer>> AddAsync(WriterForCreateDto dto);
         Task<IResult>  DeleteAsync(int id);
         Task<IDataResult<Writer>> UpdateAsync(WriterForUpdateDto dto);
+        Task<IResult> ChangeNickNameAsync(int userId, string nickName);
 
         IDataResult<List<Writer>> GetAll();
         IDataResult<List<Writer>> GetAllWithUserInfo();

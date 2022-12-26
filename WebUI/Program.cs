@@ -119,10 +119,10 @@ app.UseAuthorization();
 app.MapAreaControllerRoute(
     name: "areaDefault",
     areaName: "User",
-    pattern: "u/{controller=Home}/{action=Index}/{id?}");
+    pattern: "u/{controller=User}/{action=Edit}/{id?}");
 app.MapControllerRoute(
     name: "areaDefault",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area:exists}/{controller=User}/{action=Edit}/{id?}");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

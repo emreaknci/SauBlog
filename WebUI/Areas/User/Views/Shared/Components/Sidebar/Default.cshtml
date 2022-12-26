@@ -1,23 +1,31 @@
 ﻿@{
     Layout = null;
+   
+
 }
 
 <nav id="sidebar">
     <div class="p-4 pt-5">
         <a href="#" class="img logo rounded-circle mb-5" style="background-image: url(https://www.pngitem.com/pimgs/m/150-1503945_transparent-user-png-default-user-image-png-png.png);"></a>
         <div class="d-flex justify-content-center">
-            @User.Identity.Name
+            @ViewBag.userFullName
         </div>
         <ul class="list-unstyled components mb-5">
             <li>
                 <a href="#accountSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Hesabım</a>
                 <ul class="collapse list-unstyled" id="accountSubmenu">
                     <li>
-                        <a href="#">Profilim</a>
+                        <a asp-area="User" asp-controller="User" asp-action="Edit">Bilgilerimi Düzenle</a>
                     </li>
                     <li>
                         <a asp-area="User" asp-controller="Auth" asp-action="ChangePassword">Şifre Değiştir</a>
                     </li>
+                    @if (User.IsInRole("Writer"))
+                    {
+                        <li>
+                            <a asp-area="User" asp-controller="Writer" asp-action="EditNickName" as>NickName Değiştir</a>
+                        </li>
+                    }
                 </ul>
             </li>
             @if (User.IsInRole("Admin"))

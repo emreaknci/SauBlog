@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+}
+@model Entities.DTOs.Users.UserForUpdateDto
+<style>
+
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #BA68C8
+    }
+
+    .profile-button {
+        background: rgb(99, 39, 120);
+        box-shadow: none;
+        border: none
+    }
+
+        .profile-button:hover {
+            background: #682773
+        }
+
+        .profile-button:focus {
+            background: #682773;
+            box-shadow: none
+        }
+
+        .profile-button:active {
+            background: #682773;
+            box-shadow: none
+        }
+
+    .back:hover {
+        color: #682773;
+        cursor: pointer
+    }
+
+    .labels {
+        font-size: 11px
+    }
+
+</style>
+
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-4 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span class="font-weight-bold">@Model.FirstName @Model.LastName</span><span class="text-black-50">@ViewBag.email</span><span> </span></div>
+        </div>
+        <div class="col-md-8">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Bilgilerimi Düzenle</h4>
+                </div>
+                <form asp-area="User" asp-controller="User" asp-action="Edit">
+                    <div class="row mt-2">
+                        <input hidden="true" type="text" class="form-control" asp-for="Id">
+
+                        <div class="col-md-6">
+                            <label class="labels">Ad</label>
+                            <input type="text" class="form-control" asp-for="FirstName">
+                            <span asp-validation-for="FirstName" class="form-text m-b-none text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="labels">Soyad</label>
+                            <input type="text" class="form-control" asp-for="LastName">
+                            <span asp-validation-for="LastName" class="form-text m-b-none text-danger"></span>
+                        </div>
+                    </div>
+                   @* <div class="row mt-3">
+                        <div class="col-md-12">
+                            <label class="labels">Email</label>
+                            <input type="email" class="form-control" asp-for="Email">
+                            <span asp-validation-for="Email" class="form-text m-b-none text-danger"></span>
+                        </div>
+                    </div>*@
+                    <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="submit">Düzenle</button></div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

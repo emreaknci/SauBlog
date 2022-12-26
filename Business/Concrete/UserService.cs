@@ -60,7 +60,6 @@ namespace Business.Concrete
             {
                 user.FirstName = dto.FirstName;
                 user.LastName = dto.LastName;
-                user.Email = dto.Email;
                 _userDal.Update(user);
                 await _userDal.SaveAsync();
                 return new SuccessDataResult<User>(user, "User Güncellendi");

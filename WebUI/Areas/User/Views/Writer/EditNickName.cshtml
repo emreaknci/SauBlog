@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewData["Title"] = "EditNickName";
+    Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+}
+<div class="row my-5">
+
+    <div class="offset-3 col-6">
+        <h3>Nick Name Değiştir</h3>
+
+        <form asp-controller="Writer" asp-action="EditNickName" asp-area="User" >
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"> Nick Name </label>
+                <div class="col-sm-10">
+                    <input type="text" name="newNickName" value="@ViewBag.nickName" class="form-control">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <input type="submit" value="Değiştir" class="btn btn-success"/>
+            </div>
+        </form>
+
+    </div>
+
+
+</div>
+
+

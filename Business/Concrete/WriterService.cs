@@ -52,6 +52,21 @@ namespace Business.Concrete
             return new ErrorResult("Yazar Bulunamadı");
         }
 
+        public async Task<IResult> ChangeNickNameAsync(int userId, string newNickName)
+        {
+            var writer =  GetByUserId(userId).Result.Data;
+
+            if (writer != null)
+            {
+               writer.NickName= newNickName;
+               _writerDal.Update(writer);
+               await _writerDal.SaveAsync();
+               return new SuccessResult("NickName Güncellendi");
+
+            }
+            return new ErrorResult("Yazar Bulunamadı");
+        }
+
         public IDataResult<List<Writer>> GetAll()
         {
             var list = _writerDal.GetAll().ToList();
@@ -110,7 +125,6 @@ namespace Business.Concrete
 
             var userForUpdateDto = new UserForUpdateDto()
             {
-                Email = dto.Email,
                 FirstName = dto.FirstName,
                 Id = dto.Id,
                 LastName = dto.LastName

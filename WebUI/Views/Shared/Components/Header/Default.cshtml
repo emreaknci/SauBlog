@@ -42,10 +42,10 @@
                             <i class="fa-solid fa-circle-user"></i> @User.Identity.Name
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a asp-area="User" asp-controller="Home" asp-action="Index" class="dropdown-item">
+                            <a asp-area="User" asp-controller="User" asp-action="Edit" class="dropdown-item">
                                 <i class="fa-solid fa-pencil"></i> @localizer["Hesabım"]
                             </a>
-                            <a class="dropdown-item">
+                            <a asp-area="User" asp-controller="Auth" asp-action="ChangePassword" class="dropdown-item">
                                 <i class="fa-solid fa-key"></i> @localizer["Güvenlik"]
                             </a>
                             <a class="dropdown-item" asp-action="LogOut" asp-controller="Auth">

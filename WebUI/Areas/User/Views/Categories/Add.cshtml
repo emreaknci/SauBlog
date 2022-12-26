@@ -6,9 +6,9 @@
 
 @model Entities.DTOs.Category.CategoryForCreateDto
 <div class="row my-5">
-    <h3>Kategori Bilgilerini Düzenle</h3>
 
     <div class="offset-3 col-6">
+        <h3>Kategori Bilgilerini Düzenle</h3>
 
         <form asp-controller="Categories" asp-action="Add" asp-area="User" >
             <div class="mb-3 row">
@@ -19,7 +19,7 @@
                 </div>
             </div>
 
-            <div class="mb-3 row">
+            <div class="mb-3">
                 <input type="submit" value="Ekle" class="btn btn-success"/>
             </div>
         </form>
