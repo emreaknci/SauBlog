@@ -30,12 +30,12 @@ namespace WebUI.Controllers
             _toastNotification = toastNotification;
         }
 
-        [HttpGet("[action]")]
+        [HttpGet]
         public IActionResult Detail(int id)
         {
-            var result = _blogService.GetByIdWithCommentsAsync(id).Result.Data;
-
-            return View(result);
+            var result = _blogService.GetByIdWithWriter(id).Result.Data;
+            ViewBag.blog=result;
+            return View();
         }
 
 
@@ -123,7 +123,7 @@ namespace WebUI.Controllers
 
             return View(pagedlist);
         }
-        [HttpGet("Blogs/Category{categoryId}")]
+        [HttpGet("Blogs/Category/{categoryId}")]
         public IActionResult BlogsByCategoryId(int categoryId)
         {
             var result = _blogService.GetAllByCategoryId(categoryId);

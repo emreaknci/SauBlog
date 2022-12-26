@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+}
+
+@model List<Entities.DTOs.Comment.CommentForListDto>
+<div class="col-12">
+    @if (Model.Count>0)
+    {
+        <h3>Yorumlar</h3>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Writer</th>
+                    <th>Blog</th>
+                    <th>Comment</th>
+                    <th>Status</th>
+                    <th>Created Date</th>
+                    <th>Updated Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <th>@item.Id</th>
+                        <th>@item.WriterNickName</th>
+                        <th>@item.BlogTitle</th>
+                        <td>@item.Content</td>
+                        @if (item.Status == true)
+                        {
+                            <td><div class="btn btn-success disabled">Aktif</div></td>
+                        }
+                        else
+                        {
+                            <td><div class="btn btn-danger disabled">Pasif</div></td>
+                        }
+                        <td>@item.CreatedDate</td>
+                        <td>@item.UpdatedDate</td>
+                        <td>
+                            <span class="btn btn-danger dropdown-toggle" data-toggle="dropdown">  Actions <i class="fa fa-caret-down"></i></span>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-item">
+                                    <a target="_blank" asp-area="" asp-controller="Blogs" asp-action="Detail" asp-route-id="@item.BlogId">Bloga Git</a>
+                                </li>
+                                <li class="dropdown-item"><a href="#">Durum Değiştir</a></li>
+                                <li class="dropdown-item"><a href="#">Yazar Profiline Git</a></li>
+                                <li class="dropdown-item"><a asp-area="User" asp-controller="Comments" asp-action="Delete" asp-route-id="@item.Id">Sil</a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+
+    }
+    else
+    {
+        <span>
+            Kategori Bulunamadı
+        </span>
+    }
+</div>

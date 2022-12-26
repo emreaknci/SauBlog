@@ -1,0 +1,72 @@
+﻿@{
+    Layout = null;
+    string userImg = "https://e7.pngegg.com/pngimages/178/595/png-clipart-user-profile-computer-icons-login-user-avatars-monochrome-black.png";
+    var blogId = ViewContext.RouteData.Values["id"];
+
+}
+@model Entities.DTOs.Comment.CommentForCreateDto
+@if (User.Identity!.IsAuthenticated)
+{
+    @if (User.IsInRole("Writer"))
+    {
+        <form asp-area="" asp-controller="Comment" asp-action="Add">
+            <div class="card m-3">dasd
+                @TempData["writerId"]
+
+
+                <div class="row">
+                    <input hidden="true" asp-for="WriterId" value="@ViewBag.writerId"/>
+                    <input hidden="true" asp-for="BlogId" value="@blogId"/>
+                    <div class="col-md-2 m-auto text-center p-3">
+                        <img class="w-75 rounded rounded-circle" src="@userImg" >
+                        <h5 class="card-title">@User.Identity.Name</h5>
+                    </div>
+                    <div class="col-md">
+                        <div class="card-body">
+                            <textarea asp-for="Content" class="w-100 bg-light" rows="6"></textarea>
+                            <button class="rounded-3 btn btn-outline-success">Gönder</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    }
+    else
+    {
+        <form>
+            <div class="card m-3">
+                <div class="row">
+                    <div class="col-md-2 m-auto text-center p-3">
+                        <img class="w-75 rounded rounded-circle" src="@userImg" alt=" ">
+                        <h5 class="card-title"></h5> 
+                    </div>
+                    <div class="col-md">
+                        <div class="card-body">
+                            <textarea class="w-100 bg-light" rows="6" disabled="disabled">Yorum yapmak için yazar olmalısınız</textarea>
+                            <button class="rounded-3 btn btn-outline-success" disabled="disabled">Gönder</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    }
+}
+else
+{
+    <form>
+        <div class="card m-3">
+            <div class="row">
+                <div class="col-md-2 m-auto text-center p-3">
+                    <img class="w-75 rounded rounded-circle" src="@userImg" alt=" ">
+                    <h5 class="card-title"></h5> 
+                </div>
+                <div class="col-md">
+                    <div class="card-body">
+                        <textarea class="w-100 bg-light" rows="6" disabled="disabled">Yorum yapmak için giriş yapmalısnız</textarea>
+                        <button class="rounded-3 btn btn-outline-success" disabled="disabled">Gönder</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}

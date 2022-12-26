@@ -2,53 +2,15 @@
 @{
     string userImg = "https://e7.pngegg.com/pngimages/178/595/png-clipart-user-profile-computer-icons-login-user-avatars-monochrome-black.png";
 }
-@model List<Comment>
 
 <div class="container w-100">
     <h6>Yorumlar</h6>
 
-    @if (User.Identity!.IsAuthenticated)
-    {
-        <form>
-            <div class="card m-3">
-                <div class="row">
-                    <div class="col-md-2 m-auto text-center p-3">
-                        <img class="w-75 rounded rounded-circle" src="@userImg" alt="">
-                        <h5 class="card-title">@User.Identity.Name</h5>
-                    </div>
-                    <div class="col-md">
-                        <div class="card-body">
-                            <textarea class="w-100 bg-light" rows="6"></textarea>
-                            <button class="rounded-3 btn btn-outline-success">Gönder</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    }
-    else
-    {
-        <form>
-            <div class="card m-3">
-                <div class="row">
-                    <div class="col-md-2 m-auto text-center p-3">
-                        <img class="w-75 rounded rounded-circle" src="@userImg" alt=" ">
-                        <h5 class="card-title">----</h5> <!--todo isim cookieden çekilecek,cookiede kullanıcı yoksa yorum yapılmayacak-->
-                    </div>
-                    <div class="col-md">
-                        <div class="card-body">
-                            <textarea class="w-100 bg-light" rows="6" disabled="disabled">Yorum yapmak için giriş yapmalısnız</textarea>
-                            <button class="rounded-3 btn btn-outline-success" disabled="disabled">Gönder</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    }
+   <partial name="/Views/Comment/Add.cshtml"/>
 
-    @if (Model != null)
+    @if ((List<Comment>)ViewBag.comments != null)
     {
-        @foreach (var item in Model)
+        @foreach (var item in (List<Comment>)ViewBag.comments)
         {
             <div class="card m-3">
                 <div class="row">

@@ -2,6 +2,8 @@
 @{
     ViewData["Title"] = "Detail";
     Layout = "_Layout";
+    var blogId = ViewContext.RouteData.Values["id"];
+    Blog blog = ViewBag.blog;
 }
 @model Blog
 
@@ -10,17 +12,18 @@
     <div class="row">
         <div class="col-lg-9">
             <div class="card border-0 mb-3">
-                <img src="~/Images/@Model.ImagePath" style="height: 50%; height: 50%" class="card-img-top mx-auto" alt="...">
+                <img src="~/Images/@blog.ImagePath" style="height: 50%; height: 50%" class="card-img-top mx-auto" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title">@Model.Title</h5>
+                    <h5 class="card-title">@blog.Title</h5>
                     <p class="card-text">
-                        @Model.Content
+                        @blog.Content
                         
                     </p>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    <p class="card-text"><small class="text-muted">@blog.CreatedDate</small></p>
+                    <p class="card-text"><small class="text-muted">@blog.Writer.NickName</small></p>
                 </div>
             </div>
-            @await Component.InvokeAsync("CommentList",new {blogId=2})
+            @await Component.InvokeAsync("CommentList",new {blogId=Convert.ToInt32(blogId)})
         </div>
         <div class="col-lg-3">
             @await Component.InvokeAsync("BlogsSidebar")

@@ -10,5 +10,8 @@ namespace Business.Abstract
         Task<IResult> DeleteAsync(int id);
 
         IDataResult<List<Comment>> GetAllByBlogId(int id);
+        IDataResult<List<Comment>> GetAll();
+        IDataResult<List<CommentForListDto>> GetAllForListing();
+        IDataResult<List<Comment>> GetAllWithWriterByBlogId(int id);
     }
 }

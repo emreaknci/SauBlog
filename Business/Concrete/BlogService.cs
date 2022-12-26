@@ -130,6 +130,21 @@ namespace Business.Concrete
 
             if (blog != null)
             {
+                if (string.IsNullOrEmpty(blog.ImagePath))
+                    blog.ImagePath = "DefaultBlogPng.png"; 
+                return new SuccessDataResult<Blog>(blog);
+            }
+            return new ErrorDataResult<Blog>("Blog Bulunamadı");
+        }
+
+        public async Task<IDataResult<Blog>> GetByIdWithWriter(int id)
+        {
+            var blog = await _blogDal.Table.Include(b=>b.Writer).FirstOrDefaultAsync(b=>b.Id==id);
+
+            if (blog != null)
+            {
+                if (string.IsNullOrEmpty(blog.ImagePath))
+                    blog.ImagePath = "DefaultBlogPng.png";
                 return new SuccessDataResult<Blog>(blog);
             }
             return new ErrorDataResult<Blog>("Blog Bulunamadı");
@@ -140,6 +155,8 @@ namespace Business.Concrete
             var blog = await _blogDal.Table.Include(b => b.Categories).FirstOrDefaultAsync(b => b.Id == id);
             if (blog == null)
                 return new ErrorDataResult<Blog>();
+            if (string.IsNullOrEmpty(blog.ImagePath))
+                blog.ImagePath = "DefaultBlogPng.png";
             return new SuccessDataResult<Blog>(blog);
         }
 
@@ -160,6 +177,8 @@ namespace Business.Concrete
 
             if (blog != null)
             {
+                if (string.IsNullOrEmpty(blog.ImagePath))
+                    blog.ImagePath = "DefaultBlogPng.png";
                 return new SuccessDataResult<Blog>(blog);
             }
             return new ErrorDataResult<Blog>("Blog Bulunamadı");

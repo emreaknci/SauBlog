@@ -1,12 +1,22 @@
-﻿using Entities.Concrete;
+﻿using Business.Abstract;
+using Entities.Concrete;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebUI.ViewComponents;
 
 public class CommentListViewComponent : ViewComponent
 {
-    public IViewComponentResult Invoke(List<Comment> comments)
+    ICommentService _commentService;
+
+    public CommentListViewComponent(ICommentService commentService)
     {
-        return View(comments);
+        _commentService = commentService;
+    }
+
+    public IViewComponentResult Invoke(int blogId)
+    {
+        var comments = _commentService.GetAllWithWriterByBlogId(blogId).Data;
+        ViewBag.comments= comments;
+        return View();
     }
 }

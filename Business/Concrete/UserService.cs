@@ -76,6 +76,13 @@ namespace Business.Concrete
                 if (!HashingHelper.VerifyPasswordHash(dto.OldPassword!, userToCheck.PasswordHash!,
                         userToCheck.PasswordSalt!))
                     return new ErrorResult("Hatalı Şifre!");
+
+                HashingHelper.CreatePasswordHash(dto.NewPassword!, out var hash, out var salt);
+                userToCheck.PasswordHash=hash;
+                userToCheck.PasswordSalt=salt;
+                _userDal.Update(userToCheck);
+                await _userDal.SaveAsync();
+
                 return new SuccessResult("Şifre değişikliği tamamlandı!");
             }
             return new ErrorResult("Kullanıcı bulunamadı");

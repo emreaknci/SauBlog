@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Concrete
 {
@@ -47,7 +48,39 @@ namespace Business.Concrete
 
         public IDataResult<List<Comment>> GetAllByBlogId(int id)
         {
-            var comments = _commentDal.GetAll(c => c.BlogId == id).ToList();
+            var comments = _commentDal.GetAll(c => c.BlogId == id).OrderByDescending(c=>c.Id).ToList();
+
+            if (comments.Count > 0)
+            {
+                return new SuccessDataResult<List<Comment>>(comments);
+            }
+            return new ErrorDataResult<List<Comment>>(comments);
+        }
+
+        public IDataResult<List<Comment>> GetAll()
+        {
+            var comments = _commentDal.GetAll().OrderByDescending(c => c.Id).ToList();
+
+            if (comments.Count > 0)
+            {
+                return new SuccessDataResult<List<Comment>>(comments);
+            }
+            return new ErrorDataResult<List<Comment>>(comments);
+        }
+
+        public IDataResult<List<CommentForListDto>> GetAllForListing()
+        {
+            var comments = _commentDal.GetAllForListing();
+            if (comments.Count > 0)
+            {
+                return new SuccessDataResult<List<CommentForListDto>>(comments);
+            }
+            return new ErrorDataResult<List<CommentForListDto>>(comments);
+        }
+
+        public IDataResult<List<Comment>> GetAllWithWriterByBlogId(int id)
+        {
+            var comments = _commentDal.GetAll(c => c.BlogId == id).Include(c=>c.Writer).OrderByDescending(c => c.Id).ToList();
 
             if (comments.Count > 0)
             {
