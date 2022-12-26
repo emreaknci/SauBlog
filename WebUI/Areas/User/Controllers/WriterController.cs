@@ -15,10 +15,9 @@ namespace WebUI.Areas.User.Controllers
     {
         private readonly IWriterService _writerService;
         private readonly IToastNotification _toastNotification;
-        private Writer CurrentWriter()
+        private Writer GetCurrentWriter()
         {
-            var userId = Convert.ToInt32(HttpContext.User.Claims.ToList()[0].Value);
-            var writer = _writerService.GetByUserId(userId).Result.Data;
+            var writer = _writerService.GetByUserId(Convert.ToInt32(HttpContext.User.Claims.ToList()[0].Value)).Result.Data;
             return writer!;
         }
         public WriterController(IWriterService writerService, IToastNotification toastNotification)
@@ -27,6 +26,7 @@ namespace WebUI.Areas.User.Controllers
             _toastNotification = toastNotification;
         }
         [HttpGet("Detail")]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult GetUserById(int id)
         {
             var result = _writerService.GetByIdWithUserInfoAsync(id).Result;
@@ -48,22 +48,25 @@ namespace WebUI.Areas.User.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Writer", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult EditNickName()
         {
-            ViewBag.nickName = CurrentWriter().NickName;
+            ViewBag.nickName = GetCurrentWriter().NickName;
             return View();
         }
+
         [HttpPost]
+        [Authorize(Roles = "Writer", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> EditNickName(string newNickName)
         {
-            ViewBag.nickName = CurrentWriter().NickName;
+            ViewBag.nickName = GetCurrentWriter().NickName;
             if (newNickName.IsNullOrEmpty())
             {
-                ViewBag.nickName = CurrentWriter().NickName;
+                ViewBag.nickName = GetCurrentWriter().NickName;
                 return View();
             }
-            await _writerService.ChangeNickNameAsync(((int)CurrentWriter().UserId!), newNickName);
-            ViewBag.nickName = CurrentWriter().NickName;
+            await _writerService.ChangeNickNameAsync(((int)GetCurrentWriter().UserId!), newNickName);
+            ViewBag.nickName = GetCurrentWriter().NickName;
 
             return View();
         }

@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
+using Core.Entities;
 using Entities.Concrete;
 using Entities.DTOs.Blog;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -26,14 +27,17 @@ namespace WebUI.Areas.User.Controllers
             _categoryService = categoryService;
             _toastNotification = toastNotification;
         }
+        private  Writer GetCurrentWriter()
+        {
+            var writer = _writerService.GetByUserId(Convert.ToInt32(HttpContext.User.Claims.ToList()[0].Value)).Result.Data;
+            return writer!;
+        }
 
         [HttpGet]
         [Authorize(Roles = "Writer", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult Add()
         {
-            var userid = HttpContext.User.Claims.ToList()[0].Value;
-            var writerId = _writerService.GetByUserId(Convert.ToInt32(userid)).Result.Data!.Id;
-            ViewBag.writerId = writerId;
+            ViewBag.writerId = GetCurrentWriter().Id;
 
             var categories = _categoryService.GetAll().Data;
             ViewData["categories"] = categories;
@@ -46,9 +50,8 @@ namespace WebUI.Areas.User.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var userid = HttpContext.User.Claims.ToList()[0].Value;
-                var writerId = _writerService.GetByUserId(Convert.ToInt32(userid)).Result.Data!.Id;
-                ViewBag.writerId = writerId;
+                ViewBag.writerId = GetCurrentWriter().Id;
+
                 var categories = _categoryService.GetAll().Data;
                 ViewData["categories"] = categories;
                 return View(dto);
@@ -116,18 +119,11 @@ namespace WebUI.Areas.User.Controllers
             return RedirectToAction("MyBlogs", "Blogs",new{Area="User"});
         }
 
-
-
-
-
-
         [HttpGet]
         [Authorize(Roles = "Writer", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult MyBlogs()
         {
-            var userid = HttpContext.User.Claims.ToList()[0].Value;
-            var writerId = _writerService.GetByUserId(Convert.ToInt32(userid)).Result.Data!.Id;
-            var list = _blogService.GetAllByWriterId(writerId).Data;
+            var list = _blogService.GetAllByWriterId(GetCurrentWriter().Id).Data;
             return View(list);
         }
 

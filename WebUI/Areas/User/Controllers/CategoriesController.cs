@@ -8,11 +8,11 @@ using NToastNotify;
 namespace WebUI.Areas.User.Controllers
 {
     [Area("User")]
-    [Authorize(Roles = "User", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+    [Authorize(Roles = "Admin", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public class CategoriesController : Controller
     {
-        private ICategoryService _categoryService;
-        private IToastNotification _toastNotification;
+        private readonly ICategoryService _categoryService;
+        private readonly IToastNotification _toastNotification;
         public CategoriesController(ICategoryService categoryService, IToastNotification toastNotification)
         {
             _categoryService = categoryService;
@@ -56,7 +56,7 @@ namespace WebUI.Areas.User.Controllers
         [HttpPost]
         public IActionResult Update(CategoryForUpdateDto dto)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return View(dto);
 
             var result = _categoryService.UpdateAsync(dto).Result;

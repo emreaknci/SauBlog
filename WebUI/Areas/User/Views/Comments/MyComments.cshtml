@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "MyComments";
+    Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+    var currentUrl = ViewContext.HttpContext.Request.GetDisplayUrl();
+
+}
+
+
+@using Microsoft.IdentityModel.Tokens
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<Entities.DTOs.Comment.CommentForListDto>
+<div class="row mb-2 p-3">
+
+    @if (!Model.IsNullOrEmpty())
+    {
+        <div class="m-0 p-0 col-12 mb-3">
+            <h3>Yorumlarım</h3>
+        </div>
+
+        @foreach (var item in Model)
+        {
+            <div class="col-md-12 m-0 p-0 mb-3">
+                <div class="card">
+                    <h5 class="card-header"><span class="font-weight-bold">Blog:</span>  @item.BlogTitle</h5>
+                    <div class="card-body">
+
+                        <h5 class="card-title">Yorum:</h5>
+                        <p class="card-text">@item.Content</p>
+                        <div class="row">
+                            <div class="col-9">
+                                <a target="_blank" asp-area="" asp-controller="Blogs" asp-action="Detail" asp-route-id="@item.BlogId" class="btn btn-primary">Bloga Git &raquo;</a>
+                                <a target="_blank" asp-area="User" asp-controller="Comments" asp-action="Delete" asp-route-id="@item.Id" asp-route-previousUrl="@currentUrl" class="btn btn-danger">Yorumu Sil</a>
+                            </div>
+                            <div class="col-3 d-flex justify-content-end">
+                                <span class="font-weight-bold">Yorum Tarihi:</span>  @item.CreatedDate
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <h3>Henüz bir bloga yorum yapmadınız!</h3>
+        <a target="_blank" asp-area="" asp-controller="Home" asp-action="Index" class="mx-2 btn btn-primary w-auto">Bloglar &raquo;</a>
+    }
+
+</div>

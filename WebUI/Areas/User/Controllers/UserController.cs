@@ -13,12 +13,10 @@ namespace WebUI.Areas.User.Controllers
     {
         private readonly IUserService _userService;
 
-        
-        private Core.Entities.User CurrentUser()
+        private Core.Entities.User GetCurrentUser()
         {
-            var email = HttpContext.User.Claims.ToList()[1].Value;
-            var user = _userService.GetUserByMailAsync(email).Result.Data;
-            return user;
+            var user = _userService!.GetById(Convert.ToInt32(HttpContext.User.Claims.ToList()[0].Value)).Result.Data;
+            return user!;
         }
 
         public UserController(IUserService userService)
@@ -28,9 +26,9 @@ namespace WebUI.Areas.User.Controllers
         [HttpGet]
         public IActionResult Edit()
         {
-            ViewBag.email = CurrentUser().Email;
+            ViewBag.email = GetCurrentUser().Email!;
 
-            var user = CurrentUser();
+            var user = GetCurrentUser();
             UserForUpdateDto dto = new()
             {
                 Id = user.Id,
@@ -39,13 +37,14 @@ namespace WebUI.Areas.User.Controllers
             };
             return View(dto);
         }
+
         [HttpPost]
         public IActionResult Edit(UserForUpdateDto dto)
         {
-            ViewBag.email = CurrentUser().Email;
+            ViewBag.email = GetCurrentUser().Email!;
 
-            if (dto.Id == null || dto.Id != CurrentUser().Id) //Id degistirmeye izin vermiyoruz. Manipule edilirse diye aktif kullanicinin idsini aliyoruz.
-                dto.Id = CurrentUser().Id;
+            if (dto.Id == null || dto.Id != GetCurrentUser().Id) //Id degistirmeye izin vermiyoruz. Manipule edilirse diye aktif kullanicinin idsini aliyoruz.
+                dto.Id = GetCurrentUser().Id;
 
             if (!ModelState.IsValid)
             {

@@ -1,6 +1,7 @@
 ﻿using Entities.Concrete;
 using Core.Utilities.Results;
 using Entities.DTOs.Comment;
+using System.Linq.Expressions;
 
 namespace Business.Abstract
 {
@@ -11,7 +12,7 @@ namespace Business.Abstract
 
         IDataResult<List<Comment>> GetAllByBlogId(int id);
         IDataResult<List<Comment>> GetAll();
-        IDataResult<List<CommentForListDto>> GetAllForListing();
+        IDataResult<List<CommentForListDto>> GetAllForListing(Expression<Func<CommentForListDto, bool>>? filter = null);
         IDataResult<List<Comment>> GetAllWithWriterByBlogId(int id);
     }
 }

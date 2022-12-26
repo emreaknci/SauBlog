@@ -4,6 +4,8 @@ using DataAccess.Concrete.Context;
 using Entities.Concrete;
 using Entities.DTOs.Comment;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DataAccess.Concrete
 {
@@ -12,30 +14,12 @@ namespace DataAccess.Concrete
         public CommentDal(BlogDbContext context) : base(context)
         {
         }
-        //var result = GetAll().Include(b => b.Categories)
-        //    .Include(b => b.Comments)
-        //    .Include(b => b.Writer)
-        //    .Select(b => new BlogForListDto()
-        //    {
-        //        Id = b.Id,
-        //        ImagePath = b.ImagePath,
-        //        Title = b.Title,
-        //        CreatedDate = b.CreatedDate,
-        //        CommentCount = b.Comments!.Count,
-        //        WriterNickName = b.Writer.NickName,
-        //    });
-
-        //var list = result.Skip(index * size).Take(size);
-        //int count = result.Count();
-
-        //    if (filter == null) return (list.ToList(), count);
-
-        //list = list.Where(filter);
-        //count = list.Count();
-        //return (list.ToList(), count);
-        public List<CommentForListDto>? GetAllForListing()
+        public List<CommentForListDto>? GetAllForListing(Expression<Func<CommentForListDto, bool>>? filter = null, bool tracking = true)
         {
-            var result = GetAll().Include(c => c.Blog)
+            IQueryable<CommentForListDto> result = null!;
+            if (!tracking)
+                result = result.AsNoTracking();
+            result = GetAll().Include(c => c.Blog)
                 .Include(c => c.Writer)
                 .Select(c => new CommentForListDto()
                 {
@@ -48,9 +32,9 @@ namespace DataAccess.Concrete
                     Status = c.Status,
                     BlogTitle = c.Blog.Title,
                     WriterNickName = c.Writer.NickName
-
                 });
-            return result.ToList();
+
+            return filter == null ? result.ToList() : result.Where(filter).ToList();
         }
     }
 }

@@ -42,10 +42,10 @@ namespace Business.Concrete
             {
                 if (!HashingHelper.VerifyPasswordHash(dto.Password!, userToCheck.Data.PasswordHash!,
                         userToCheck.Data.PasswordSalt!))
-                    return new ErrorDataResult<User>();
+                    return new ErrorDataResult<User>("Doğru şifreyi girdiğinizden emin olun");
                 return new SuccessDataResult<User>(userToCheck.Data, "Giriş başarılı");
             }
-            return new ErrorDataResult<User>();
+            return new ErrorDataResult<User>("Kullanıcı bulunamadı");
         }
 
         public async Task<IDataResult<int>> RegisterForUserAsync(UserForRegisterDto dto)

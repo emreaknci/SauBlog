@@ -77,7 +77,7 @@ namespace WebUI.Controllers
                         return RedirectToAction("Index", "Home");
                     return Redirect((string)TempData["returnUrl"]);
                 }
-                _toastNotification.AddErrorToastMessage("Giriş başarısız");
+                _toastNotification.AddErrorToastMessage(result.Message);
                 return View(dto);
             }
             _toastNotification.AddErrorToastMessage("Eksik alanlar var");

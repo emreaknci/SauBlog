@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
+using Entities.Concrete;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,13 +13,22 @@ namespace WebUI.Areas.User.Controllers
     public class CommentsController : Controller
     {
         private readonly ICommentService _commentService;
-        private IToastNotification _toastNotification;
+        private readonly IToastNotification _toastNotification; 
+        private readonly IWriterService _writerService;
 
-        public CommentsController(ICommentService commentService, IToastNotification toastNotification)
+        public CommentsController(ICommentService commentService, IToastNotification toastNotification, IWriterService writerService)
         {
             _commentService = commentService;
             _toastNotification = toastNotification;
+            _writerService = writerService;
         }
+
+        private Writer GetCurrentWriter()
+        {
+            var writer = _writerService.GetByUserId(Convert.ToInt32(HttpContext.User.Claims.ToList()[0].Value)).Result.Data;
+            return writer!;
+        }
+
         [HttpGet]
         [Authorize(Roles = "Admin", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult Index()
@@ -26,9 +36,9 @@ namespace WebUI.Areas.User.Controllers
             var list = _commentService.GetAllForListing().Data;
             return View(list);
         }
+
         [HttpGet]
-        [Authorize(Roles = "Admin", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id, string previousUrl)
         {
             var result = _commentService.DeleteAsync(id).Result;
             if (result.Success)
@@ -36,7 +46,16 @@ namespace WebUI.Areas.User.Controllers
             else
                 _toastNotification.AddErrorToastMessage(result.Message);
 
-            return RedirectToAction("Index", "Comments", new { Area = "User" });
+            return Redirect(previousUrl);
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Writer", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        public IActionResult MyComments()
+        {
+            var list = _commentService.GetAllForListing(c=>c.WriterId==GetCurrentWriter().Id).Data;
+            return View(list);
+        }
+
     }
 }

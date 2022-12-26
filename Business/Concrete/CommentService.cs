@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Business.Concrete
 {
@@ -68,9 +69,10 @@ namespace Business.Concrete
             return new ErrorDataResult<List<Comment>>(comments);
         }
 
-        public IDataResult<List<CommentForListDto>> GetAllForListing()
+        public IDataResult<List<CommentForListDto>> GetAllForListing(Expression<Func<CommentForListDto, bool>>? filter = null)
         {
-            var comments = _commentDal.GetAllForListing();
+            var comments = _commentDal.GetAllForListing(filter);
+                
             if (comments.Count > 0)
             {
                 return new SuccessDataResult<List<CommentForListDto>>(comments);
