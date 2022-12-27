@@ -98,5 +98,15 @@ namespace Business.Concrete
             }
             return new ErrorDataResult<Role>("Rol Bulunamadı");
         }
+
+        public async Task<IDataResult<Role>> GetWithUsersByName(string name)
+        {
+            var role = await _roleDal.Table.Include(r => r.Users).FirstOrDefaultAsync(r => r.Name == name);
+            if (role != null)
+            {
+                return new SuccessDataResult<Role>(role);
+            }
+            return new ErrorDataResult<Role>("Rol Bulunamadı");
+        }
     }
 }

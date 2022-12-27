@@ -1,9 +1,11 @@
 ﻿using Business.Abstract;
+using Core.Utilities.Results;
 using Entities.DTOs.Users;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using NToastNotify;
 
 namespace WebUI.Areas.User.Controllers
 {
@@ -12,6 +14,7 @@ namespace WebUI.Areas.User.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IToastNotification _toastNotification;
 
         private Core.Entities.User GetCurrentUser()
         {
@@ -19,9 +22,10 @@ namespace WebUI.Areas.User.Controllers
             return user!;
         }
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IToastNotification toastNotification)
         {
             _userService = userService;
+            _toastNotification = toastNotification;
         }
         [HttpGet]
         public IActionResult Edit()
@@ -54,6 +58,33 @@ namespace WebUI.Areas.User.Controllers
             var email = HttpContext.User.Claims.ToList()[1].Value;
             var user = _userService.UpdateAsync(dto).Result.Data;
             return View(dto);
+        }
+        
+        [HttpPost]
+        public IActionResult AssignRole(int userId)
+        {
+            var roleName = (string)TempData["roleName"]!;
+           var result= _userService.AssignRole(userId, roleName).Result;
+           
+           if (result.Success)
+               _toastNotification.AddSuccessToastMessage(result.Message);
+           else
+               _toastNotification.AddErrorToastMessage(result.Message);
+
+            return Redirect(TempData["url"]!.ToString()!);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RevokeRole(int userId, string previousUrl)
+        {
+            var roleName = (string)TempData["roleName"]!;
+            var result = await _userService.RevokeRole(userId, roleName);
+
+            if (result.Success)
+                _toastNotification.AddSuccessToastMessage(result.Message);
+            else
+                _toastNotification.AddErrorToastMessage(result.Message);
+            return Redirect(TempData["url"]!.ToString()!);
         }
     }
 }

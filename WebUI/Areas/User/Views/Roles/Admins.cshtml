@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Admins";
+    Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+    var currentUrl = ViewContext.HttpContext.Request.GetDisplayUrl();
+}
+
+@using Microsoft.AspNetCore.Http.Extensions
+@using WebUI.Areas.User.ViewComponents
+@model Core.Entities.Role
+<div class="row mb-2 p-3">
+    @if (Model != null)
+    {
+        <div class="m-0 p-0 col-12 mb-3">
+            <h3>Adminler</h3>
+            @await Component.InvokeAsync("AssignRole")
+        </div>
+        @foreach (var item in Model.Users!)
+        {
+            <div class="col-4 m-0 p-0">
+                <div class="card" style="width: 18rem;">
+                    <img src="https://www.pngitem.com/pimgs/m/150-1503945_transparent-user-png-default-user-image-png-png.png" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.FirstName @item.LastName</h5>
+                        <p class="card-text"><span class="font-weight-bold">Email:</span> @item.Email</p>
+                        <p class="card-text"><span class="font-weight-bold">Kayıt Tarihi:</span> @item.CreatedDate</p>
+                        <p class="card-text">
+
+                            <a asp-area="User" asp-controller="User"
+                       asp-action="RevokeRole"
+                       asp-route-previousUrl="@currentUrl"
+                       asp-route-userId="@item.Id"
+                       class="font-weight-bold text-danger">
+                                Yetki Al
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        }
+    }
+
+</div>

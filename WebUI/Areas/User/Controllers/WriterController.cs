@@ -15,27 +15,29 @@ namespace WebUI.Areas.User.Controllers
     {
         private readonly IWriterService _writerService;
         private readonly IToastNotification _toastNotification;
+
         private Writer GetCurrentWriter()
         {
-            var writer = _writerService.GetByUserId(Convert.ToInt32(HttpContext.User.Claims.ToList()[0].Value)).Result.Data;
+            var writer = _writerService.GetByUserId(Convert.ToInt32(HttpContext.User.Claims.ToList()[0].Value)).Result
+                .Data;
             return writer!;
         }
+
         public WriterController(IWriterService writerService, IToastNotification toastNotification)
         {
             _writerService = writerService;
             _toastNotification = toastNotification;
         }
-        [HttpGet("Detail")]
+
+        [HttpGet]
         [Authorize(Roles = "Admin", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-        public IActionResult GetUserById(int id)
+        public IActionResult Detail(int id)
         {
             var result = _writerService.GetByIdWithUserInfoAsync(id).Result;
-            if (result.Success)
-            {
-                _toastNotification.AddErrorToastMessage(result.Message);
-                return RedirectToAction("Index", "Home", new { Area = "User" });
-            }
-            return View(result.Data);
+            if (result.Success) return View(result.Data);
+
+            _toastNotification.AddErrorToastMessage(result.Message);
+            return RedirectToAction("Index", "Home", new { Area = "User" });
         }
 
         [Authorize(Roles = "Admin", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]

@@ -1,0 +1,48 @@
+﻿@using Core.Entities
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+    List<User> users = ViewBag.users;
+}
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-success text-white w-auto h-auto" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Yeni Admin Ekle
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">
+                    Yeni Admin Ekle
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (users != null)
+                {
+                    <form action="/u/User/AssignRole" method="post">
+                        <select class="form-select" name="userId">
+
+                            @foreach (var item in users)
+                            {
+                                <option value="@item.Id" > @item.FirstName @item.LastName</option>
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-success">Admin Olarak Ekle</button>
+
+                    </form>
+                }
+                else
+                {
+                    <span>Hata!</span>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>

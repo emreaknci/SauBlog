@@ -45,14 +45,6 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#writerSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Yazar İşlemleri</a>
-                    <ul class="collapse list-unstyled" id="writerSubmenu">
-                        <li>
-                            <a asp-area="User" asp-controller="Writer" asp-action="Index">Yazarlar</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
                     <a href="#commentSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Yorum İşlemleri</a>
                     <ul class="collapse list-unstyled" id="commentSubmenu">
                         <li><a asp-area="User" asp-controller="Comments" asp-action="Index">Yorumlar</a></li>
@@ -61,10 +53,10 @@
                 <li>
                     <a href="#roleSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Yetki İşlemleri</a>
                     <ul class="collapse list-unstyled" id="roleSubmenu">
-                        <li><a href="#">Adminler</a></li>
-                        <li><a href="#">Kullanıcılar</a></li>
-                        <li><a href="#">Yeni Rol Ekle</a></li>
-                        <li><a href="#">Yeni Admin Ekle</a></li>
+                        <li><a asp-area="User" asp-controller="Roles" asp-action="Admins">Adminler</a></li>
+                        <li>
+                            <a asp-area="User" asp-controller="Writer" asp-action="Index">Yazarlar</a>
+                        </li>
                     </ul>
                 </li>
             }

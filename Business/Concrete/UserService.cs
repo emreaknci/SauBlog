@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -14,25 +15,31 @@ using DataAccess.Abstract;
 using DataAccess.Concrete;
 using Entities.DTOs.Users;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Business.Concrete
 {
     public class UserService : IUserService
     {
         private readonly IUserDal _userDal;
+        private readonly IRoleService _roleService;
 
-        public UserService(IUserDal userDal)
+        public UserService(IUserDal userDal, IRoleService roleService)
         {
             _userDal = userDal;
+            _roleService = roleService;
         }
+
+
 
         public async Task<IDataResult<int>> AddAsync(User user)
         {
-            var result= BusinessRules.Run(CheckIfEmailExist(user.Email));
+            var result = BusinessRules.Run(CheckIfEmailExist(user.Email));
             if (result != null)
             {
                 return new ErrorDataResult<int>(result.Message);
             }
+
             await _userDal.AddAsync(user);
             await _userDal.SaveAsync();
 
@@ -48,6 +55,7 @@ namespace Business.Concrete
                 await _userDal.SaveAsync();
                 return new SuccessResult("User Silindi");
             }
+
             return new ErrorResult("User Bulunamadı");
 
         }
@@ -64,6 +72,7 @@ namespace Business.Concrete
                 await _userDal.SaveAsync();
                 return new SuccessDataResult<User>(user, "User Güncellendi");
             }
+
             return new ErrorDataResult<User>("User Bulunamadı");
         }
 
@@ -77,13 +86,14 @@ namespace Business.Concrete
                     return new ErrorResult("Hatalı Şifre!");
 
                 HashingHelper.CreatePasswordHash(dto.NewPassword!, out var hash, out var salt);
-                userToCheck.PasswordHash=hash;
-                userToCheck.PasswordSalt=salt;
+                userToCheck.PasswordHash = hash;
+                userToCheck.PasswordSalt = salt;
                 _userDal.Update(userToCheck);
                 await _userDal.SaveAsync();
 
                 return new SuccessResult("Şifre değişikliği tamamlandı!");
             }
+
             return new ErrorResult("Kullanıcı bulunamadı");
         }
 
@@ -95,6 +105,7 @@ namespace Business.Concrete
             {
                 return new SuccessDataResult<User>(user);
             }
+
             return new ErrorDataResult<User>("User Bulunamadı");
         }
 
@@ -106,6 +117,7 @@ namespace Business.Concrete
             {
                 return new SuccessDataResult<User>(user);
             }
+
             return new ErrorDataResult<User>("User Bulunamadı");
         }
 
@@ -118,6 +130,7 @@ namespace Business.Concrete
             {
                 return new SuccessDataResult<User>(user);
             }
+
             return new ErrorDataResult<User>("User Bulunamadı");
 
         }
@@ -129,7 +142,24 @@ namespace Business.Concrete
             {
                 return new SuccessDataResult<List<User>>(list);
             }
+
             return new ErrorDataResult<List<User>>("User Bulunamadı");
+        }
+
+        public IDataResult<List<User>> GetAllNonAdmin()
+        {
+            var alluser = _userDal.GetAll().ToList();
+            if (alluser.Count > 0)
+                new ErrorDataResult<List<User>>("Kullanıcı bulunamadı");
+            var admins = _roleService.GetWithUsersByName("Admin").Result.Data!.Users!.ToList();
+            var nonAdmins = alluser;
+
+            if (!admins.IsNullOrEmpty()) //admin rolunde user varsa user olmayanlari aliyoruz
+                nonAdmins = alluser.Except(admins).ToList();
+
+            if (nonAdmins==alluser)
+                return new ErrorDataResult<List<User>>("Tüm kullanıcılar zaten Admin");
+            return new SuccessDataResult<List<User>>(nonAdmins);
         }
 
         public async Task<IDataResult<User>> GetById(int id)
@@ -140,6 +170,7 @@ namespace Business.Concrete
             {
                 return new SuccessDataResult<User>(user);
             }
+
             return new ErrorDataResult<User>("User Bulunamadı");
         }
 
@@ -153,8 +184,6 @@ namespace Business.Concrete
             return claims;
         }
 
-
-
         public async Task<IResult> AddResetPasswordToken(User user, string resetPasswordToken)
         {
             user.ResetPasswordToken = resetPasswordToken;
@@ -162,6 +191,8 @@ namespace Business.Concrete
             await _userDal.SaveAsync();
             return new SuccessResult();
         }
+
+
         public async Task<IResult> ResetPasswordAsync(int userId, string newPassword)
         {
             var user = await _userDal.GetByIdAsync(userId);
@@ -177,7 +208,39 @@ namespace Business.Concrete
             return new SuccessResult("Şifre değişikliği tamamlandı!");
         }
 
+        public async Task<IResult> AssignRole(int userId, string roleName)
+        {
 
+            var result = _roleService.GetByName(roleName).Result;
+            if (!result.Success) return new ErrorResult(result.Message);
+            return await AssignRole(userId, result.Data!);
+        }
+        public async Task<IResult> AssignRole(int userId, Role role)
+        {
+            var user = await _userDal.Table.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null) return new ErrorResult("Kullanıcı bulunamadı");
+            user.Roles.Add(role);
+            await _userDal.SaveAsync();
+            return new SuccessResult($"{role.Name} rolü {user.FirstName} {user.LastName} kullanıcısına verildi");
+        }
+
+        public async Task<IResult> RevokeRole(int userId, string roleName)
+        {
+
+            var result = _roleService.GetByName(roleName).Result;
+            if (!result.Success)
+                return new ErrorResult(result.Message);
+            return await RevokeRole(userId, result.Data!);
+        }
+
+        public async Task<IResult> RevokeRole(int userId, Role role)
+        {
+            var user = await _userDal.Table.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null) return new ErrorResult("Kullanıcı bulunamadı");
+            user.Roles.Remove(role);
+            await _userDal.SaveAsync();
+            return new SuccessResult($"{role.Name} rolü {user.FirstName} {user.LastName} kullanıcısından alındı");
+        }
 
         private IResult CheckIfEmailExist(string email)
         {
@@ -186,7 +249,11 @@ namespace Business.Concrete
             {
                 return new ErrorResult("Bu email daha önce kullanılmış");
             }
+
             return new SuccessResult();
         }
+
+
     }
 }
+

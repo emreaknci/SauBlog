@@ -19,7 +19,6 @@ namespace Business.Abstract
         Task<IDataResult<Role>> GetById(int id);
         Task<IDataResult<Role>> GetByName(string name);
         Task<IDataResult<Role>> GetWithUsersById(int id);
-
-
+        Task<IDataResult<Role>> GetWithUsersByName(string name);
     }
 }
