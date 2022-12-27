@@ -119,7 +119,7 @@ namespace Business.Concrete
             var list = _blogDal.GetAll(b=>b.WriterId==writerId).ToList();
 
             if (list.Count <= 0)
-                return new ErrorDataResult<List<Blog>>(null, "Bu kategoriye ait blog bulunumadı");
+                return new ErrorDataResult<List<Blog>>(null, "Bu yazara ait blog bulunumadı");
             list.ForEach(i =>
             {
                 if (string.IsNullOrEmpty(i.ImagePath))

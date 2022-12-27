@@ -29,17 +29,6 @@ namespace WebUI.Areas.User.Controllers
             _toastNotification = toastNotification;
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Admin", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-        public IActionResult Detail(int id)
-        {
-            var result = _writerService.GetByIdWithUserInfoAsync(id).Result;
-            if (result.Success) return View(result.Data);
-
-            _toastNotification.AddErrorToastMessage(result.Message);
-            return RedirectToAction("Index", "Home", new { Area = "User" });
-        }
-
         [Authorize(Roles = "Admin", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult Index()
         {

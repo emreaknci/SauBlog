@@ -138,6 +138,17 @@ namespace WebUI.Controllers
             }
             return View(result.Data);
         }
+        [HttpGet("Blogs/Writer/{writerId}")]
+        public IActionResult BlogsByWriterId(int writerId)
+        {
+            var result = _blogService.GetAllByWriterId(writerId);
+            if (!result.Success)
+            {
+                _toastNotification.AddInfoToastMessage(result.Message);
+                return RedirectToAction("Index", "Home");
+            }
+            return View(result.Data);
+        }
     }
   
 }

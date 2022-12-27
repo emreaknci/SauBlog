@@ -28,7 +28,7 @@
                         <h3 class="mb-0"> @item.Title</h3>
                         <p class="card-text mb-auto"></p>
                         <div class="row">
-                            <a asp-area="User" asp-controller="Writer" asp-action="Detail" asp-route-id="@item.WriterId" class="col-6 text-primary">Yazara Git &raquo;</a>
+                            <a asp-area="" asp-controller="Writer" asp-action="Detail" asp-route-id="@item.WriterId" class="col-6 text-primary">Yazara Git &raquo;</a>
                             <a target="_blank" asp-area="" asp-controller="Blogs" asp-action="Detail" asp-route-id="@item.Id" class="col-6 text-primary">Bloga Git &raquo;</a>
                             @if (item.Status)
                             {

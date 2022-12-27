@@ -20,6 +20,7 @@ namespace Business.Abstract
         IDataResult<List<Writer>> GetAll();
         IDataResult<List<Writer>> GetAllWithUserInfo();
         Task<IDataResult<Writer>> GetById(int id);
+        Task<IDataResult<Writer>> GetByIdWithAllInfo(int id);
         Task<IDataResult<Writer>> GetByIdWithUserInfoAsync(int id);
         Task<IDataResult<Writer>> GetByUserId(int userId);
 

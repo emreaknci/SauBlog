@@ -54,14 +54,14 @@ namespace Business.Concrete
 
         public async Task<IResult> ChangeNickNameAsync(int userId, string newNickName)
         {
-            var writer =  GetByUserId(userId).Result.Data;
+            var writer = GetByUserId(userId).Result.Data;
 
             if (writer != null)
             {
-               writer.NickName= newNickName;
-               _writerDal.Update(writer);
-               await _writerDal.SaveAsync();
-               return new SuccessResult("NickName Güncellendi");
+                writer.NickName = newNickName;
+                _writerDal.Update(writer);
+                await _writerDal.SaveAsync();
+                return new SuccessResult("NickName Güncellendi");
 
             }
             return new ErrorResult("Yazar Bulunamadı");
@@ -87,6 +87,19 @@ namespace Business.Concrete
         {
             var writer = await _writerDal.GetByIdAsync(id);
 
+            if (writer != null)
+            {
+                return new SuccessDataResult<Writer>(writer);
+            }
+            return new ErrorDataResult<Writer>("Yazar Bulunamadı");
+        }
+
+        public async Task<IDataResult<Writer>> GetByIdWithAllInfo(int id)
+        {
+            var writer = await _writerDal.Table.Include(w => w.User)
+                .Include(w => w.Blogs)
+                .Include(w => w.Comments)
+                .FirstOrDefaultAsync(w => w.Id == id);
             if (writer != null)
             {
                 return new SuccessDataResult<Writer>(writer);

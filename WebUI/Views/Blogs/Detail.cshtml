@@ -20,7 +20,7 @@
                         
                     </p>
                     <p class="card-text"><small class="text-muted">@blog.CreatedDate</small></p>
-                    <p class="card-text"><small class="text-muted">@blog.Writer.NickName</small></p>
+                    <p class="card-text"><small class="text-muted"><a class="btn btn-outline-info" asp-area="" asp-controller="Writer" asp-action="Detail" asp-route-id="@blog.WriterId">Yazara Git &raquo; @blog.Writer.NickName</a></small></p>
                 </div>
             </div>
             @await Component.InvokeAsync("CommentList",new {blogId=Convert.ToInt32(blogId)})

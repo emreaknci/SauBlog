@@ -16,7 +16,8 @@
                     <p class="card-text"><span class="font-weight-bold">Email:</span> @item.User.Email</p>
                     <p class="card-text"><span class="font-weight-bold">NickName:</span> @item.NickName</p>
                     <p class="card-text"><span class="font-weight-bold">Kayıt Tarihi:</span> @item.CreatedDate</p>
-                    <p class="card-text"><a href="#" class="font-weight-bold text-primary">Bloglarına Git &raquo;</a></p>
+                    <p class="card-text"><a asp-area="" asp-action="BlogsByWriterId" asp-controller="Blogs"
+                                            asp-route-writerId="@item.Id" class="font-weight-bold text-primary">Bloglarına Git &raquo;</a></p>
                     <p class="card-text"><a href="#" class="font-weight-bold text-danger">Üyeliğini İptal Et</a></p>
                 </div>
             </div>
