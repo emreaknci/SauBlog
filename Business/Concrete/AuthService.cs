@@ -101,7 +101,7 @@ namespace Business.Concrete
             //once varsa yazari ve iliskili oldugu tablolarda veriler varsa siliyoruz
             await _writerService.DeleteByUserIdAsync(userId);
             var userDeleteResult = await _userService.DeleteAsync(userId);
-            if (!userDeleteResult.Success) 
+            if (!userDeleteResult.Success)
                 return new ErrorResult(userDeleteResult.Message);
             return new SuccessResult(userDeleteResult.Message);
         }

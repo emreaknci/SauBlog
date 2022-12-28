@@ -61,6 +61,7 @@ namespace WebUI.Areas.User.Controllers
         }
         
         [HttpPost]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult AssignRole(int userId)
         {
             var roleName = (string)TempData["roleName"]!;
@@ -75,6 +76,7 @@ namespace WebUI.Areas.User.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> RevokeRole(int userId, string previousUrl)
         {
             var roleName = (string)TempData["roleName"]!;

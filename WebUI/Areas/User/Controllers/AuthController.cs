@@ -71,6 +71,7 @@ namespace WebUI.Areas.User.Controllers
              return  RedirectToAction("LogOut", "Auth", new { Area = "" });
         }
         [HttpGet]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult DeleteAccount(int userId)
         {
             var result = _authService.DeleteAsync(userId).Result;

@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Data;
+using System.Net.Http;
 using System.Reflection.Metadata;
 using System.Security.Claims;
 using System.Text;
@@ -12,6 +13,7 @@ using Entities.DTOs.Users;
 using Entities.DTOs.Writers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -47,6 +49,7 @@ namespace WebUI.Controllers
             return View();
         }
         [HttpGet]
+        [Authorize(Roles = "User", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> LogOut()
         {
             if (HttpContext.User.Identity!.IsAuthenticated)

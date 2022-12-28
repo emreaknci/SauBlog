@@ -1,5 +1,7 @@
 ﻿using Business.Abstract;
 using Entities.DTOs.Comment;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebUI.Controllers
@@ -16,11 +18,13 @@ namespace WebUI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Writer", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult Add()
         {
             return PartialView();
         }
         [HttpPost]
+        [Authorize(Roles = "Writer", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Add(CommentForCreateDto dto)
         {
             var userId = Convert.ToInt32(HttpContext.User.Claims.ToList()[0].Value);
