@@ -32,14 +32,13 @@
                 }
                 else
                 {
-
                     <li class="nav-item dropdown d-flex">
                         <a class="nav-link dropdown-toggle text-white btn border border-light"
                        id="navbarDropdown"
                        role="button"
                        data-bs-toggle="dropdown"
                        aria-expanded="false">
-                            <i class="fa-solid fa-circle-user"></i> @User.Identity.Name
+                            <i class="fa-solid fa-circle-user"></i> @ViewContext.HttpContext.User.Claims.ToList()[1].Value <!-- claimslerdeki 1. indexteki eleman bize  ak,tf kullanıcnının emailini veriyor-->
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a asp-area="User" asp-controller="User" asp-action="Edit" class="dropdown-item">

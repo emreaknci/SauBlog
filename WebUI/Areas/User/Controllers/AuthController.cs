@@ -14,12 +14,14 @@ namespace WebUI.Areas.User.Controllers
     public class AuthController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IAuthService _authService;
         private readonly IToastNotification _toastNotification;
 
-        public AuthController(IUserService userService, IToastNotification toastNotification)
+        public AuthController(IUserService userService, IToastNotification toastNotification, IAuthService authService)
         {
             _userService = userService;
             _toastNotification = toastNotification;
+            _authService = authService;
         }
         private Core.Entities.User GetCurrentUser()
         {
@@ -57,6 +59,24 @@ namespace WebUI.Areas.User.Controllers
             }
             _toastNotification.AddErrorToastMessage(result.Message);
             return View(model);
+        }
+        [HttpGet]
+        public IActionResult DeleteMyAccount()
+        {
+             var result= _authService.DeleteAsync(GetCurrentUser().Id).Result;
+             if (!result.Success)
+                 return RedirectToAction("Edit", "User", new { Area = "User" });
+             
+             _toastNotification.AddInfoToastMessage(result.Message);
+             return  RedirectToAction("LogOut", "Auth", new { Area = "" });
+        }
+        [HttpGet]
+        public IActionResult DeleteAccount(int userId)
+        {
+            var result = _authService.DeleteAsync(userId).Result;
+            if (!result.Success) 
+                _toastNotification.AddErrorToastMessage(result.Message);
+            return RedirectToAction("Index", "Writer", new { Area = "User" });
         }
     }
 }

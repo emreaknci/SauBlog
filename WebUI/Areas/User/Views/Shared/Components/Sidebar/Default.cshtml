@@ -23,9 +23,12 @@
                     @if (User.IsInRole("Writer"))
                     {
                         <li>
-                            <a asp-area="User" asp-controller="Writer" asp-action="EditNickName" as>NickName Değiştir</a>
+                            <a asp-area="User" asp-controller="Writer" asp-action="EditNickName">NickName Değiştir</a>
                         </li>
                     }
+                    <li>
+                        <a asp-area="User" asp-controller="Auth" asp-action="DeleteMyAccount">Hesabımı Sil</a>
+                    </li>
                 </ul>
             </li>
             @if (User.IsInRole("Admin"))

@@ -36,7 +36,7 @@ namespace Business.Concrete
             return new SuccessDataResult<Comment>(newComment, "Yorum Kaydedildi");
         }
 
-        public async Task<IResult> DeleteAsync(int id)
+        public async Task<IResult> RemoveAsync(int id)
         {
             var comment = await _commentDal.GetByIdAsync(id);
             if (comment != null) {
@@ -45,6 +45,13 @@ namespace Business.Concrete
                 return new SuccessResult("Yorum Silindi");
             }
             return new ErrorResult("Yorum Bulunamadı");
+        }
+
+        public async Task<IResult> RemoveRangeAsync(List<Comment> comments)
+        {
+            _commentDal.RemoveRange(comments);
+            await _commentDal.SaveAsync();
+            return new SuccessResult("Yorumlar silindi");
         }
 
         public IDataResult<List<Comment>> GetAllByBlogId(int id)
@@ -62,6 +69,16 @@ namespace Business.Concrete
         {
             var comments = _commentDal.GetAll().OrderByDescending(c => c.Id).ToList();
 
+            if (comments.Count > 0)
+            {
+                return new SuccessDataResult<List<Comment>>(comments);
+            }
+            return new ErrorDataResult<List<Comment>>(comments);
+        }
+
+        public IDataResult<List<Comment>> GetAllByWriterId(int writerId)
+        {
+            var comments = _commentDal.GetAll(w=>w.WriterId==writerId).ToList();
             if (comments.Count > 0)
             {
                 return new SuccessDataResult<List<Comment>>(comments);

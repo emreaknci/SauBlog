@@ -1,8 +1,11 @@
 ﻿@{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+    var currentUrl = ViewContext.HttpContext.Request.GetDisplayUrl();
 }
 
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model List<Entities.DTOs.Comment.CommentForListDto>
 <div class="col-12">
     @if (Model.Count>0)
@@ -48,7 +51,7 @@
                                 </li>
                                 <li class="dropdown-item"><a href="#">Durum Değiştir</a></li>
                                 <li class="dropdown-item"><a href="#">Yazar Profiline Git</a></li>
-                                <li class="dropdown-item"><a asp-area="User" asp-controller="Comments" asp-action="Delete" asp-route-id="@item.Id">Sil</a></li>
+                                <li class="dropdown-item"><a asp-area="User" asp-controller="Comments" asp-action="Delete" asp-route-id="@item.Id" asp-route-previousUrl="@currentUrl">Sil</a></li>
                             </ul>
                         </td>
                     </tr>
@@ -61,8 +64,8 @@
     }
     else
     {
-        <span>
+        <h3>
             Yorum Bulunamadı
-        </span>
+        </h3>
     }
 </div>

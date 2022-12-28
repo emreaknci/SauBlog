@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Business.Abstract;
 using Core.Helpers;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
+using DataAccess.Concrete;
 using Entities.Concrete;
 using Entities.DTOs.Blog;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Business.Concrete
 {
@@ -17,11 +20,13 @@ namespace Business.Concrete
     {
         private readonly IBlogDal _blogDal;
         private readonly ICategoryService _categoryService;
+        private readonly ICommentService _commentService;
 
-        public BlogService(IBlogDal blogDal, ICategoryService categoryService)
+        public BlogService(IBlogDal blogDal, ICategoryService categoryService, ICommentService commentService)
         {
             _blogDal = blogDal;
             _categoryService = categoryService;
+            _commentService = commentService;
         }
 
         public async Task<IDataResult<Blog>> AddAsync(BlogForCreateDto dto)
@@ -41,18 +46,27 @@ namespace Business.Concrete
             return new SuccessDataResult<Blog>(newBlog);
         }
 
-        public async Task<IResult> DeleteAsync(int id)
+        public async Task<IResult> RemoveAsync(int id)
         {
             var blog = await _blogDal.Table.Include(b => b.Comments).FirstOrDefaultAsync(b => b.Id == id);
 
             if (blog != null)
             {
-                 FileHelper.Delete(blog.ImagePath);
+                FileHelper.Delete(blog.ImagePath);
+                if (!blog.Comments.IsNullOrEmpty())
+                    await _commentService.RemoveRangeAsync(blog.Comments!.ToList());
                 _blogDal.Remove(blog);
                 await _blogDal.SaveAsync();
                 return new SuccessResult("Blog Silindi");
             }
             return new ErrorResult("Blog Bulunamadı");
+        }
+
+        public async Task<IResult> RemoveRangeAsync(List<Blog> blogs)
+        {
+            _blogDal.RemoveRange(blogs);
+            await _blogDal.SaveAsync();
+            return new SuccessResult("Bloglar silindi");
         }
 
         public async Task<IDataResult<Blog>> UpdateAsync(BlogForUpdateDto dto)
@@ -116,7 +130,7 @@ namespace Business.Concrete
 
         public IDataResult<List<Blog>> GetAllByWriterId(int writerId)
         {
-            var list = _blogDal.GetAll(b=>b.WriterId==writerId).ToList();
+            var list = _blogDal.GetAll(b => b.WriterId == writerId).ToList();
 
             if (list.Count <= 0)
                 return new ErrorDataResult<List<Blog>>(null, "Bu yazara ait blog bulunumadı");

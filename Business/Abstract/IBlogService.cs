@@ -12,7 +12,8 @@ namespace Business.Abstract
     public interface IBlogService
     {
         Task<IDataResult<Blog>> AddAsync(BlogForCreateDto dto);
-        Task<IResult> DeleteAsync(int id);
+        Task<IResult> RemoveAsync(int id);
+        Task<IResult> RemoveRangeAsync(List<Blog> blogs);
         Task<IDataResult<Blog>> UpdateAsync(BlogForUpdateDto dto);
         IPaginateResult<BlogForListDto> GetWithPaginate(int index, int size);
 

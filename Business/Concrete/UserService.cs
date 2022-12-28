@@ -48,7 +48,7 @@ namespace Business.Concrete
 
         public async Task<IResult> DeleteAsync(int id)
         {
-            var user = await _userDal.GetByIdAsync(id);
+            var user = await _userDal.Table.Include(u=>u.Roles).FirstOrDefaultAsync(u=>u.Id==id);
             if (user != null)
             {
                 _userDal.Remove(user);

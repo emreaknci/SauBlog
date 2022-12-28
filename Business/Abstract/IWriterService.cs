@@ -13,7 +13,7 @@ namespace Business.Abstract
     public interface IWriterService
     {
         Task<IDataResult<Writer>> AddAsync(WriterForCreateDto dto);
-        Task<IResult>  DeleteAsync(int id);
+        Task<IResult>  DeleteByUserIdAsync(int userId);
         Task<IDataResult<Writer>> UpdateAsync(WriterForUpdateDto dto);
         Task<IResult> ChangeNickNameAsync(int userId, string nickName);
 

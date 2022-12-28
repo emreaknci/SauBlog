@@ -19,5 +19,6 @@ namespace Business.Abstract
         Task<IResult> PasswordResetAsync(string email);
         Task<IDataResult<ResetPasswordToken>> VerifyResetTokenAsync(string resetToken);
         Task<IResult> RegisterForWriterAsync(WriterForRegisterDto dto);
+        Task<IResult> DeleteAsync(int userId);
     }
 }

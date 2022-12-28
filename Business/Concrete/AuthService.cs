@@ -91,9 +91,19 @@ namespace Business.Concrete
                 NickName = dto.NickName,
                 UserId = result.Data
             });
-           
-            
+
+
             return new SuccessResult("Yazar Kaydı Oluşturuldu");
+        }
+
+        public async Task<IResult> DeleteAsync(int userId)
+        {
+            //once varsa yazari ve iliskili oldugu tablolarda veriler varsa siliyoruz
+            await _writerService.DeleteByUserIdAsync(userId);
+            var userDeleteResult = await _userService.DeleteAsync(userId);
+            if (!userDeleteResult.Success) 
+                return new ErrorResult(userDeleteResult.Message);
+            return new SuccessResult(userDeleteResult.Message);
         }
 
         public async Task<IResult> PasswordResetAsync(string email)

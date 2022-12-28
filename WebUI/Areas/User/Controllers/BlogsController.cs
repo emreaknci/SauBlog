@@ -64,7 +64,7 @@ namespace WebUI.Areas.User.Controllers
         [HttpGet]
         public IActionResult Delete(int id, string previousUrl)
         {
-            var result = _blogService.DeleteAsync(id).Result;
+            var result = _blogService.RemoveAsync(id).Result;
             if (result.Success)
                 _toastNotification.AddSuccessToastMessage(result.Message);
             else

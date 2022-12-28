@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Business.Concrete
 {
@@ -17,11 +18,15 @@ namespace Business.Concrete
     {
         private readonly IWriterDal _writerDal;
         private readonly IUserService _userService;
+        private readonly ICommentService _commentService;
+        private readonly IBlogService _blogService;
 
-        public WriterService(IWriterDal writerDal, IUserService userService)
+        public WriterService(IWriterDal writerDal, IUserService userService, ICommentService commentService, IBlogService blogService)
         {
             _writerDal = writerDal;
             _userService = userService;
+            _commentService = commentService;
+            _blogService = blogService;
         }
 
         public async Task<IDataResult<Writer>> AddAsync(WriterForCreateDto dto)
@@ -36,20 +41,30 @@ namespace Business.Concrete
             return new SuccessDataResult<Writer>(writer);
         }
 
-        public async Task<IResult> DeleteAsync(int id)
+        public async Task<IResult> DeleteByUserIdAsync(int userId)
         {
-            var user = await _userService.GetById(id);
+            var userResult = await _userService.GetById(userId);
 
-            if (user != null)
+            if (userResult != null)
             {
-                var result = await _userService.DeleteAsync(id);
-                if (result.Success)
-                {
-                    return new SuccessResult("Yazar silindi");
-                }
-                return new ErrorResult(result.Message);
+                var writer = _writerDal.Table.Include(w => w.Blogs)
+                    .Include(w => w.Comments)
+                    .FirstOrDefaultAsync(w => w.UserId == userId).Result;
+                if (writer == null)
+                    return new ErrorResult("Yazar bulunumadı");
+
+                if (!writer.Comments.IsNullOrEmpty())
+                    await _commentService.RemoveRangeAsync(writer.Comments!.ToList());
+
+                if (!writer.Blogs.IsNullOrEmpty())
+                    await _blogService.RemoveRangeAsync(writer.Blogs!.ToList());
+
+                _writerDal.Remove(writer);
+                await _writerDal.SaveAsync();
+                return new SuccessResult("Yazar silindi");
+
             }
-            return new ErrorResult("Yazar Bulunamadı");
+            return new ErrorResult(userResult.Message);
         }
 
         public async Task<IResult> ChangeNickNameAsync(int userId, string newNickName)
