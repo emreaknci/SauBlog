@@ -9,7 +9,7 @@ SauBlog, kullanıcıların kayıt olup blog yazabildiği, bloglara yorum yapabil
 
 **Backend:** Asp.Net Core 6 MVC,  Entity Framework Core ORM
 
-**Frontend:** HTML5, CSS3, Javascript, Boostrap
+**Frontend:** HTML5, CSS3, Javascript, Bootstrap
 
 **Database:** PostgreSQL
 
