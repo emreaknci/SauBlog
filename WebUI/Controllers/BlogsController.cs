@@ -40,7 +40,7 @@ namespace WebUI.Controllers
         [HttpGet]
         public IActionResult List(int currentPageNo = 1, int size = 2)
         {
-            //var result = _blogService.GetWithPaginate(currentPageNo - 1, size);
+            //var result = _blogService.GetWithPagination(currentPageNo - 1, size);
             var result = _blogService.GetAll();
             var pagedlist = result.Data.ToPagedList(currentPageNo - 1, size);
 

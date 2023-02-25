@@ -14,8 +14,8 @@ namespace WebUI.Controllers
 
         public IActionResult Detail(int id)
         {
-            var result = _writerService.GetByIdWithAllInfo(id).Result;
-            
+            var result = _writerService.GetByIdWithAllInfo(id).Result;            
+
             return View(result);
         }
     }

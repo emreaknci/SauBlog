@@ -28,7 +28,6 @@ namespace DataAccess.Concrete.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var date = new DateOnly(2022, 1, 1);
-            HashingHelper.CreatePasswordHash("sau", out var hash, out var salt);
 
             List<Role> roles = new()
             {

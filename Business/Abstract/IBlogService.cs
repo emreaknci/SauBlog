@@ -20,7 +20,7 @@ namespace Business.Abstract
         IDataResult<List<Blog>> GetAll();
         IDataResult<List<Blog>> GetAllByWriterId(int writerId);
         IDataResult<List<Blog>> GetAllByCategoryId(int categroyId);
-        IDataResult<List<Blog>> GetLastBlogs(int count);
+        IDataResult<List<LastBlogDto>> GetLastBlogs(int count);
         Task<IDataResult<Blog>> GetById(int id);
         Task<IDataResult<Blog>> GetByIdWithWriter(int id);
         Task<IDataResult<Blog>> GetByIdWithCategories(int id);

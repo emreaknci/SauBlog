@@ -22,6 +22,7 @@ namespace Business.Abstract
         Task<IDataResult<Category>> GetById(int id);
         Task<IDataResult<Category>> GetByIdWithBlogs(int id);
         Task<IDataResult<List<Category>>> GetByList(List<int> ids);
+        Task<IDataResult<List<CategoryForListDto>>> GetListWithBlogCount();
 
     }
 }

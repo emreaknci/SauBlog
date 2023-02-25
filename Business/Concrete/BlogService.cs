@@ -192,15 +192,25 @@ namespace Business.Concrete
             return new SuccessDataResult<Blog>(blog);
         }
 
-        public IDataResult<List<Blog>> GetLastBlogs(int count)
+        public IDataResult<List<LastBlogDto>> GetLastBlogs(int count)
         {
-            var blogs = _blogDal.GetAll().Include(b => b.Comments).OrderByDescending(b => b.Id).ToList().Take(count).ToList();
+            //var blogs = _blogDal.GetAll().Include(b => b.Comments).OrderByDescending(b => b.Id).ToList().Take(count).ToList();
+            var blogs = _blogDal.GetAll();
 
-            if (blogs.Count > 0)
-            {
-                return new SuccessDataResult<List<Blog>>(blogs);
-            }
-            return new ErrorDataResult<List<Blog>>("Blog Bulunamadı");
+            if (!blogs.Any()) return new ErrorDataResult<List<LastBlogDto>>("Blog Bulunamadı");
+
+            var lastBlogs = blogs.Include(b => b.Comments)
+                .OrderByDescending(b => b.Id).ToList().Take(count).ToList()
+                .Select(i => new LastBlogDto
+                {
+                    Id = i.Id,
+                    Title = i.Title!,
+                    CreatedDate = i.CreatedDate,
+                    CommentCount = i.Comments!.Count
+                })
+                .ToList();
+            return new SuccessDataResult<List<LastBlogDto>>(lastBlogs);
+
         }
 
         public async Task<IDataResult<Blog>> GetByIdWithCommentsAsync(int id)

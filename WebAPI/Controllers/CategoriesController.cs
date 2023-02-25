@@ -1,6 +1,6 @@
 ﻿using Business.Abstract;
-using Business.Concrete;
-using Entities.DTOs.Roles;
+using Core.Utilities.Results;
+using Entities.DTOs.Category;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -10,52 +10,55 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RolesController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
-        private IRoleService _roleService;
+        private ICategoryService _categoryService;
 
-        public RolesController(IRoleService roleService)
+        public CategoriesController(ICategoryService categoryService)
         {
-            _roleService = roleService;
+            _categoryService = categoryService;
         }
 
         [HttpPost("[action]")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        public async Task<IActionResult> Add(RoleForCreateDto dto)
+        public async Task<IActionResult> Add(CategoryForCreateDto dto)
         {
-            var result = await _roleService.AddAsync(dto);
+            var result = await _categoryService.AddAsync(dto);
             if (result.Success)
+            {
                 return Ok(result);
+            }
             return BadRequest(result);
         }
-
         [HttpPut("[action]")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        public async Task<IActionResult> Update(RoleForUpdateDto dto)
+        public async Task<IActionResult> Update(CategoryForUpdateDto dto)
         {
-            var result = await _roleService.UpdateAsync(dto);
+            var result = await _categoryService.UpdateAsync(dto);
+
             if (result.Success)
+            {
                 return Ok(result);
+            }
             return BadRequest(result);
         }
-
         [HttpDelete("[action]")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _roleService.DeleteAsync(id);
+            var result = await _categoryService.DeleteAsync(id);
+
             if (result.Success)
+            {
                 return Ok(result);
+            }
             return BadRequest(result);
         }
-
-
-
-
         [HttpGet("[action]")]
         public IActionResult GetAll()
         {
-            var result = _roleService.GetAll();
+            Thread.Sleep(2000);
+            var result = _categoryService.GetAll();
 
             if (result.Success)
             {
@@ -63,11 +66,43 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
+        [HttpGet("[action]")]
+        public IActionResult GetAllWithBlogs()
+        {
+            var result = _categoryService.GetAllWithBlogs();
 
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetListWithBlogCount()
+        {
+            var result = await _categoryService.GetListWithBlogCount();
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
         [HttpGet("[action]")]
         public async Task<IActionResult> GetById(int id)
         {
-            var result = await _roleService.GetById(id);
+            var result = await _categoryService.GetById(id);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetByIdWithBlogs(int id)
+        {
+            var result = await _categoryService.GetByIdWithBlogs(id);
 
             if (result.Success)
             {
@@ -77,34 +112,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetByName(string name)
+        public async Task<IActionResult> GetByList([FromQuery] List<int> ids)
         {
-            var result = await _roleService.GetByName(name);
-
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
-        [HttpGet("[action]")]
-        public async Task<IActionResult> GetWithUsersById(int id)
-        {
-            var result = await _roleService.GetWithUsersById(id);
-
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-
-        }
-
-        [HttpGet("[action]")]
-        public async Task<IActionResult> GetWithUsersByName(string name)
-        {
-            var result = await _roleService.GetWithUsersByName(name);
+            var result = await _categoryService.GetByList(ids);
 
             if (result.Success)
             {
@@ -113,4 +123,5 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
     }
+
 }

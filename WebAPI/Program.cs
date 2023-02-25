@@ -1,6 +1,9 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Business;
 using Core;
+using Core.Converters;
+using Core.Utilities.Interceptors;
 using Core.Utilities.Security.JWT;
 using DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -11,7 +14,7 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy
-    => policy.WithOrigins("https://localhost:7144", "http://localhost:7144").AllowAnyHeader().AllowAnyMethod().AllowCredentials()
+    => policy.WithOrigins("https://localhost:7144", "http://localhost:7144", "http://localhost:4200", "https://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials()
 ));
 // Add services to the container.
 TokenOptions? tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
@@ -38,7 +41,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCoreService();
 builder.Services.AddBusinessService();
 builder.Services.AddDataAccessService(builder.Configuration);
-
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+    });
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.WriteIndented = true;
+});
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Test01", Version = "v1" });
@@ -76,11 +88,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseMiddleware<DelayInterceptor>();
 app.MapControllers();
 
 app.Run();

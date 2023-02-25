@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Business.Concrete
 {
@@ -25,7 +26,7 @@ namespace Business.Concrete
 
         public async Task<IDataResult<Category>> AddAsync(CategoryForCreateDto dto)
         {
-            var newCategory = new Category()
+            var newCategory = new Category
             {
                 Name = dto.Name,
             };
@@ -36,8 +37,8 @@ namespace Business.Concrete
 
         public async Task<IDataResult<Category>> GetByIdWithBlogs(int id)
         {
-            var category = await _categoryDal.Table.Include(c=>c.Blogs).FirstOrDefaultAsync(b=>b.Id==id);
-            if (category!=null)
+            var category = await _categoryDal.Table.Include(c => c.Blogs).FirstOrDefaultAsync(b => b.Id == id);
+            if (category != null)
             {
                 return new SuccessDataResult<Category>(category);
             }
@@ -51,6 +52,22 @@ namespace Business.Concrete
                 categories.Add((await _categoryDal.GetByIdAsync(id))!);
             return new SuccessDataResult<List<Category>>(categories);
         }
+
+        public async Task<IDataResult<List<CategoryForListDto>>> GetListWithBlogCount()
+        {
+            var categories = _categoryDal.Table.Include(c => c.Blogs).ToList();
+            if (categories.IsNullOrEmpty()) return new ErrorDataResult<List<CategoryForListDto>>("Kategori Bulunamadı");
+
+            return new SuccessDataResult<List<CategoryForListDto>>(categories
+                .Select(i => new CategoryForListDto()
+                {
+                    Id = i.Id,
+                    Name = i.Name,
+                    BlogCount = i.Blogs.Count
+                })
+                .ToList());
+        }
+
         public async Task<IDataResult<Category>> DeleteAsync(int id)
         {
             var category = await _categoryDal.GetByIdAsync(id);

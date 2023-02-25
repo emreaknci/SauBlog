@@ -1,10 +1,14 @@
 ﻿using Business.Abstract;
+using DataAccess.Abstract;
+using DataAccess.Concrete.Context;
+using Entities.Concrete;
 using Entities.DTOs.Users;
 using Entities.DTOs.Writers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Controllers
 {
@@ -14,9 +18,11 @@ namespace WebAPI.Controllers
     {
         private readonly IAuthService _authService;
 
-        public AuthController(IAuthService authService)
+        private IWriterDal _writerDal;
+        public AuthController(IAuthService authService, IWriterDal writerDal)
         {
             _authService = authService;
+            _writerDal = writerDal;
         }
 
         [HttpPost("[action]")]
@@ -29,7 +35,17 @@ namespace WebAPI.Controllers
             }
             return BadRequest();
         }
-
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Login(UserForLoginDto dto)
+        {
+            var result = await _authService.LoginAsync(dto);
+            if (result.Success)
+            {
+                var token = _authService.CreateAccessToken(result.Data).Data;
+                return Ok(token);
+            }
+            return BadRequest();
+        }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> RegisterForWriter(WriterForRegisterDto dto)
@@ -42,12 +58,6 @@ namespace WebAPI.Controllers
             return BadRequest();
         }
 
-        [HttpGet("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User")]
-        public IActionResult denemeYetki()
-        {
-            return Ok();
-        }
 
         [HttpPost("[action]")]
         public IActionResult SendResetPassword(string email)

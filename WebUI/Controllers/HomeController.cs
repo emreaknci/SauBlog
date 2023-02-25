@@ -28,7 +28,7 @@ namespace WebUI.Controllers
 
         public IActionResult Index(int page = 1, int size = 6)
         {
-            //var result = _blogService.GetWithPaginate(page - 1, size);
+            //var result = _blogService.GetWithPagination(page - 1, size);
             //List<int> pageList = new();
             //if (page - 3 <= 0)
             //    for (var i = 1; i <= 7; i++)
