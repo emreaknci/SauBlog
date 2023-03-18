@@ -8,5 +8,6 @@
         public string? ImagePath { get; set; }
         public DateOnly? CreatedDate { get; set; }
         public string? WriterNickName { get; set; }
+        public bool Status { get; set; }
     }
 }

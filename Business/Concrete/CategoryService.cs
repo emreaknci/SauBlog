@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
+using Entities.DTOs.Blog;
 
 namespace Business.Concrete
 {
@@ -28,7 +29,7 @@ namespace Business.Concrete
         {
             var newCategory = new Category
             {
-                Name = dto.Name,
+                Name = dto.Name.ToUpper()
             };
             await _categoryDal.AddAsync(newCategory);
             await _categoryDal.SaveAsync();
@@ -52,6 +53,19 @@ namespace Business.Concrete
                 categories.Add((await _categoryDal.GetByIdAsync(id))!);
             return new SuccessDataResult<List<Category>>(categories);
         }
+
+        public IPaginateResult<Category> GetWithPaginate(int index, int size, string? filter)
+        { 
+            var data = filter.IsNullOrEmpty() ? _categoryDal.GetWithPagination(index, size)
+                : _categoryDal.GetWithPagination(index, size, filter: i => i.Name!.Contains(filter!.ToUpper()));
+
+            if (index * size > data.totalCount)
+                return new ErrorPaginationResult<Category>("Hata!");
+
+            return new SuccessPaginationResult<Category>(index, size, data.entities, data.totalCount);
+        }
+
+
 
         public async Task<IDataResult<List<CategoryForListDto>>> GetListWithBlogCount()
         {
@@ -103,7 +117,7 @@ namespace Business.Concrete
             var category = await _categoryDal.GetByIdAsync(dto.Id);
             if (category != null)
             {
-                category.Name = dto.Name;
+                category.Name = dto.Name.ToUpper();
                 _categoryDal.Update(category);
                 await _categoryDal.SaveAsync();
                 return new SuccessDataResult<Category>(category, "Kategori Güncellendi");

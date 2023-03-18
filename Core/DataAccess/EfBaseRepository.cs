@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Core.DataAccess;
 
@@ -86,6 +87,11 @@ public class EfBaseRepository<TEntity, TContext> : IRepository<TEntity>
 
     public (List<TEntity> entities, int totalCount) GetWithPagination(int index, int size, bool tracking = true, Expression<Func<TEntity, bool>>? filter = null)
     {
-        return (GetAll().Skip(index * size).Take(size).ToList(), GetAll().Count());
+        return filter == null 
+            ? (GetAll().Skip(index * size).Take(size).ToList()
+                , GetAll().Count()) 
+            : (GetAll().Where(filter).Skip(index * size).Take(size).ToList()
+                , GetAll().Where(filter).Count());
+
     }
 }

@@ -73,7 +73,17 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
+        [HttpGet("[action]")]
+        public IActionResult GetWithPagination(int index, int size, string? filter)
+        {
+            var result = _commentService.GetWithPaginate(index, size, filter);
 
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
 
         [HttpPost("[action]")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User")]

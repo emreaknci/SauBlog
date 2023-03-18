@@ -56,8 +56,7 @@ namespace WebAPI.Controllers
         }
         [HttpGet("[action]")]
         public IActionResult GetAll()
-        {
-            Thread.Sleep(2000);
+        { 
             var result = _categoryService.GetAll();
 
             if (result.Success)
@@ -66,6 +65,20 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
+
+
+        [HttpGet("[action]")]
+        public IActionResult GetWithPagination(int index, int size,string? filter)
+        {
+            var result = _categoryService.GetWithPaginate(index, size,filter);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
         [HttpGet("[action]")]
         public IActionResult GetAllWithBlogs()
         {

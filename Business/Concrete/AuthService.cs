@@ -75,6 +75,11 @@ namespace Business.Concrete
 
         public async Task<IResult> RegisterForWriterAsync(WriterForRegisterDto dto)
         {
+            var writerResult = await _writerService.GetByNickName(dto.NickName);
+            if (writerResult.Success)
+                return new ErrorResult("Bu kullanıcı adı daha önce kullanılmış!");
+
+
             var result = await RegisterForUserAsync(new UserForRegisterDto
             {
                 Email = dto.Email,
@@ -106,13 +111,17 @@ namespace Business.Concrete
             return new SuccessResult(userDeleteResult.Message);
         }
 
-        public async Task<IResult> PasswordResetAsync(string email)
+        public async Task<IResult> ResetPasswordAsync(UserForResetPasswordDto dto)
+        {
+            return await _userService.ResetPasswordAsync(dto.UserId, dto.NewPassword);
+        }
+
+        public async Task<IResult> SendPasswordResetEmailAsync(string email)
         {
             var user = _userService.GetUserByMailAsync(email).Result.Data;
             if (user == null) return new ErrorResult("Kullanıcı bulunamadı!");
 
             var resetPasswordToken = Guid.NewGuid().ToString();
-            var resetPasswordTokenExpiration = DateTime.UtcNow.AddDays(1);
             var token = _tokenHandler.GenerateResetPasswordToken(user.Id.ToString(), resetPasswordToken);
 
             var result = await _userService.AddResetPasswordToken(user, token);

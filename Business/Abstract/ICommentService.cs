@@ -16,5 +16,7 @@ namespace Business.Abstract
         IDataResult<List<Comment>> GetAllByWriterId(int writerId);
         IDataResult<List<CommentForListDto>> GetAllForListing(Expression<Func<CommentForListDto, bool>>? filter = null);
         IDataResult<List<Comment>> GetAllWithWriterByBlogId(int id);
+        IPaginateResult<CommentForListDto> GetWithPaginate(int index, int size, string? filter);
+
     }
 }

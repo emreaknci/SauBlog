@@ -53,9 +53,9 @@ public class BlogsController : ControllerBase
     }
 
     [HttpGet("[action]")]
-    public IActionResult GetWithPagination(int index = 0, int size = 6)
+    public IActionResult GetWithPagination(int index, int size, string? filter)
     {
-        var result = _blogService.GetWithPaginate(index, size);
+        var result = _blogService.GetWithPaginate(index, size,filter);
         if (result.Success)
         {
             return Ok(result);

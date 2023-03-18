@@ -65,9 +65,6 @@ namespace Core.Utilities.Security.JWT
 
         public string GenerateResetPasswordToken(string userId, string resetPasswordToken)
         {
-            // Token oluşturma işlemini gerçekleştirin.
-            // Örneğin, tarih ve saat bilgilerini kullanarak bir token oluşturun.
-            // Token, verilen userId ve resetPasswordToken değerlerini içerecektir.
             var currentDate = DateTime.UtcNow;
             var expirationDate = currentDate.AddDays(1);
 
@@ -76,10 +73,6 @@ namespace Core.Utilities.Security.JWT
         }
         public ResetPasswordToken ValidateResetPasswordToken(string token)
         {
-            // Token doğrulama işlemini gerçekleştirin.
-            // Örneğin, token'ın oluşturulduğu tarih ve saat bilgilerine bakarak token'ın geçerliliğini doğrulayabilirsiniz.
-            // Token geçerli ise, token içindeki bilgileri döndürün.
-            // Token geçersiz ise, null değerini döndürün.
             var tokenBytes = Convert.FromBase64String(token);
             var tokenString = Encoding.UTF8.GetString(tokenBytes);
             var tokenValues = tokenString.Split(':');
@@ -98,11 +91,9 @@ namespace Core.Utilities.Security.JWT
             var expirationDate = new DateTime(expirationTicks);
 
             if (currentDate > DateTime.UtcNow || expirationDate < DateTime.UtcNow)
-            {
-                return null;
-            }
+                return null!;
+            
 
-            // Token geçerli. Token içindeki bilgileri döndürün.
             ResetPasswordToken resetToken = new()
             {
                 Token = resetPasswordToken,

@@ -7,8 +7,11 @@ namespace DataAccess.Abstract
 {
     public interface ICommentDal : IRepository<Comment>
     {
-        List<CommentForListDto>? GetAllForListing(Expression<Func<CommentForListDto, bool>>? filter = null,
+        IQueryable<CommentForListDto>? GetAllForListing(Expression<Func<CommentForListDto, bool>>? filter = null,
             bool tracking = true);
+
+        (List<CommentForListDto> entities, int totalCount) GetWithPagination(int index, int size, bool tracking = true,
+            Expression<Func<CommentForListDto, bool>>? filter = null);
 
     }
 }

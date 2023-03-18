@@ -1,13 +1,7 @@
-﻿using Core.Entities;
-using Core.Utilities.Results;
+﻿using Core.Utilities.Results;
 using Entities.Concrete;
 using Entities.DTOs.Category;
-using Entities.DTOs.Roles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Business.Abstract
 {
@@ -22,6 +16,8 @@ namespace Business.Abstract
         Task<IDataResult<Category>> GetById(int id);
         Task<IDataResult<Category>> GetByIdWithBlogs(int id);
         Task<IDataResult<List<Category>>> GetByList(List<int> ids);
+        IPaginateResult<Category> GetWithPaginate(int index, int size, string? filter);
+
         Task<IDataResult<List<CategoryForListDto>>> GetListWithBlogCount();
 
     }

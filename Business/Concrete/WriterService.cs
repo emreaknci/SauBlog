@@ -109,6 +109,17 @@ namespace Business.Concrete
             return new ErrorDataResult<Writer>("Yazar Bulunamadı");
         }
 
+        public async Task<IDataResult<Writer>> GetByNickName(string nickName)
+        {
+            var writer = await _writerDal.GetAsync(w => w.NickName == nickName);
+
+            if (writer != null)
+            {
+                return new SuccessDataResult<Writer>(writer);
+            }
+            return new ErrorDataResult<Writer>("Yazar Bulunamadı");
+        }
+
         public async Task<IDataResult<Writer>> GetByIdWithAllInfo(int id)
         {
             var writer = await _writerDal.Table.Include(w => w.User)

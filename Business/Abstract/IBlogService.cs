@@ -15,7 +15,7 @@ namespace Business.Abstract
         Task<IResult> RemoveAsync(int id);
         Task<IResult> RemoveRangeAsync(List<Blog> blogs);
         Task<IDataResult<Blog>> UpdateAsync(BlogForUpdateDto dto);
-        IPaginateResult<BlogForListDto> GetWithPaginate(int index, int size);
+        IPaginateResult<BlogForListDto> GetWithPaginate(int index, int size, string? filter);
 
         IDataResult<List<Blog>> GetAll();
         IDataResult<List<Blog>> GetAllByWriterId(int writerId);

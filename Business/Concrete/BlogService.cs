@@ -98,13 +98,15 @@ namespace Business.Concrete
             return new SuccessDataResult<Blog>(blog);
         }
 
-        public IPaginateResult<BlogForListDto> GetWithPaginate(int index, int size)
+        public IPaginateResult<BlogForListDto> GetWithPaginate(int index, int size, string? filter)
         {
-            var data = _blogDal.GetWithPagination(index, size);
+            var data = filter.IsNullOrEmpty()
+                ? _blogDal.GetWithPagination(index, size)
+                : _blogDal.GetWithPagination(index, size, filter: i => i.Title!.Contains(filter!.ToUpper()));
+
             if (index * size > data.totalCount)
-            {
-                return new ErrorPaginationResult<BlogForListDto>("Yanlış kardeşim dön");
-            }
+                return new ErrorPaginationResult<BlogForListDto>("Hata!");
+            
             data.list.ForEach(i =>
             {
                 if (string.IsNullOrEmpty(i.ImagePath))

@@ -32,6 +32,7 @@ namespace DataAccess.Concrete
                     CreatedDate = b.CreatedDate,
                     CommentCount = b.Comments!.Count,
                     WriterNickName = b.Writer.NickName,
+                    Status=b.Status
                 });
 
             var list = result.Skip(index * size).Take(size);

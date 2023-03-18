@@ -2,7 +2,7 @@
 @using WebUI.ViewComponents
 @using System.Globalization
 @using Microsoft.AspNetCore.Mvc.Localization
-@model List<Blog>
+@model List<Entities.DTOs.Blog.LastBlogDto>
 
 @inject IViewLocalizer localizer
 @if (Model != null)
@@ -20,7 +20,7 @@
                             <span class="fs-6">@item.CreatedDate</span>
                             <a asp-action="Detail" asp-route-id="@item.Id" asp-controller="Blogs">@localizer["Bloga Git"] &raquo;</a>
                         </div>
-                        <span class="badge bg-primary rounded-pill">@item.Comments.Count</span>
+                        <span class="badge bg-primary rounded-pill">@item.CommentCount</span>
                     </li>
                 }
             </ol>

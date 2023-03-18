@@ -1,14 +1,8 @@
 ﻿using Business.Abstract;
-using DataAccess.Abstract;
-using DataAccess.Concrete.Context;
-using Entities.Concrete;
 using Entities.DTOs.Users;
 using Entities.DTOs.Writers;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Controllers
 {
@@ -18,11 +12,9 @@ namespace WebAPI.Controllers
     {
         private readonly IAuthService _authService;
 
-        private IWriterDal _writerDal;
-        public AuthController(IAuthService authService, IWriterDal writerDal)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
-            _writerDal = writerDal;
         }
 
         [HttpPost("[action]")]
@@ -33,7 +25,17 @@ namespace WebAPI.Controllers
             {
                 return Ok(result);
             }
-            return BadRequest();
+            return BadRequest(result);
+        }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> VerifyResetToken( string resetToken)
+        {
+            var result = await _authService.VerifyResetTokenAsync(resetToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
         [HttpPost("[action]")]
         public async Task<IActionResult> Login(UserForLoginDto dto)
@@ -44,7 +46,7 @@ namespace WebAPI.Controllers
                 var token = _authService.CreateAccessToken(result.Data).Data;
                 return Ok(token);
             }
-            return BadRequest();
+            return BadRequest(result);
         }
 
         [HttpPost("[action]")]
@@ -55,14 +57,24 @@ namespace WebAPI.Controllers
             {
                 return Ok(result);
             }
-            return BadRequest();
+            return BadRequest(result);
+        }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ResetPassword(UserForResetPasswordDto dto)
+        {
+            var result = await _authService.ResetPasswordAsync(dto);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
 
 
         [HttpPost("[action]")]
         public IActionResult SendResetPassword(string email)
         {
-            var result = _authService.PasswordResetAsync(email).Result;
+            var result = _authService.SendPasswordResetEmailAsync(email).Result;
 
             if (result.Success)
             {
