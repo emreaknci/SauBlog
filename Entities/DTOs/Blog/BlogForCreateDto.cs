@@ -13,6 +13,7 @@ namespace Entities.DTOs.Blog
         public string? Title { get; set; }
         public string? Content { get; set; }
         public int? WriterId { get; set; }
+        public string? ImagePath { get; set; }
         public IFormFile? Image { get; set; }
         public List<int>? CategoryIds { get; set; }
     }

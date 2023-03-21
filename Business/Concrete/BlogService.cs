@@ -31,11 +31,13 @@ namespace Business.Concrete
 
         public async Task<IDataResult<Blog>> AddAsync(BlogForCreateDto dto)
         {
-            var imagePath = FileHelper.Upload(dto.Image);
+            var imagePath = dto.Image != null
+                ? FileHelper.Upload(dto.Image).Data
+                : !string.IsNullOrEmpty(dto.ImagePath) ? dto.ImagePath : null;
             var result = await _categoryService.GetByList(dto.CategoryIds);
             var newBlog = new Blog()
             {
-                ImagePath = imagePath.Data,
+                ImagePath = imagePath,
                 WriterId = dto.WriterId,
                 Content = dto.Content,
                 Title = dto.Title,
@@ -43,7 +45,7 @@ namespace Business.Concrete
             };
             await _blogDal.AddAsync(newBlog);
             await _blogDal.SaveAsync();
-            return new SuccessDataResult<Blog>(newBlog);
+            return new SuccessDataResult<Blog>(newBlog,"Blog eklendi");
         }
 
         public async Task<IResult> RemoveAsync(int id)
@@ -106,7 +108,7 @@ namespace Business.Concrete
 
             if (index * size > data.totalCount)
                 return new ErrorPaginationResult<BlogForListDto>("Hata!");
-            
+
             data.list.ForEach(i =>
             {
                 if (string.IsNullOrEmpty(i.ImagePath))

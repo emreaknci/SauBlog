@@ -1,11 +1,13 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
+using Core.Helpers;
 using Entities.DTOs.Blog;
 using Entities.DTOs.Category;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace WebAPI.Controllers;
 [Route("api/[controller]")]
@@ -55,7 +57,7 @@ public class BlogsController : ControllerBase
     [HttpGet("[action]")]
     public IActionResult GetWithPagination(int index, int size, string? filter)
     {
-        var result = _blogService.GetWithPaginate(index, size,filter);
+        var result = _blogService.GetWithPaginate(index, size, filter);
         if (result.Success)
         {
             return Ok(result);
@@ -150,3 +152,11 @@ public class BlogsController : ControllerBase
     }
 }
 
+public class DtoObje
+{
+    public string? Title { get; set; }
+    public string? Content { get; set; }
+    public int? WriterId { get; set; }
+    //public IFormFileCollection? BlogImage { get; set; }
+    public List<int>? CategoryIds { get; set; }
+}

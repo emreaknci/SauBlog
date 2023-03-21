@@ -31,8 +31,22 @@ namespace Core.Helpers
 
             CheckDirectoryExists(_currentDirectory + _folderName);
             CreateImageFile(_currentDirectory + _folderName + randomName + type, file);
-            return new SuccessDataResult<string>(randomName+type, (_folderName + randomName + type).Replace("\\", "/"));
+            return new SuccessDataResult<string>(randomName+type, "Dosya yüklendi!");
         }
+        public static IDataResult<List<string>> UploadRange(IFormCollection files)
+        {
+            List<string> filePathsList = new();
+            foreach (var file in files.Files)
+            {
+                var result= Upload(file);
+                if(result.Success) filePathsList.Add(result.Data);
+            }
+
+            return filePathsList.Count > 0 ? new SuccessDataResult<List<string>>(filePathsList, "Dosyalar yüklendi!") :new ErrorDataResult<List<string>>();
+
+
+        }
+
         public static IDataResult<string> Update(IFormFile newFile, string oldImagePath)
         {
             var fileExists = CheckFileExists(newFile);
