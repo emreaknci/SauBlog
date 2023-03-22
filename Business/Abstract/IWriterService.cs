@@ -16,6 +16,7 @@ namespace Business.Abstract
         Task<IResult>  DeleteByUserIdAsync(int userId);
         Task<IDataResult<Writer>> UpdateAsync(WriterForUpdateDto dto);
         Task<IResult> ChangeNickNameAsync(int userId, string nickName);
+        Task<IResult> DoesBlogBelongToThisWriter(int blogId, int writerId);
 
         IDataResult<List<Writer>> GetAll();
         IDataResult<List<Writer>> GetAllWithUserInfo();

@@ -3,7 +3,8 @@
     public class BlogForListDto
     {
         public int Id { get; set; }
-        public int CommentCount{ get; set; }
+        public int WriterId { get; set; }
+        public int CommentCount { get; set; }
         public string? Title { get; set; }
         public string? ImagePath { get; set; }
         public DateOnly? CreatedDate { get; set; }

@@ -74,9 +74,9 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
         [HttpGet("[action]")]
-        public IActionResult GetWithPagination(int index, int size, string? filter)
+        public IActionResult GetWithPagination([FromQuery]CommentForPaginationRequest request)
         {
-            var result = _commentService.GetWithPaginate(index, size, filter);
+            var result = _commentService.GetWithPaginate(request);
 
             if (result.Success)
             {

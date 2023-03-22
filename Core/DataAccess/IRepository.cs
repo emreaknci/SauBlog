@@ -24,6 +24,7 @@ namespace Core.DataAccess
         IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>>? filter = null, bool tracking = true);
         Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filter, bool tracking = true);
         Task<TEntity?> GetByIdAsync(int id, bool tracking = true);
-        (List<TEntity> entities, int totalCount) GetWithPagination(int index, int size, bool tracking = true, Expression<Func<TEntity, bool>>? filter = null);
+        (List<TEntity> entities, int totalCount) GetWithPagination(BasePaginationRequest req,
+            Expression<Func<TEntity, bool>>? filter = null);
     }
 }

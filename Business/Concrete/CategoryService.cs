@@ -54,18 +54,18 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Category>>(categories);
         }
 
-        public IPaginateResult<Category> GetWithPaginate(int index, int size, string? filter)
-        { 
-            var data = filter.IsNullOrEmpty() ? _categoryDal.GetWithPagination(index, size)
-                : _categoryDal.GetWithPagination(index, size, filter: i => i.Name!.Contains(filter!.ToUpper()));
+        public IPaginateResult<Category> GetWithPaginate(CategoryForPaginationRequest request)
+        {
+            var result = _categoryDal.GetWithPagination(request);
 
-            if (index * size > data.totalCount)
+            if (request.Index * request.Size > result.totalCount)
                 return new ErrorPaginationResult<Category>("Hata!");
 
-            return new SuccessPaginationResult<Category>(index, size, data.entities, data.totalCount);
+           
+            return new SuccessPaginationResult<Category>(request.Index, request.Size, result.entities, result.totalCount);
         }
-
-
+        
+    
 
         public async Task<IDataResult<List<CategoryForListDto>>> GetListWithBlogCount()
         {

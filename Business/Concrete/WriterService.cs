@@ -179,5 +179,17 @@ namespace Business.Concrete
             return new SuccessDataResult<Writer>(writer, "Yazar Bilgileri Güncellendi");
 
         }
+        public async Task<IResult> DoesBlogBelongToThisWriter(int blogId, int writerId)
+        {
+            var blogResult = await _blogService.GetById(blogId);
+            if (!blogResult.Success) return new ErrorResult(blogResult.Message);
+
+            var writerResult = await GetById(writerId);
+            if (!writerResult.Success) return new ErrorResult(writerResult.Message);
+
+            if (blogResult.Data!.WriterId != writerId)
+                return new ErrorResult($"{blogResult.Data.Title} başlıklı blog {writerResult.Data.NickName} yazarına ait değil!");
+            return new SuccessResult($"{blogResult.Data.Title} başlıklı blog {writerResult.Data.NickName} yazarına ait!");
+        }
     }
 }

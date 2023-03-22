@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
+using System.Reflection;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Core.DataAccess;
 
@@ -85,13 +85,40 @@ public class EfBaseRepository<TEntity, TContext> : IRepository<TEntity>
     public async Task<TEntity?> GetByIdAsync(int id, bool tracking = true)
         => await GetAsync(entity => entity.Id == id, tracking);
 
-    public (List<TEntity> entities, int totalCount) GetWithPagination(int index, int size, bool tracking = true, Expression<Func<TEntity, bool>>? filter = null)
+    public (List<TEntity> entities, int totalCount) GetWithPagination(BasePaginationRequest req, Expression<Func<TEntity, bool>>? filter = null)
     {
-        return filter == null 
-            ? (GetAll().Skip(index * size).Take(size).ToList()
-                , GetAll().Count()) 
-            : (GetAll().Where(filter).Skip(index * size).Take(size).ToList()
-                , GetAll().Where(filter).Count());
+        var query = GetAll().AsQueryable();
+        query = CheckIfRequestParams(query, req, filter);
 
+        return (query.Skip(req.Index * req.Size).Take(req.Size).ToList()
+                , query.Count());
+    }
+
+    protected IQueryable<TEntity> CheckIfRequestParams(IQueryable<TEntity> query, BasePaginationRequest req, Expression<Func<TEntity, bool>>? filter = null)
+    {
+        if (!string.IsNullOrEmpty(req.OrderByField) && !string.IsNullOrEmpty(req.OrderType))
+        {
+            var propertyInfo = typeof(TEntity).GetProperty(req.OrderByField, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+            if (propertyInfo != null)
+            
+                query = req.OrderType.ToLower() == "desc" 
+                    ? query.AsEnumerable().OrderByDescending(x => propertyInfo.GetValue(x, null)).AsQueryable()
+                    : query.AsEnumerable().OrderBy(x => propertyInfo.GetValue(x, null)).AsQueryable();
+        }
+        else
+            query = query.OrderByDescending(x => x.Id);
+        
+
+        if (!string.IsNullOrEmpty(req.SearchValue) && !string.IsNullOrEmpty(req.SearchValueField))
+        {
+            var propertyInfo = typeof(TEntity).GetProperty(req.SearchValueField, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+            if (propertyInfo != null)
+                query = query.AsEnumerable().Where(x => propertyInfo.GetValue(x, null).ToString().Contains(req.SearchValue)).AsQueryable();
+            
+        }
+
+        return filter == null
+            ? query
+            : query.Where(filter);
     }
 }

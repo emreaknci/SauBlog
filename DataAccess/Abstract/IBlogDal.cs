@@ -7,7 +7,7 @@ namespace DataAccess.Abstract;
 
 public interface IBlogDal : IRepository<Blog>
 {
-    (List<BlogForListDto> list, int totalCount) GetWithPagination(int index, int size, bool tracking = true, Expression<Func<BlogForListDto, bool>>? filter = null);
+    (List<BlogForListDto> list, int totalCount) GetWithPagination(BlogForPaginationRequest request, bool tracking = true, Expression<Func<BlogForListDto, bool>>? filter = null);
     List<Blog>? GetAllByCategoryId(int categoryId);
 
 }

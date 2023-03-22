@@ -68,9 +68,9 @@ namespace WebAPI.Controllers
 
 
         [HttpGet("[action]")]
-        public IActionResult GetWithPagination(int index, int size,string? filter)
+        public IActionResult GetWithPagination([FromQuery]CategoryForPaginationRequest request)
         {
-            var result = _categoryService.GetWithPaginate(index, size,filter);
+            var result = _categoryService.GetWithPaginate(request);
 
             if (result.Success)
             {

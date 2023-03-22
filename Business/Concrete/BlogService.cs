@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using DataAccess.Concrete;
 using Entities.Concrete;
 using Entities.DTOs.Blog;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Business.Concrete
@@ -100,21 +102,19 @@ namespace Business.Concrete
             return new SuccessDataResult<Blog>(blog);
         }
 
-        public IPaginateResult<BlogForListDto> GetWithPaginate(int index, int size, string? filter)
+        public IPaginateResult<BlogForListDto> GetWithPaginate(BlogForPaginationRequest request)
         {
-            var data = filter.IsNullOrEmpty()
-                ? _blogDal.GetWithPagination(index, size)
-                : _blogDal.GetWithPagination(index, size, filter: i => i.Title!.Contains(filter!.ToUpper()));
+            var result= _blogDal.GetWithPagination(request);
 
-            if (index * size > data.totalCount)
+            if (request.Index *request.Size > result.totalCount)
                 return new ErrorPaginationResult<BlogForListDto>("Hata!");
 
-            data.list.ForEach(i =>
+            result.list.ForEach(i =>
             {
                 if (string.IsNullOrEmpty(i.ImagePath))
                     i.ImagePath = "DefaultBlogPng.png";
             });
-            return new SuccessPaginationResult<BlogForListDto>(index, size, data.list, data.totalCount);
+            return new SuccessPaginationResult<BlogForListDto>(request.Index, request.Size, result.list, result.totalCount);
         }
 
         public IDataResult<List<Blog>> GetAll()

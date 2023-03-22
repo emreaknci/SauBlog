@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
 using Core.Helpers;
+using Core.Utilities.Results;
+using Entities.Concrete;
 using Entities.DTOs.Blog;
 using Entities.DTOs.Category;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,6 +10,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Security.Claims;
+using IResult = Core.Utilities.Results.IResult;
 
 namespace WebAPI.Controllers;
 [Route("api/[controller]")]
@@ -15,11 +19,15 @@ namespace WebAPI.Controllers;
 public class BlogsController : ControllerBase
 {
     private IBlogService _blogService;
+    private IWriterService _writerService;
 
-    public BlogsController(IBlogService blogService)
+    public BlogsController(IBlogService blogService, IWriterService writerService)
     {
         _blogService = blogService;
+        _writerService = writerService;
     }
+
+
     [HttpPost("[action]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Writer")]
     public async Task<IActionResult> Add(BlogForCreateDto dto)
@@ -46,7 +54,10 @@ public class BlogsController : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Writer,Admin")]
     public async Task<IActionResult> Remove(int id)
     {
-        var result = await _blogService.RemoveAsync(id);
+        var result = await _writerService.DoesBlogBelongToThisWriter(id, GetCurrentWriterId());
+        if (!IsCurrentUserAdmin() && !result.Success) return Forbid();
+       
+        result = await _blogService.RemoveAsync(id);
         if (result.Success)
         {
             return Ok(result);
@@ -55,13 +66,28 @@ public class BlogsController : ControllerBase
     }
 
     [HttpGet("[action]")]
-    public IActionResult GetWithPagination(int index, int size, string? filter)
+    public IActionResult GetWithPagination([FromQuery]BlogForPaginationRequest request)
     {
-        var result = _blogService.GetWithPaginate(index, size, filter);
+        var result = _blogService.GetWithPaginate(request);
         if (result.Success)
         {
             return Ok(result);
         }
+        return BadRequest(result);
+    }
+    [HttpGet("[action]")]
+    public IActionResult GetCurrentWriterBlogs([FromQuery] BlogForPaginationRequest request)
+    {
+        if (request.WriterIds == null)
+            request.WriterIds = new() { GetCurrentWriterId() };
+        else
+            request.WriterIds.Add(GetCurrentWriterId());
+
+        var result = _blogService.GetWithPaginate(request);
+
+        if (result.Success)
+            return Ok(result);
+        
         return BadRequest(result);
     }
 
@@ -150,13 +176,19 @@ public class BlogsController : ControllerBase
         }
         return BadRequest(result);
     }
-}
+    private int GetCurrentWriterId()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var writer = _writerService.GetByUserId(Convert.ToInt32(userId)).Result.Data;
+        return writer!.Id;
+    }
 
-public class DtoObje
-{
-    public string? Title { get; set; }
-    public string? Content { get; set; }
-    public int? WriterId { get; set; }
-    //public IFormFileCollection? BlogImage { get; set; }
-    public List<int>? CategoryIds { get; set; }
+    private bool IsCurrentUserAdmin()
+    {
+        var roles = User.FindAll(ClaimTypes.Role).ToList();
+        foreach (var role in roles)
+            if (role.Value.Contains("Admin"))
+                return true;
+        return false;
+    }
 }
