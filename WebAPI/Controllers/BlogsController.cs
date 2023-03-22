@@ -16,15 +16,13 @@ using IResult = Core.Utilities.Results.IResult;
 namespace WebAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-public class BlogsController : ControllerBase
+public class BlogsController : BaseController
 {
     private IBlogService _blogService;
-    private IWriterService _writerService;
 
-    public BlogsController(IBlogService blogService, IWriterService writerService)
+    public BlogsController(IBlogService blogService) : base()
     {
         _blogService = blogService;
-        _writerService = writerService;
     }
 
 
@@ -54,7 +52,7 @@ public class BlogsController : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Writer,Admin")]
     public async Task<IActionResult> Remove(int id)
     {
-        var result = await _writerService.DoesBlogBelongToThisWriter(id, GetCurrentWriterId());
+        var result = await WriterService!.DoesBlogBelongToThisWriter(id, GetCurrentWriterId());
         if (!IsCurrentUserAdmin() && !result.Success) return Forbid();
        
         result = await _blogService.RemoveAsync(id);
@@ -69,6 +67,16 @@ public class BlogsController : ControllerBase
     public IActionResult GetWithPagination([FromQuery]BlogForPaginationRequest request)
     {
         var result = _blogService.GetWithPaginate(request);
+        if (result.Success)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
+    }
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetBlogDetailById(int id)
+    {
+        var result = await _blogService.GetByIdWithWriter(id);
         if (result.Success)
         {
             return Ok(result);
@@ -134,6 +142,16 @@ public class BlogsController : ControllerBase
         }
         return BadRequest(result);
     }
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetByIdWithDetails(int id)
+    {
+        var result = await _blogService.GetByIdWithDetails(id);
+        if (result.Success)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
+    }
 
     [HttpGet("[action]")]
     public IActionResult GetLastBlogs(int count = 3)
@@ -175,20 +193,5 @@ public class BlogsController : ControllerBase
             return Ok(result);
         }
         return BadRequest(result);
-    }
-    private int GetCurrentWriterId()
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var writer = _writerService.GetByUserId(Convert.ToInt32(userId)).Result.Data;
-        return writer!.Id;
-    }
-
-    private bool IsCurrentUserAdmin()
-    {
-        var roles = User.FindAll(ClaimTypes.Role).ToList();
-        foreach (var role in roles)
-            if (role.Value.Contains("Admin"))
-                return true;
-        return false;
     }
 }

@@ -82,6 +82,21 @@ namespace Business.Concrete
             return new ErrorResult("Yazar Bulunamadı");
         }
 
+        public async Task<IResult> DoesCommentBelongToThisWriter(int commentId, int writerId)
+        {
+            var commentResult = await _commentService.GetById(commentId);
+            if (!commentResult.Success) return new ErrorResult(commentResult.Message);
+
+            var writerResult = await GetById(writerId);
+            if (!writerResult.Success) return new ErrorResult(writerResult.Message);
+
+            if (commentResult.Data!.WriterId != writerId)
+                return new ErrorResult($"'{commentResult.Data.Content}' yorumu {writerResult.Data.NickName} yazarına ait değil!");
+            return new SuccessResult($"'{commentResult.Data.Content}' yorumu {writerResult.Data.NickName} yazarına ait!");
+
+            throw new NotImplementedException();
+        }
+
         public IDataResult<List<Writer>> GetAll()
         {
             var list = _writerDal.GetAll().ToList();

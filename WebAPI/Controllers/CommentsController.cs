@@ -10,7 +10,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CommentsController : ControllerBase
+    public class CommentsController : BaseController
     {
         private ICommentService _commentService;
 
@@ -84,9 +84,21 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
+        [HttpGet("[action]")]
+        public IActionResult GetCurrentUserComments([FromQuery] CommentForPaginationRequest request)
+        {
+            request.WriterId = GetCurrentWriterId();
+            var result = _commentService.GetWithPaginate(request);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
 
         [HttpPost("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Writer")]
         public async Task<IActionResult> AddAsync(CommentForCreateDto dto)
         {
             var result =await _commentService.AddAsync(dto);
@@ -98,11 +110,13 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
         [HttpDelete("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Writer,Admin")]
         public async Task<IActionResult> Remove(int id)
         {
-            var result = await _commentService.RemoveAsync(id);
+            var result = await WriterService!.DoesCommentBelongToThisWriter(id, GetCurrentWriterId());
+            if (!IsCurrentUserAdmin() && !result.Success) return Forbid();
 
+            result = await _commentService.RemoveAsync(id);
             if (result.Success)
             {
                 return Ok(result);

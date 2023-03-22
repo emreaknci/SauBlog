@@ -72,6 +72,17 @@ namespace Business.Concrete
             return new ErrorDataResult<List<Comment>>(comments);
         }
 
+        public async Task<IDataResult<Comment>> GetById(int id)
+        {
+            var comment = await _commentDal.GetAsync(w => w.Id == id);
+
+            if (comment != null)
+            {
+                return new SuccessDataResult<Comment>(comment);
+            }
+            return new ErrorDataResult<Comment>("Yorum Bulunamadı");
+        }
+
         public IDataResult<List<Comment>> GetAll()
         {
             var comments = _commentDal.GetAll().OrderByDescending(c => c.Id).ToList();

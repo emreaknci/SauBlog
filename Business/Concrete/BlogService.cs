@@ -47,7 +47,7 @@ namespace Business.Concrete
             };
             await _blogDal.AddAsync(newBlog);
             await _blogDal.SaveAsync();
-            return new SuccessDataResult<Blog>(newBlog,"Blog eklendi");
+            return new SuccessDataResult<Blog>(newBlog, "Blog eklendi");
         }
 
         public async Task<IResult> RemoveAsync(int id)
@@ -104,9 +104,9 @@ namespace Business.Concrete
 
         public IPaginateResult<BlogForListDto> GetWithPaginate(BlogForPaginationRequest request)
         {
-            var result= _blogDal.GetWithPagination(request);
+            var result = _blogDal.GetWithPagination(request);
 
-            if (request.Index *request.Size > result.totalCount)
+            if (request.Index * request.Size > result.totalCount)
                 return new ErrorPaginationResult<BlogForListDto>("Hata!");
 
             result.list.ForEach(i =>
@@ -164,6 +164,21 @@ namespace Business.Concrete
         {
             var blog = await _blogDal.GetByIdAsync(id);
 
+            if (blog != null)
+            {
+                if (string.IsNullOrEmpty(blog.ImagePath))
+                    blog.ImagePath = "DefaultBlogPng.png";
+                return new SuccessDataResult<Blog>(blog);
+            }
+            return new ErrorDataResult<Blog>("Blog Bulunamadı");
+        }
+
+        public async Task<IDataResult<Blog>> GetByIdWithDetails(int id)
+        {
+            var blog = await _blogDal.Table
+                .Include(b => b.Writer)
+                .Include(b => b.Categories)
+                .Include(b => b.Comments)!.ThenInclude(c=>c.Writer).FirstOrDefaultAsync(b => b.Id == id);
             if (blog != null)
             {
                 if (string.IsNullOrEmpty(blog.ImagePath))

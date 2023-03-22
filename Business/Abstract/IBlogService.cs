@@ -21,6 +21,7 @@ namespace Business.Abstract
         IDataResult<List<Blog>> GetAllByCategoryId(int categroyId);
         IDataResult<List<LastBlogDto>> GetLastBlogs(int count);
         Task<IDataResult<Blog>> GetById(int id);
+        Task<IDataResult<Blog>> GetByIdWithDetails(int id);
         Task<IDataResult<Blog>> GetByIdWithWriter(int id);
         Task<IDataResult<Blog>> GetByIdWithCategories(int id);
         Task<IDataResult<Blog>> GetByIdWithCommentsAsync(int id);

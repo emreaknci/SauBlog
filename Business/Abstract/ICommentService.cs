@@ -13,6 +13,7 @@ namespace Business.Abstract
         Task<IResult> RemoveRangeAsync(List<Comment> comments);
 
         IDataResult<List<Comment>> GetAllByBlogId(int id);
+        Task<IDataResult<Comment>> GetById(int id);
         IDataResult<List<Comment>> GetAll();
         IDataResult<List<Comment>> GetAllByWriterId(int writerId);
         IDataResult<List<CommentForListDto>> GetAllForListing(Expression<Func<CommentForListDto, bool>>? filter = null);

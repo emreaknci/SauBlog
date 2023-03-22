@@ -9,6 +9,6 @@ namespace Entities.DTOs.Comment
 {
     public class CommentForPaginationRequest : BasePaginationRequest
     {
-
+        public int WriterId{ get; set; }
     }
 }
