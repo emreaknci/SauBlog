@@ -9,8 +9,8 @@ namespace Entities.DTOs.Blog
 {
     public class BlogForPaginationRequest:BasePaginationRequest
     {
-        public List<int>? WriterIds{ get; set; }
-        public List<int>? CategoryIds{ get; set; }
+        public List<string>? WriterIds{ get; set; }
+        public List<string>? CategoryIds{ get; set; }
     }
 
    

@@ -33,12 +33,11 @@ namespace DataAccess.Concrete
 
 
             query = CheckIfRequestParams(query, req);
-
             if (req.CategoryIds != null)
-                query = query.Where(blog => blog.Categories!.Any(category => req.CategoryIds.Contains(category.Id)));
+                query = query.Where(blog => blog.Categories!.Any(category => req.CategoryIds.Select(int.Parse).ToArray().Contains(category.Id)));
 
             if (req.WriterIds != null)
-                query = query.Where(blog => req.WriterIds.Contains((int)blog.WriterId));
+                query = query.Where(blog => req.WriterIds.Select(int.Parse).ToArray().Contains((int)blog.WriterId));
 
 
             var result = query.Select(b => new BlogForListDto()

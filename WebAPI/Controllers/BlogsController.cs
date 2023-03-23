@@ -87,9 +87,9 @@ public class BlogsController : BaseController
     public IActionResult GetCurrentWriterBlogs([FromQuery] BlogForPaginationRequest request)
     {
         if (request.WriterIds == null)
-            request.WriterIds = new() { GetCurrentWriterId() };
+            request.WriterIds = new  (){ GetCurrentWriterId().ToString() };
         else
-            request.WriterIds.Add(GetCurrentWriterId());
+            request.WriterIds.Add(GetCurrentWriterId().ToString());
 
         var result = _blogService.GetWithPaginate(request);
 
@@ -98,6 +98,7 @@ public class BlogsController : BaseController
         
         return BadRequest(result);
     }
+
 
     [HttpGet("[action]")]
     public IActionResult GetAll()

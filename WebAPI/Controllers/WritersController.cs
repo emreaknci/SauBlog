@@ -94,7 +94,6 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<IActionResult> GetByIdWithAllInfo(int id)
         {
             var result = await _writerService.GetByIdWithAllInfo(id);
