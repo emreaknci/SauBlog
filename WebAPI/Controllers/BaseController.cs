@@ -15,7 +15,7 @@ namespace WebAPI.Controllers
         protected int GetCurrentWriterId()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var writer = _writerService.GetByUserId(Convert.ToInt32(userId)).Result.Data;
+            var writer = WriterService.GetByUserId(Convert.ToInt32(userId)).Result.Data;
             return writer!.Id;
         }
         protected bool IsCurrentUserAdmin()

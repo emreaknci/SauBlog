@@ -50,12 +50,13 @@ namespace WebAPI.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Update(UserForUpdateDto dto)
         {
+
             var result = await _userService.UpdateAsync(dto);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
         }
-        [HttpPost("[action]")]
+        [HttpPut("[action]")]
         public async Task<IActionResult> ChangePassword(UserForChangePasswordDto dto)
         {
             var result = await _userService.ChangePasswordAsync(dto);

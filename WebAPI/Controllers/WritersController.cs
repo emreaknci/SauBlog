@@ -11,7 +11,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class WritersController : ControllerBase
+    public class WritersController : BaseController
     {
         private IWriterService _writerService;
 
@@ -102,9 +102,11 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
         [HttpPost("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Writer")]
         public async Task<IActionResult> ChangeNickNameAsync([FromBody] ChangeNickNameDto dto)
         {
+            if (dto.UserId != GetCurrentWriterId())
+                return Forbid();
             var result = await _writerService.ChangeNickNameAsync(dto.UserId,dto.NewNickName);
             if (result.Success)
                 return Ok(result);
