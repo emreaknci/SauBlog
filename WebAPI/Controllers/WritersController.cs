@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles = "Writer")]
         public async Task<IActionResult> Update(WriterForUpdateDto dto)
         {
             var result = await _writerService.UpdateAsync(dto);
@@ -39,16 +39,15 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> Delete(int userId)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Writer")]
+        public async Task<IActionResult> DeleteByUserId(int id)
         {
-            var result = await _writerService.DeleteByUserIdAsync(userId);
+            var result = await _writerService.DeleteByUserIdAsync(id);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
         }
         [HttpGet("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult GetAll()
         {
             var result = _writerService.GetAll();
@@ -57,7 +56,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
         [HttpGet("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await _writerService.GetById(id);

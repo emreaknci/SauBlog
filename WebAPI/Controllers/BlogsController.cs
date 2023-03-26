@@ -37,6 +37,7 @@ public class BlogsController : BaseController
         }
         return BadRequest(result);
     }
+
     [HttpPut("[action]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Writer")]
     public async Task<IActionResult> Update(BlogForUpdateDto dto)
@@ -48,14 +49,12 @@ public class BlogsController : BaseController
         }
         return BadRequest(result);
     }
+
     [HttpDelete("[action]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Writer,Admin")]
     public async Task<IActionResult> Remove(int id)
     {
-        var result = await WriterService!.DoesBlogBelongToThisWriter(id, GetCurrentWriterId());
-        if (!IsCurrentUserAdmin() && !result.Success) return Forbid();
-       
-        result = await _blogService.RemoveAsync(id);
+        var result = await _blogService.RemoveAsync(id);
         if (result.Success)
         {
             return Ok(result);
@@ -64,7 +63,7 @@ public class BlogsController : BaseController
     }
 
     [HttpGet("[action]")]
-    public IActionResult GetWithPagination([FromQuery]BlogForPaginationRequest request)
+    public IActionResult GetWithPagination([FromQuery] BlogForPaginationRequest request)
     {
         var result = _blogService.GetWithPaginate(request);
         if (result.Success)
@@ -73,6 +72,7 @@ public class BlogsController : BaseController
         }
         return BadRequest(result);
     }
+
     [HttpGet("[action]")]
     public async Task<IActionResult> GetBlogDetailById(int id)
     {
@@ -83,11 +83,13 @@ public class BlogsController : BaseController
         }
         return BadRequest(result);
     }
+
     [HttpGet("[action]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Writer")]
     public IActionResult GetCurrentWriterBlogs([FromQuery] BlogForPaginationRequest request)
     {
         if (request.WriterIds == null)
-            request.WriterIds = new  (){ GetCurrentWriterId().ToString() };
+            request.WriterIds = new() { GetCurrentWriterId().ToString() };
         else
             request.WriterIds.Add(GetCurrentWriterId().ToString());
 
@@ -95,7 +97,7 @@ public class BlogsController : BaseController
 
         if (result.Success)
             return Ok(result);
-        
+
         return BadRequest(result);
     }
 

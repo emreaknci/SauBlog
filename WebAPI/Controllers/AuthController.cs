@@ -1,7 +1,8 @@
 ﻿using Business.Abstract;
 using Entities.DTOs.Users;
 using Entities.DTOs.Writers;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -31,6 +32,17 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> VerifyResetToken( string resetToken)
         {
             var result = await _authService.VerifyResetTokenAsync(resetToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpPost("[action]")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User,Admin")]
+        public async Task<IActionResult> Delete(int id)//id->userId
+        {
+            var result = await _authService.DeleteAsync(id);
             if (result.Success)
             {
                 return Ok(result);

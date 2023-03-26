@@ -10,6 +10,8 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+
     public class RolesController : ControllerBase
     {
         private IRoleService _roleService;
@@ -20,7 +22,6 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<IActionResult> Add(RoleForCreateDto dto)
         {
             var result = await _roleService.AddAsync(dto);
@@ -30,7 +31,6 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<IActionResult> Update(RoleForUpdateDto dto)
         {
             var result = await _roleService.UpdateAsync(dto);
@@ -40,7 +40,6 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _roleService.DeleteAsync(id);
@@ -48,9 +47,6 @@ namespace WebAPI.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
-
-
-
 
         [HttpGet("[action]")]
         public IActionResult GetAll()

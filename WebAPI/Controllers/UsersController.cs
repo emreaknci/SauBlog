@@ -11,7 +11,8 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public class UsersController : BaseController
     {
         private IUserService _userService;
 
@@ -21,36 +22,34 @@ namespace WebAPI.Controllers
         }
         [HttpGet("[action]")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        public async Task<IActionResult> AssignRole(int userId, string roleName)
+        public async Task<IActionResult> AssignRole(int id, string roleName)
         {
-            var result = await _userService.AssignRole(userId,roleName);
+            var result = await _userService.AssignRole(id, roleName);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
         }
         [HttpGet("[action]")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        public async Task<IActionResult> RevokeRole(int userId, string roleName)
+        public async Task<IActionResult> RevokeRole(int id, string roleName)
         {
-            var result = await _userService.AssignRole(userId, roleName);
+            var result = await _userService.AssignRole(id, roleName);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
         }
         [HttpDelete("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> Delete(int userId)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,User")]
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = await _userService.DeleteAsync(userId);
+            var result = await _userService.DeleteAsync(id);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
         }
         [HttpPut("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Update(UserForUpdateDto dto)
         {
-
             var result = await _userService.UpdateAsync(dto);
             if (result.Success)
                 return Ok(result);
@@ -81,9 +80,9 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
         [HttpGet("[action]")]
-        public async Task<ActionResult> GetById([FromQuery]int id)
+        public async Task<ActionResult> GetById([FromQuery] int id)
         {
-            var result =await _userService.GetById(id);
+            var result = await _userService.GetById(id);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);

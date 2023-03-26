@@ -48,6 +48,10 @@ namespace DataAccess.Concrete
             var comments = GetAll();
             var query = CheckIfRequestParams(comments, request);
 
+            if (!request.WriterId.Equals(null))
+                query = query.Where(c => c.WriterId==request.WriterId);
+
+
             result = query.Include(c => c.Blog)
                  .Include(c => c.Writer)
                  .Select(c => new CommentForListDto()

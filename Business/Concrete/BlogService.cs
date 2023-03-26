@@ -68,6 +68,13 @@ namespace Business.Concrete
 
         public async Task<IResult> RemoveRangeAsync(List<Blog> blogs)
         {
+            blogs.ForEach(blog =>
+            {
+                FileHelper.Delete(blog.ImagePath);
+                var commentsResult = _commentService.GetAllByBlogId(blog.Id);
+                if (commentsResult.Success)
+                    _commentService.RemoveRangeAsync(commentsResult.Data!);
+            });
             _blogDal.RemoveRange(blogs);
             await _blogDal.SaveAsync();
             return new SuccessResult("Bloglar silindi");
@@ -178,7 +185,7 @@ namespace Business.Concrete
             var blog = await _blogDal.Table
                 .Include(b => b.Writer)
                 .Include(b => b.Categories)
-                .Include(b => b.Comments)!.ThenInclude(c=>c.Writer).FirstOrDefaultAsync(b => b.Id == id);
+                .Include(b => b.Comments)!.ThenInclude(c => c.Writer).FirstOrDefaultAsync(b => b.Id == id);
             if (blog != null)
             {
                 if (string.IsNullOrEmpty(blog.ImagePath))
