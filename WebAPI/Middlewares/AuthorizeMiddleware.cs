@@ -23,12 +23,15 @@ namespace WebAPI.Middlewares
 
         public async Task InvokeAsync(HttpContext context)
         {
-            var authorizeAttribute = context.GetEndpoint()!.Metadata.GetMetadata<AuthorizeAttribute>();
+            var authorizeAttribute = context.GetEndpoint()?.Metadata.GetMetadata<AuthorizeAttribute>();
             if (authorizeAttribute != null)
             {
                 var roles = authorizeAttribute.Roles?.Split(',').ToList();
                 if (!roles.IsNullOrEmpty() && roles.Contains("Admin") && context.User.IsInRole("Admin"))
+                {
                     await _next(context);
+                    return;
+                }
 
 
                 var endpoint = context.GetEndpoint()?.Metadata.GetMetadata<ControllerActionDescriptor>();
